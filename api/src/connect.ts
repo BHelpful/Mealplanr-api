@@ -16,8 +16,6 @@ function connect() {
 		})
 		.catch((error) => {
 			log.error('db error', error);
-			// Exit the process with a failure
-			process.exit(1);
 		});
 }
 
