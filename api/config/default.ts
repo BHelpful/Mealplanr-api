@@ -1,8 +1,8 @@
 export default {
 	port: 1337,
 	host: 'localhost',
-	// dbUri: 'mongodb://poweruser:PinFloorBHL2020@bhelpful.net:27017/mealplanr',
-	dbUri: 'mongodb://localhost:27017/mealplanr',
+	dbUri: 'mongodb://bhelpful.net:27017/mealplanr',
+	// dbUri: 'mongodb://localhost:27017/mealplanr',
 	saltWorkFactor: 10,
 	accessTokenTtl: '15m',
 	refreshTokenTtl: '1y',
