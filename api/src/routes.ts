@@ -10,7 +10,7 @@ export default function (app: Express) {
 		res.sendStatus(200)
 	);
 
-	// register user with
+	// register user (validating the body of the request before calling the method to create a new user).
 	app.post(
 		'/api/users',
 		validateRequest(createUserSchema),
