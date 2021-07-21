@@ -5,7 +5,6 @@ import connect from './connect';
 import routes from './routes';
 import mongoose from 'mongoose';
 
-
 // Gets items from default config file
 const port = config.get('port') as number;
 const host = config.get('host') as string;
