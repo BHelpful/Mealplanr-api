@@ -19,7 +19,6 @@ export interface UserDocument extends Document {
 	options: UserOptionsDocument;
 	plan: PlanDocument;
 	oAuth: string;
-	visited: Schema.Types.Date;
 	availableIngredients: [Schema.Types.ObjectId];
 	shoppingList: ShoppingListDocument;
 	createdAt: Date;
@@ -35,7 +34,6 @@ const UserSchema = new Schema(
 		options: { type: UserOptionsSubschema, required: false },
 		plan: { type: PlanSubschema, required: false },
 		oAuth: { type: String, required: false },
-		visited: { type: Schema.Types.Date, required: false },
 		availableIngredients: {
 			type: [Schema.Types.ObjectId],
 			required: false,
