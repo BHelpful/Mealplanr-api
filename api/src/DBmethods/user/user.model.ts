@@ -9,6 +9,7 @@ import {
 	UserOptionsDocument,
 	UserOptionsSubschema,
 } from '../documents';
+import log from '../../logger';
 
 export interface UserDocument extends Document {
 	Name: string;
@@ -28,13 +29,16 @@ const UserSchema = new Schema(
 		Name: { type: String, required: true },
 		Email: { type: String, required: true, unique: true },
 		Password: { type: String, required: true },
-		Colection: { type: [Schema.Types.ObjectId], required: true },
-		Options: { type: UserOptionsSubschema, required: true },
-		Plan: { type: PlanSubschema, required: true },
-		OAuth: { type: String, required: true },
-		Visited: { type: Schema.Types.Date, required: true },
-		AvailableIngredients: { type: [Schema.Types.ObjectId], required: true },
-		ShoppingList: { type: ShoppingListSubschema, required: true },
+		Colection: { type: [Schema.Types.ObjectId], required: false },
+		Options: { type: UserOptionsSubschema, required: false },
+		Plan: { type: PlanSubschema, required: false },
+		OAuth: { type: String, required: false },
+		Visited: { type: Schema.Types.Date, required: false },
+		AvailableIngredients: {
+			type: [Schema.Types.ObjectId],
+			required: false,
+		},
+		ShoppingList: { type: ShoppingListSubschema, required: false },
 	},
 	{ timestamps: true }
 );
@@ -66,6 +70,6 @@ UserSchema.methods.comparePassword = async function (
 	return bcrypt.compare(candidatePassword, user.Password).catch((e) => false);
 };
 
-const User = mongoose.model<UserDocument>('User', UserSchema);
+const User = mongoose.model<UserDocument>('Users', UserSchema);
 
 export default User;
