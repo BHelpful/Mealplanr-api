@@ -18,7 +18,7 @@ export async function validatePassword({
 	email,
 	password,
 }: {
-	email: UserDocument['Email'];
+	email: UserDocument['email'];
 	password: string;
 }) {
 	const user = await User.findOne({ email });

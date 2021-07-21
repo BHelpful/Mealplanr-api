@@ -14,120 +14,120 @@ export const UserOptionsAddressSubschema = new Schema({
 });
 
 export interface UserOptionsDocument extends Document {
-	Diet: string;
-	Country: string;
-	Notifications: boolean;
-	Address: UserOptionsAddressDocument;
-	Stores: [Schema.Types.ObjectId];
-	GCalendar: boolean;
+	diet: string;
+	country: string;
+	notifications: boolean;
+	address: UserOptionsAddressDocument;
+	stores: [Schema.Types.ObjectId];
+	gCalendar: boolean;
 }
 export const UserOptionsSubschema = new Schema({
-	Diet: { type: String, required: true },
-	Country: { type: String, required: true },
-	Notifications: { type: Boolean, required: true },
-	Address: { type: UserOptionsAddressSubschema, required: false },
-	Stores: { type: [Schema.Types.ObjectId], required: true },
-	GCalendar: { type: Boolean, required: true },
+	diet: { type: String, required: true },
+	country: { type: String, required: true },
+	notifications: { type: Boolean, required: true },
+	address: { type: UserOptionsAddressSubschema, required: false },
+	stores: { type: [Schema.Types.ObjectId], required: true },
+	gCalendar: { type: Boolean, required: true },
 });
 
 export interface PlanDocument extends Document {
-	Recipes: [Schema.Types.ObjectId];
-	Datedex: Date;
+	recipes: [Schema.Types.ObjectId];
+	datedex: Date;
 }
 export const PlanSubschema = new Schema({
-	Recipes: { type: [Schema.Types.ObjectId], required: true },
-	Datedex: { type: Schema.Types.Date, required: true },
+	recipes: { type: [Schema.Types.ObjectId], required: true },
+	datedex: { type: Schema.Types.Date, required: true },
 });
 
 export interface ShoppingListItemDocument extends Document {
-	Ingredient: [Schema.Types.ObjectId];
-	Store: Schema.Types.ObjectId;
+	ingredient: [Schema.Types.ObjectId];
+	store: Schema.Types.ObjectId;
 }
 export const ShoppingListItemSubschema = new Schema({
-	Ingredient: { type: [Schema.Types.ObjectId], required: true },
-	Store: { type: Schema.Types.ObjectId, required: false },
+	ingredient: { type: [Schema.Types.ObjectId], required: true },
+	store: { type: Schema.Types.ObjectId, required: false },
 });
 
 export interface ShoppingListDocument extends Document {
-	Ingredients: [ShoppingListItemDocument];
+	ingredients: [ShoppingListItemDocument];
 }
 export const ShoppingListSubschema = new Schema({
-	Ingredients: { type: [ShoppingListItemSubschema], required: true },
+	ingredients: { type: [ShoppingListItemSubschema], required: true },
 });
 
 export interface RatingDocument extends Document {
-	User: Schema.Types.ObjectId;
-	Rating: number;
+	user: Schema.Types.ObjectId;
+	rating: number;
 }
 export const RatingSubschema = new Schema({
-	User: { type: Schema.Types.ObjectId, required: true },
-	Rating: { type: Number, required: true },
+	user: { type: Schema.Types.ObjectId, required: true },
+	rating: { type: Number, required: true },
 });
 
 // ! Schemas------------------------------------------------------------------
 interface RecipeDocument extends Document {
-	Public: boolean;
-	Categories: [Schema.Types.ObjectId];
-	Creator: Schema.Types.ObjectId;
-	Title: string;
-	Description: string;
-	Estimate: Date;
-	Images: [string];
-	Ingredients: [Schema.Types.ObjectId];
-	Preparation: [string];
-	Instructions: [string];
-	Rating: [RatingDocument];
-	Servings: number;
-	Sidedish: [Schema.Types.ObjectId];
+	public: boolean;
+	categories: [Schema.Types.ObjectId];
+	creator: Schema.Types.ObjectId;
+	title: string;
+	description: string;
+	estimate: Date;
+	images: [string];
+	ingredients: [Schema.Types.ObjectId];
+	preparation: [string];
+	instructions: [string];
+	rating: [RatingDocument];
+	servings: number;
+	sidedish: [Schema.Types.ObjectId];
+	createdAt: Date;
+	updatedAt: Date;
 }
 const RecipeSchema = new Schema(
 	{
-		Public: { type: Boolean, required: true },
-		Categories: { type: [Schema.Types.ObjectId], required: true },
-		Creator: { type: Schema.Types.ObjectId, required: true },
-		Title: { type: String, required: true },
-		Description: { type: String, required: true },
-		Estimate: { type: Schema.Types.Date, required: true },
-		Images: { type: [String], required: true },
-		Ingredients: { type: [Schema.Types.ObjectId], required: true },
-		Preparation: { type: [String], required: true },
-		Instructions: { type: [String], required: true },
-		Rating: { type: [RatingSubschema], required: true },
-		Servings: { type: Number, required: true },
-		Sidedish: { type: [Schema.Types.ObjectId], required: true },
+		public: { type: Boolean, required: true },
+		categories: { type: [Schema.Types.ObjectId], required: true },
+		creator: { type: Schema.Types.ObjectId, required: true },
+		title: { type: String, required: true },
+		description: { type: String, required: true },
+		estimate: { type: Schema.Types.Date, required: true },
+		images: { type: [String], required: true },
+		ingredients: { type: [Schema.Types.ObjectId], required: true },
+		preparation: { type: [String], required: true },
+		instructions: { type: [String], required: true },
+		rating: { type: [RatingSubschema], required: true },
+		servings: { type: Number, required: true },
+		sidedish: { type: [Schema.Types.ObjectId], required: true },
 	},
 	{ timestamps: true }
 );
 
 interface IngredientDocument extends Document {
-	Type: string;
-	Season: string;
-	Unit: string;
-	Diet: [string];
-	Alternatives: [Schema.Types.ObjectId];
+	type: string;
+	season: string;
+	unit: string;
+	diet: [string];
+	alternatives: [Schema.Types.ObjectId];
 }
 const IngredientSchema = new Schema({
-	Type: { type: String, required: true },
-	Season: { type: String, required: true },
-	Unit: { type: String, required: true },
-	Diet: { type: [String], required: true },
-	Alternatives: { type: [Schema.Types.ObjectId], required: true },
+	type: { type: String, required: true },
+	season: { type: String, required: true },
+	unit: { type: String, required: true },
+	diet: { type: [String], required: true },
+	alternatives: { type: [Schema.Types.ObjectId], required: true },
 });
 
 interface CategoryDocument extends Document {
-	Name: string;
-	Recipes: [string];
+	same: string;
+	recipes: [string];
 }
 const CategorySchema = new Schema({
-	Name: { type: String, required: true },
-	Recipes: { type: [String], required: true },
+	same: { type: String, required: true },
+	recipes: { type: [String], required: true },
 });
 
 interface StoreDocument extends Document {
-	Name: string;
-	createdAt: Date;
-	updatedAt: Date;
+	name: string;
 }
 const StoreSchema = new Schema({
-	Name: { type: String, required: true },
+	name: { type: String, required: true },
 });

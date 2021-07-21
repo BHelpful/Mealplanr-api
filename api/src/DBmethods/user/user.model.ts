@@ -12,33 +12,35 @@ import {
 import log from '../../logger';
 
 export interface UserDocument extends Document {
-	Name: string;
-	Email: string;
-	Password: string;
-	Colection: [Schema.Types.ObjectId];
-	Options: UserOptionsDocument;
-	Plan: PlanDocument;
-	OAuth: string;
-	Visited: Schema.Types.Date;
-	AvailableIngredients: [Schema.Types.ObjectId];
-	ShoppingList: ShoppingListDocument;
+	name: string;
+	email: string;
+	password: string;
+	colection: [Schema.Types.ObjectId];
+	options: UserOptionsDocument;
+	plan: PlanDocument;
+	oAuth: string;
+	visited: Schema.Types.Date;
+	availableIngredients: [Schema.Types.ObjectId];
+	shoppingList: ShoppingListDocument;
+	createdAt: Date;
+	updatedAt: Date;
 	comparePassword(candidatePassword: string): Promise<boolean>;
 }
 const UserSchema = new Schema(
 	{
-		Name: { type: String, required: true },
-		Email: { type: String, required: true, unique: true },
-		Password: { type: String, required: true },
-		Colection: { type: [Schema.Types.ObjectId], required: false },
-		Options: { type: UserOptionsSubschema, required: false },
-		Plan: { type: PlanSubschema, required: false },
-		OAuth: { type: String, required: false },
-		Visited: { type: Schema.Types.Date, required: false },
-		AvailableIngredients: {
+		name: { type: String, required: true },
+		email: { type: String, required: true, unique: true },
+		password: { type: String, required: false },
+		colection: { type: [Schema.Types.ObjectId], required: false },
+		options: { type: UserOptionsSubschema, required: false },
+		plan: { type: PlanSubschema, required: false },
+		oAuth: { type: String, required: false },
+		visited: { type: Schema.Types.Date, required: false },
+		availableIngredients: {
 			type: [Schema.Types.ObjectId],
 			required: false,
 		},
-		ShoppingList: { type: ShoppingListSubschema, required: false },
+		shoppingList: { type: ShoppingListSubschema, required: false },
 	},
 	{ timestamps: true }
 );
@@ -54,10 +56,10 @@ UserSchema.pre('save', async function (next: mongoose.HookNextFunction) {
 	// Random additional data
 	const salt = await bcrypt.genSalt(config.get('saltWorkFactor'));
 
-	const hash = await bcrypt.hashSync(user.Password, salt);
+	const hash = await bcrypt.hashSync(user.password, salt);
 
 	// Replace the password with the hash
-	user.Password = hash;
+	user.password = hash;
 
 	return next();
 });
@@ -67,9 +69,9 @@ UserSchema.methods.comparePassword = async function (
 ) {
 	const user = this as UserDocument;
 
-	return bcrypt.compare(candidatePassword, user.Password).catch((e) => false);
+	return bcrypt.compare(candidatePassword, user.password).catch((e) => false);
 };
 
-const User = mongoose.model<UserDocument>('Users', UserSchema);
+const User = mongoose.model<UserDocument>('users', UserSchema);
 
 export default User;
