@@ -62,6 +62,8 @@ UserSchema.pre('save', async function (next: mongoose.HookNextFunction) {
 	return next();
 });
 
+// Adds a comparePassword method to the UserSchema which encrupts a password
+// and validates with the existing encrypted password from the user.
 UserSchema.methods.comparePassword = async function (
 	candidatePassword: string
 ) {

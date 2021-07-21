@@ -1,5 +1,9 @@
 import { object, string, ref } from 'yup';
 
+// creates the validation schema i.e the schema of which the contents of the body from the request will be
+// validated against. Just for your knowledge, if there are keys in the body of the request
+// that is not represented in this validation schema, it will not be validated for (of course)
+// but there will not be any error. So any exess keys will be ignored.
 export const createUserSchema = object({
 	body: object({
 		name: string().required('Name is required'),

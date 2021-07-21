@@ -16,12 +16,14 @@ export default function (app: Express) {
 		validateRequest(createUserSchema),
 		createUserHandler
 	);
+
 	// login
 	app.post(
 		'/api/sessions',
 		validateRequest(createUserSessionSchema),
 		createUserSessionHandler
 	);
+
 	// get user's sessions
 
 	// logout

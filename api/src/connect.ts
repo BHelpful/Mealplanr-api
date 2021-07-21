@@ -12,10 +12,10 @@ function connect() {
 			useUnifiedTopology: true,
 		})
 		.then(() => {
-			log.info('Database connected');
+			log.info('Connection success');
 		})
 		.catch((error) => {
-			log.error('db error', error);
+			log.error('Error in connecting', error);
 		});
 }
 

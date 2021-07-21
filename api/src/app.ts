@@ -16,6 +16,7 @@ let bodyParser = require('body-parser');
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
+// this is used to get info on the connection to the DB.
 const db = mongoose.connection;
 
 app.listen(port, host, () => {
@@ -26,9 +27,6 @@ app.listen(port, host, () => {
 		log.error(err);
 		// Exit the process with a failure
 		process.exit(1);
-	});
-	db.on('open', () => {
-		log.info('Connected to database');
 	});
 
 	// Pass express app to routes
