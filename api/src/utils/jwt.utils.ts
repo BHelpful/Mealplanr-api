@@ -4,14 +4,14 @@ import config from 'config';
 const privateKey = config.get('privateKey') as string;
 
 /**
- * This function
+ * This function is used to generate a JWT token.
  *
  * @remarks
+ * Uses the private key from the config file.
  *
- *
- * @param x -
- * @param y -
- * @returns
+ * @param object - an object
+ * @param options - a set of options from the JWT library (SignOptions)
+ * @returns a JWT token
  */
 export function sign(object: Object, options?: jwt.SignOptions | undefined) {
 	return jwt.sign(object, privateKey, options);

@@ -4,14 +4,11 @@ import { createUser } from './user.service';
 import log from '../../logger';
 
 /**
- * This function 
+ * This function is used to request the creation of a new user.
  *
- * @remarks
- * 
- *
- * @param x - 
- * @param y - 
- * @returns 
+ * @param req - The request object.
+ * @param res - The response object.
+ * @returns a response with the user omitted the password.
  */
 export async function createUserHandler(req: Request, res: Response) {
 	try {

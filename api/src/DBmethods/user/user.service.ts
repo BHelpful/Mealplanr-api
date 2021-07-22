@@ -1,20 +1,18 @@
 import { DocumentDefinition, FilterQuery } from 'mongoose';
 import User, { UserDocument } from './user.model';
 
-// Uses the .create() method on the User object (which is the mongoose schema of the users collection)
-// In the same way as with the validation schema, any keys from the body of the requests
-// that matches the keys from the mongoose schema will be added to the database.
-// If there are required keys e.g. email, these need to be in the object in order to be accepted
-// however this will already be checked for in the validation schema.
 /**
- * This function 
+ * This function is used to create a new user.
  *
  * @remarks
- * 
+ * Uses the .create() method on the User object (which is the mongoose schema of the users collection)
+ * In the same way as with the validation schema, any keys from the body of the requests
+ * that matches the keys from the mongoose schema will be added to the database.
+ * If there are required keys e.g. email, these need to be in the object in order to be accepted
+ * however this will already be checked for in the validation schema.
  *
- * @param x - 
- * @param y - 
- * @returns 
+ * @param input - The user object to be created.
+ * @returns - The created user object.
  */
 export async function createUser(input: DocumentDefinition<UserDocument>) {
 	try {
@@ -24,16 +22,11 @@ export async function createUser(input: DocumentDefinition<UserDocument>) {
 	}
 }
 
-// This method uses mongoose to find a user from the DB based on a querry.
 /**
- * This function 
+ * This function uses mongoose to find a user from the DB based on a querry.
  *
- * @remarks
- * 
- *
- * @param x - 
- * @param y - 
- * @returns 
+ * @param query - a query object that will be used to find a user from the DB
+ * @returns a promise that resolves to the user that was found
  */
 export async function findUser(query: FilterQuery<UserDocument>) {
 	return User.findOne(query).lean();

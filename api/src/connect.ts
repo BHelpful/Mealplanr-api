@@ -3,14 +3,11 @@ import config from 'config';
 import log from './logger';
 
 /**
- * This function 
+ * This function connects to the mongoDB database on the server
+ * using the dbURI from the config file.
  *
  * @remarks
- * 
- *
- * @param x - 
- * @param y - 
- * @returns 
+ * It logs on success and on connection error.
  */
 function connect() {
 	const dbUri = config.get('dbUri') as string;
