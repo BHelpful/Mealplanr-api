@@ -120,14 +120,12 @@ export async function reIssueAccessToken({
 }
 
 /**
- * This function
+ * This function uses mongoose to find a session from the DB based on a querry
+ * updates it based on the input and returns the updated session.
  *
- * @remarks
- *
- *
- * @param x -
- * @param y -
- * @returns
+ * @param querry - a query object that will be used to find a session from the DB
+ * @param update - a query object that will be used to specify the update
+ * @returns the updated session
  */
 export async function updateSession(
 	query: FilterQuery<SessionDocument>,
@@ -136,6 +134,12 @@ export async function updateSession(
 	return Session.updateOne(query, update);
 }
 
+/**
+ * This function uses mongoose to find sessions from the DB based on a querry
+ *
+ * @param querry - a query object that will be used to find a session from the DB
+ * @returns the sessions matching the querry
+ */
 export async function findSessions(query: FilterQuery<SessionDocument>) {
 	return Session.find(query).lean();
 }

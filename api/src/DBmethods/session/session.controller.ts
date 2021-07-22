@@ -44,23 +44,23 @@ export async function createUserSessionHandler(req: Request, res: Response) {
 }
 
 /**
- * This function
+ * This function invalidates the user's session and thereby logging them out
  *
- * @remarks
- *
- *
- * @param x -
- * @param y -
- * @returns
+ * @param req - The request object.
+ * @param res - The response object.
+ * @returns a response with refresh & access token
  */
 export async function invalidateUserSessionHandler(
 	req: Request,
 	res: Response
 ) {
+	// get the user's session from the request
 	const sessionId = get(req, 'user.session');
 
+	// update the session to be invalid
 	await updateSession({ _id: sessionId }, { valid: false });
 
+	// return a status of 200 because the user has been logged out successfully
 	return res.sendStatus(200);
 }
 
@@ -70,9 +70,9 @@ export async function invalidateUserSessionHandler(
  * @remarks
  *
  *
- * @param x -
- * @param y -
- * @returns
+ * @param req - The request object.
+ * @param res - The response object.
+ * @returns a response with the user's sessions
  */
 export async function getUserSessionsHandler(req: Request, res: Response) {
 	const userId = get(req, 'user._id');

@@ -1,19 +1,23 @@
 import { Express, Request, Response } from 'express';
-import { createUserSessionHandler } from './DBmethods/session/session.controller';
+import {
+	createUserSessionHandler,
+	getUserSessionsHandler,
+	invalidateUserSessionHandler,
+} from './DBmethods/session/session.controller';
 import { createUserSessionSchema } from './DBmethods/session/session.schema';
 import { createUserHandler } from './DBmethods/user/user.controller';
 import { createUserSchema } from './DBmethods/user/user.schema';
-import validateRequest from './middleware/validateRequest';
+import { requiresUser, validateRequest } from './middleware';
 
 /**
- * This function 
+ * This function
  *
  * @remarks
- * 
  *
- * @param x - 
- * @param y - 
- * @returns 
+ *
+ * @param x -
+ * @param y -
+ * @returns
  */
 export default function (app: Express) {
 	app.get('/healthcheck', (req: Request, res: Response) =>
@@ -34,7 +38,9 @@ export default function (app: Express) {
 		createUserSessionHandler
 	);
 
-	// get user's sessions
+	// Get the user's sessions
+	app.get('/api/sessions', requiresUser, getUserSessionsHandler);
 
-	// logout
+	// logout (invalidate a user's session)
+	app.delete("/api/sessions", requiresUser, invalidateUserSessionHandler);
 }
