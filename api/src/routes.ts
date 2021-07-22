@@ -10,14 +10,9 @@ import { createUserSchema } from './DBmethods/user/user.schema';
 import { requiresUser, validateRequest } from './middleware';
 
 /**
- * This function
+ * This function is the entry point for all routes in the API.
  *
- * @remarks
- *
- *
- * @param x -
- * @param y -
- * @returns
+ * @param app - The Express app.
  */
 export default function (app: Express) {
 	app.get('/healthcheck', (req: Request, res: Response) =>
@@ -42,5 +37,5 @@ export default function (app: Express) {
 	app.get('/api/sessions', requiresUser, getUserSessionsHandler);
 
 	// logout (invalidate a user's session)
-	app.delete("/api/sessions", requiresUser, invalidateUserSessionHandler);
+	app.delete('/api/sessions', requiresUser, invalidateUserSessionHandler);
 }

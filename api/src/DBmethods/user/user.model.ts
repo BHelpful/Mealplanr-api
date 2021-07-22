@@ -11,7 +11,6 @@ import {
 	UserOptionsDocument,
 	UserOptionsSubschema,
 } from '../documents';
-import log from '../../logger';
 
 export interface UserDocument extends Document {
 	name: string;
