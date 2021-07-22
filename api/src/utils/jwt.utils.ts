@@ -3,10 +3,30 @@ import config from 'config';
 
 const privateKey = config.get('privateKey') as string;
 
+/**
+ * This function
+ *
+ * @remarks
+ *
+ *
+ * @param x -
+ * @param y -
+ * @returns
+ */
 export function sign(object: Object, options?: jwt.SignOptions | undefined) {
 	return jwt.sign(object, privateKey, options);
 }
 
+/**
+ * This function
+ *
+ * @remarks
+ *
+ *
+ * @param x -
+ * @param y -
+ * @returns
+ */
 export function decode(token: string) {
 	try {
 		const decoded = jwt.verify(token, privateKey);

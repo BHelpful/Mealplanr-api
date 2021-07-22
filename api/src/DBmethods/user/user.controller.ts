@@ -3,12 +3,22 @@ import { omit } from 'lodash';
 import { createUser } from './user.service';
 import log from '../../logger';
 
+/**
+ * This function 
+ *
+ * @remarks
+ * 
+ *
+ * @param x - 
+ * @param y - 
+ * @returns 
+ */
 export async function createUserHandler(req: Request, res: Response) {
 	try {
 		const user = await createUser(req.body);
-		// Removes password from response using omit instead of delete.
+		// Removes password from the user object using omit instead of delete.
 		// This is because we don't want the password to be accesable later only
-		// in its non-hashed state.
+		// in its hashed state.
 		return res.send(omit(user.toJSON(), 'password'));
 	} catch (e) {
 		log.error(e);

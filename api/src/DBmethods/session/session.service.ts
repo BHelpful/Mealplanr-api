@@ -6,10 +6,19 @@ import Session, { SessionDocument } from './session.model';
 import { sign, decode } from '../../utils/jwt.utils';
 import { findUser } from '../user/user.service';
 
-// This function finds a user based on the unique email and uses the method
-// defined in the user model to check if the password is valid to the given user
-// The password will then be omitted from the user as to not allow for outside
-// asses to the user's passwords.
+/**
+ * This function validates a password based on a unuiqe email.
+ *
+ * @remarks
+ * Finds a user based on the unique email and uses the method
+ * defined in the user model to check if the password is valid to the given user
+ * The password will then be omitted from the user as to not allow for outside
+ * access to the user's passwords.
+ *
+ * @param email - The user's email
+ * @param  password - The user's password
+ * @returns a UserDocument or false if the password is invalid
+ */
 export async function validatePassword({
 	email,
 	password,
@@ -32,13 +41,31 @@ export async function validatePassword({
 	return omit(user.toJSON(), 'password');
 }
 
-
+/**
+ * This function will create a new session for a user and return the session
+ *
+ * @remarks
+ * The user agent is used to determine the device type. If PostMan is used
+ * PostMan will be the user agent, if the device is a browser, the browser.
+ * This is used to be able to log, where the reqiests are comming from.
+ *
+ * @param userId - The id of the user
+ * @param userAgent - The user agent of the device
+ * @returns a session document
+ */
 export async function createSession(userId: string, userAgent: string) {
 	const session = await Session.create({ user: userId, userAgent });
 
 	return session.toJSON();
 }
 
+/**
+ * Returns an access token for the given session if valid input.
+ *
+ * @param user - A UserDocument object either lean or not
+ * @param session - A SessionDocument object either lean or not
+ * @returns an accessToken or false if invalid
+ */
 export function createAccessToken({
 	user,
 	session,
@@ -59,6 +86,16 @@ export function createAccessToken({
 	return accessToken;
 }
 
+/**
+ * This function 
+ *
+ * @remarks
+ * 
+ *
+ * @param x - 
+ * @param y - 
+ * @returns 
+ */
 export async function reIssueAccessToken({
 	refreshToken,
 }: {
@@ -84,6 +121,16 @@ export async function reIssueAccessToken({
 	return accessToken;
 }
 
+/**
+ * This function 
+ *
+ * @remarks
+ * 
+ *
+ * @param x - 
+ * @param y - 
+ * @returns 
+ */
 export async function updateSession(
 	query: FilterQuery<SessionDocument>,
 	update: UpdateQuery<SessionDocument>
