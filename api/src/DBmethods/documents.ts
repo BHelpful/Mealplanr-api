@@ -85,6 +85,7 @@ export const IngredientListSubschema = new Schema({
 });
 
 // ! Schemas------------------------------------------------------------------
+// TODO: move these schemas into each of their own DBmethods folder in a *.model.ts file
 export interface RecipeDocument extends Document {
 	public: boolean;
 	categories: [CategoryDocument['_id']];
