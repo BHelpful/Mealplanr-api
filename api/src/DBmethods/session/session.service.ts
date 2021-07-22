@@ -87,14 +87,11 @@ export function createAccessToken({
 }
 
 /**
- * This function 
+ * This function reissue a new access token for the given session based on the
+ * validity of the refresh token.
  *
- * @remarks
- * 
- *
- * @param x - 
- * @param y - 
- * @returns 
+ * @param refreshToken - The refresh token of the user's session
+ * @returns a new access token
  */
 export async function reIssueAccessToken({
 	refreshToken,
@@ -104,6 +101,7 @@ export async function reIssueAccessToken({
 	// Decode the refresh token
 	const { decoded } = decode(refreshToken);
 
+	// If the refresh token is invalid, return false
 	if (!decoded || !get(decoded, '_id')) return false;
 
 	// Get the session
@@ -122,14 +120,14 @@ export async function reIssueAccessToken({
 }
 
 /**
- * This function 
+ * This function
  *
  * @remarks
- * 
  *
- * @param x - 
- * @param y - 
- * @returns 
+ *
+ * @param x -
+ * @param y -
+ * @returns
  */
 export async function updateSession(
 	query: FilterQuery<SessionDocument>,

@@ -1,5 +1,6 @@
 import { object, string } from 'yup';
 
+// creates the validation schema
 export const createUserSessionSchema = object({
   body: object({
     password: string()
