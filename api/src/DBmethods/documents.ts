@@ -1,4 +1,5 @@
 import { Schema, Document } from 'mongoose';
+import { UserDocument } from './user/user.model';
 
 // ! Documents------------------------------------------------------------------
 // This contains the different subschemas (documents) used in the different schemas (collections) of mongoDB. E.g. the collection of a user contains a document for options.
@@ -64,70 +65,86 @@ export const RatingSubschema = new Schema({
 	rating: { type: Number, required: true },
 });
 
+export interface IngredientListDocument extends Document {
+	ingredient: IngredientDocument['_id'];
+	amount: number;
+	unit: string;
+}
+export const IngredientListSubschema = new Schema({
+	ingredient: {
+		type: Schema.Types.ObjectId,
+		ref: 'ingredients',
+		required: true,
+	},
+	amount: { type: Number, required: true },
+	unit: { type: String, required: true },
+});
+
 // ! Schemas------------------------------------------------------------------
-interface RecipeDocument extends Document {
+export interface RecipeDocument extends Document {
 	public: boolean;
-	categories: [Schema.Types.ObjectId];
-	creator: Schema.Types.ObjectId;
+	categories: [CategoryDocument['_id']];
+	creator: UserDocument['_id'];
 	title: string;
 	description: string;
 	estimate: Date;
 	images: [string];
-	ingredients: [Schema.Types.ObjectId];
+	ingredients: [IngredientDocument['_id']];
 	preparation: [string];
 	instructions: [string];
 	rating: [RatingDocument];
 	servings: number;
-	sidedish: [Schema.Types.ObjectId];
+	sidedish: [RecipeDocument['_id']];
 	createdAt: Date;
 	updatedAt: Date;
 }
-const RecipeSchema = new Schema(
+export const RecipeSchema = new Schema(
 	{
-		public: { type: Boolean, required: true },
-		categories: { type: [Schema.Types.ObjectId], required: true },
-		creator: { type: Schema.Types.ObjectId, required: true },
+		public: { type: Boolean, default: false },
+		categories: { type: [Schema.Types.ObjectId], ref: 'categories' },
+		creator: { type: Schema.Types.ObjectId, ref: 'users', required: true },
 		title: { type: String, required: true },
 		description: { type: String, required: true },
 		estimate: { type: Schema.Types.Date, required: true },
-		images: { type: [String], required: true },
-		ingredients: { type: [Schema.Types.ObjectId], required: true },
-		preparation: { type: [String], required: true },
+		images: { type: [String] },
+		ingredients: {
+			type: [IngredientListSubschema],
+			required: true,
+		},
+		preparation: { type: [String] },
 		instructions: { type: [String], required: true },
-		rating: { type: [RatingSubschema], required: true },
+		rating: { type: [RatingSubschema] },
 		servings: { type: Number, required: true },
-		sidedish: { type: [Schema.Types.ObjectId], required: true },
+		sidedish: { type: [Schema.Types.ObjectId], ref: 'recipes' },
 	},
 	{ timestamps: true }
 );
 
-interface IngredientDocument extends Document {
+export interface IngredientDocument extends Document {
 	type: string;
 	season: string;
-	unit: string;
 	diet: [string];
-	alternatives: [Schema.Types.ObjectId];
+	alternatives: [IngredientDocument['_id']];
 }
-const IngredientSchema = new Schema({
+export const IngredientSchema = new Schema({
 	type: { type: String, required: true },
 	season: { type: String, required: true },
-	unit: { type: String, required: true },
 	diet: { type: [String], required: true },
-	alternatives: { type: [Schema.Types.ObjectId], required: true },
+	alternatives: { type: [Schema.Types.ObjectId], ref: 'ingredients' },
 });
 
-interface CategoryDocument extends Document {
+export interface CategoryDocument extends Document {
 	same: string;
 	recipes: [string];
 }
-const CategorySchema = new Schema({
+export const CategorySchema = new Schema({
 	same: { type: String, required: true },
 	recipes: { type: [String], required: true },
 });
 
-interface StoreDocument extends Document {
+export interface StoreDocument extends Document {
 	name: string;
 }
-const StoreSchema = new Schema({
+export const StoreSchema = new Schema({
 	name: { type: String, required: true },
 });

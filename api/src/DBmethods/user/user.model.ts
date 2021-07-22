@@ -2,8 +2,10 @@ import mongoose, { Schema, Document } from 'mongoose';
 import bcrypt from 'bcrypt';
 import config from 'config';
 import {
+	IngredientDocument,
 	PlanDocument,
 	PlanSubschema,
+	RecipeDocument,
 	ShoppingListDocument,
 	ShoppingListSubschema,
 	UserOptionsDocument,
@@ -15,11 +17,11 @@ export interface UserDocument extends Document {
 	name: string;
 	email: string;
 	password: string;
-	colection: [Schema.Types.ObjectId];
+	colection: [RecipeDocument['_id']];
 	options: UserOptionsDocument;
 	plan: PlanDocument;
 	oAuth: string;
-	availableIngredients: [Schema.Types.ObjectId];
+	availableIngredients: [IngredientDocument['_id']];
 	shoppingList: ShoppingListDocument;
 	createdAt: Date;
 	updatedAt: Date;
@@ -29,16 +31,16 @@ const UserSchema = new Schema(
 	{
 		name: { type: String, required: true },
 		email: { type: String, required: true, unique: true },
-		password: { type: String, required: false },
-		colection: { type: [Schema.Types.ObjectId], required: false },
-		options: { type: UserOptionsSubschema, required: false },
-		plan: { type: PlanSubschema, required: false },
-		oAuth: { type: String, required: false },
+		password: { type: String },
+		colection: { type: [Schema.Types.ObjectId], ref: 'recipes' },
+		options: { type: UserOptionsSubschema },
+		plan: { type: PlanSubschema },
+		oAuth: { type: String },
 		availableIngredients: {
 			type: [Schema.Types.ObjectId],
-			required: false,
+			ref: 'ingredients',
 		},
-		shoppingList: { type: ShoppingListSubschema, required: false },
+		shoppingList: { type: ShoppingListSubschema },
 	},
 	{ timestamps: true }
 );
