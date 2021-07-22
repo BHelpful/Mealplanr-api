@@ -19,7 +19,7 @@ export interface UserOptionsDocument extends Document {
 	country: string;
 	notifications: boolean;
 	address: UserOptionsAddressDocument;
-	stores: [Schema.Types.ObjectId];
+	stores: [StoreDocument['_id']];
 	gCalendar: boolean;
 }
 export const UserOptionsSubschema = new Schema({
@@ -27,26 +27,30 @@ export const UserOptionsSubschema = new Schema({
 	country: { type: String, required: true },
 	notifications: { type: Boolean, required: true },
 	address: { type: UserOptionsAddressSubschema, required: false },
-	stores: { type: [Schema.Types.ObjectId], required: true },
+	stores: { type: [Schema.Types.ObjectId], ref: 'stores', required: true },
 	gCalendar: { type: Boolean, required: true },
 });
 
 export interface PlanDocument extends Document {
-	recipes: [Schema.Types.ObjectId];
+	recipes: [RecipeDocument['_id']];
 	datedex: Date;
 }
 export const PlanSubschema = new Schema({
-	recipes: { type: [Schema.Types.ObjectId], required: true },
+	recipes: { type: [Schema.Types.ObjectId], ref: 'recipes', required: true },
 	datedex: { type: Schema.Types.Date, required: true },
 });
 
 export interface ShoppingListItemDocument extends Document {
-	ingredient: [Schema.Types.ObjectId];
-	store: Schema.Types.ObjectId;
+	ingredient: [IngredientDocument['_id']];
+	store: StoreDocument['_id'];
 }
 export const ShoppingListItemSubschema = new Schema({
-	ingredient: { type: [Schema.Types.ObjectId], required: true },
-	store: { type: Schema.Types.ObjectId, required: false },
+	ingredient: {
+		type: [Schema.Types.ObjectId],
+		ref: 'ingredients',
+		required: true,
+	},
+	store: { type: Schema.Types.ObjectId, ref: 'stores', required: false },
 });
 
 export interface ShoppingListDocument extends Document {
@@ -57,11 +61,11 @@ export const ShoppingListSubschema = new Schema({
 });
 
 export interface RatingDocument extends Document {
-	user: Schema.Types.ObjectId;
+	user: UserDocument['_id'];
 	rating: number;
 }
 export const RatingSubschema = new Schema({
-	user: { type: Schema.Types.ObjectId, required: true },
+	user: { type: Schema.Types.ObjectId, ref: 'users', required: true },
 	rating: { type: Number, required: true },
 });
 
