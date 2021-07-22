@@ -1,10 +1,37 @@
 import { LeanDocument, FilterQuery, UpdateQuery } from 'mongoose';
 import config from 'config';
-import { get } from 'lodash';
-import { UserDocument } from '../user/user.model';
+import { get, omit } from 'lodash';
+import User, { UserDocument } from '../user/user.model';
 import Session, { SessionDocument } from './session.model';
 import { sign, decode } from '../../utils/jwt.utils';
 import { findUser } from '../user/user.service';
+
+// This function finds a user based on the unique email and uses the method
+// defined in the user model to check if the password is valid to the given user
+// The password will then be omitted from the user as to not allow for outside
+// asses to the user's passwords.
+export async function validatePassword({
+	email,
+	password,
+}: {
+	email: UserDocument['email'];
+	password: string;
+}) {
+	const user = await User.findOne({ email });
+
+	if (!user) {
+		return false;
+	}
+
+	const isValid = await user.comparePassword(password);
+
+	if (!isValid) {
+		return false;
+	}
+
+	return omit(user.toJSON(), 'password');
+}
+
 
 export async function createSession(userId: string, userAgent: string) {
 	const session = await Session.create({ user: userId, userAgent });

@@ -1,7 +1,7 @@
 import config from 'config';
 import { get } from 'lodash';
 import { Request, Response } from 'express';
-import { validatePassword } from '../user/user.service';
+import { validatePassword } from '../session/session.service';
 import {
 	createSession,
 	createAccessToken,
