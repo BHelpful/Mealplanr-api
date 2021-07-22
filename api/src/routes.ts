@@ -33,7 +33,7 @@ export default function (app: Express) {
 		createUserSessionHandler
 	);
 
-	// Get the user's sessions
+	// Get the user's valid sessions i.e. the sessions where the user is logged in.
 	app.get('/api/sessions', requiresUser, getUserSessionsHandler);
 
 	// logout (invalidate a user's session)
