@@ -65,10 +65,7 @@ export async function invalidateUserSessionHandler(
 }
 
 /**
- * This function
- *
- * @remarks
- *
+ * This function is used to get all the sessions for a user
  *
  * @param req - The request object.
  * @param res - The response object.
