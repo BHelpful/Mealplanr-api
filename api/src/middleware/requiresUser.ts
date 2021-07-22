@@ -1,6 +1,5 @@
 import { get } from 'lodash';
 import { Request, Response, NextFunction } from 'express';
-import log from '../logger';
 
 /**
  * This function is middleware used to check if there is a user
@@ -19,10 +18,8 @@ const requiresUser = async (
 	next: NextFunction
 ) => {
 	const user = get(req, 'user');
-	log.info("just checked for user");
 
 	if (!user) {
-		log.info("user is not logged in");
 		return res.sendStatus(403);
 	}
 

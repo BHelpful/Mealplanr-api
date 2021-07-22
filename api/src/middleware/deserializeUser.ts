@@ -2,7 +2,6 @@ import { get } from 'lodash';
 import { Request, Response, NextFunction } from 'express';
 import { decode } from '../utils/jwt.utils';
 import { reIssueAccessToken } from '../DBmethods/session/session.service';
-import log from '../logger';
 
 /**
  * This function handles the access and refresh token logic
@@ -16,31 +15,26 @@ const deserializeUser = async (
 	res: Response,
 	next: NextFunction
 ) => {
-	// Get the token from the authorization header (that's where access tokens always are)
+	// get the token from the authorization header (that's where access tokens always are)
 	const accessToken = get(req, 'headers.authorization', '').replace(
 		/^Bearer\s/,
 		''
 	);
 
-	
 	// Get refresh token from our header (that's where our refresh token is)
 	const refreshToken = get(req, 'headers.x-refresh');
-	
+
 	// If there's no access token, return next function
 	if (!accessToken) return next();
-	log.info('is anything even working?');
-	
+
 	// If there is an access token, then we need to decode it to see if it's valid
 	// (meaning if it has been used within the last 15 minutes)
 	const { decoded, expired } = decode(accessToken);
-
-	log.info('just decoded');
 
 	// If the token is valid, then we can continue and add the decoded token to the request
 	if (decoded) {
 		// @ts-ignore
 		req.user = decoded;
-		log.info('just got user');
 
 		return next();
 	}
