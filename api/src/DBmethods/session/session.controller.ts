@@ -11,14 +11,11 @@ import {
 import { sign } from '../../utils/jwt.utils';
 
 /**
- * This function 
+ * This function is used to create a new session
  *
- * @remarks
- * 
- *
- * @param x - 
- * @param y - 
- * @returns 
+ * @param req - The request object.
+ * @param res - The response object.
+ * @returns a response with refresh & access token
  */
 export async function createUserSessionHandler(req: Request, res: Response) {
 	// validate the email and password
@@ -47,14 +44,14 @@ export async function createUserSessionHandler(req: Request, res: Response) {
 }
 
 /**
- * This function 
+ * This function
  *
  * @remarks
- * 
  *
- * @param x - 
- * @param y - 
- * @returns 
+ *
+ * @param x -
+ * @param y -
+ * @returns
  */
 export async function invalidateUserSessionHandler(
 	req: Request,
@@ -68,14 +65,14 @@ export async function invalidateUserSessionHandler(
 }
 
 /**
- * This function 
+ * This function
  *
  * @remarks
- * 
  *
- * @param x - 
- * @param y - 
- * @returns 
+ *
+ * @param x -
+ * @param y -
+ * @returns
  */
 export async function getUserSessionsHandler(req: Request, res: Response) {
 	const userId = get(req, 'user._id');
