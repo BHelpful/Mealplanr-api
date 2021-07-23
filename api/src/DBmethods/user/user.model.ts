@@ -2,15 +2,15 @@ import mongoose, { Schema, Document } from 'mongoose';
 import bcrypt from 'bcrypt';
 import config from 'config';
 import {
-	IngredientDocument,
 	PlanDocument,
 	PlanSubschema,
-	RecipeDocument,
 	ShoppingListDocument,
 	ShoppingListSubschema,
 	UserOptionsDocument,
 	UserOptionsSubschema,
 } from '../documents';
+import { RecipeDocument } from '../recipe/recipe.model';
+import { IngredientDocument } from '../ingredient/ingredient.model';
 
 export interface UserDocument extends Document {
 	name: string;

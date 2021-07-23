@@ -1,4 +1,7 @@
 import { Schema, Document } from 'mongoose';
+import { IngredientDocument } from './ingredient/ingredient.model';
+import { RecipeDocument } from './recipe/recipe.model';
+import { StoreDocument } from './store/store.model';
 import { UserDocument } from './user/user.model';
 
 // ! Documents------------------------------------------------------------------
@@ -82,74 +85,4 @@ export const IngredientListSubschema = new Schema({
 	},
 	amount: { type: Number, required: true },
 	unit: { type: String, required: true },
-});
-
-// ! Schemas------------------------------------------------------------------
-// TODO: move these schemas into each of their own DBmethods folder in a *.model.ts file
-export interface RecipeDocument extends Document {
-	public: boolean;
-	categories: [CategoryDocument['_id']];
-	creator: UserDocument['_id'];
-	title: string;
-	description: string;
-	estimate: Date;
-	images: [string];
-	ingredients: [IngredientDocument['_id']];
-	preparation: [string];
-	instructions: [string];
-	rating: [RatingDocument];
-	servings: number;
-	sidedish: [RecipeDocument['_id']];
-	createdAt: Date;
-	updatedAt: Date;
-}
-export const RecipeSchema = new Schema(
-	{
-		public: { type: Boolean, default: false },
-		categories: { type: [Schema.Types.ObjectId], ref: 'categories' },
-		creator: { type: Schema.Types.ObjectId, ref: 'users', required: true },
-		title: { type: String, required: true },
-		description: { type: String, required: true },
-		estimate: { type: Schema.Types.Date, required: true },
-		images: { type: [String] },
-		ingredients: {
-			type: [IngredientListSubschema],
-			required: true,
-		},
-		preparation: { type: [String] },
-		instructions: { type: [String], required: true },
-		rating: { type: [RatingSubschema] },
-		servings: { type: Number, required: true },
-		sidedish: { type: [Schema.Types.ObjectId], ref: 'recipes' },
-	},
-	{ timestamps: true }
-);
-
-export interface IngredientDocument extends Document {
-	type: string;
-	season: string;
-	diet: [string];
-	alternatives: [IngredientDocument['_id']];
-}
-export const IngredientSchema = new Schema({
-	type: { type: String, required: true },
-	season: { type: String, required: true },
-	diet: { type: [String], required: true },
-	alternatives: { type: [Schema.Types.ObjectId], ref: 'ingredients' },
-});
-
-export interface CategoryDocument extends Document {
-	same: string;
-	recipes: [string];
-}
-export const CategorySchema = new Schema({
-	same: { type: String, required: true },
-	recipes: { type: [String], required: true },
-});
-
-export interface StoreDocument extends Document {
-	name: string;
-}
-export const StoreSchema = new Schema({
-	name: { type: String, required: true },
 });
