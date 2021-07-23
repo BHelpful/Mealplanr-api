@@ -19,6 +19,32 @@ export default function (app: Express) {
 		res.sendStatus(200)
 	);
 
+	// TODO find out how swagger works
+	/**
+	 * @swagger
+	 * components:
+	 *   schemas:
+	 *     Book:
+	 *       type: object
+	 *       required:
+	 *         - title
+	 *         - author
+	 *       properties:
+	 *         id:
+	 *           type: string
+	 *           description: The auto-generated id of the book
+	 *         title:
+	 *           type: string
+	 *           description: The book title
+	 *         author:
+	 *           type: string
+	 *           description: The book author
+	 *       example:
+	 *         id: d5fE_asz
+	 *         title: The New Turing Omnibus
+	 *         author: Alexander K. Dewdney
+	 */
+
 	// register user (validating the body of the request before calling the method to create a new user).
 	app.post(
 		'/api/users',
