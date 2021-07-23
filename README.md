@@ -11,7 +11,7 @@ Below here is a diagram that shows the different types of parts of the API and h
 <p align="center">
   <img width="1200" src="https://i.imgur.com/lwI0lsj.png">
 </p>
-Now if you look in the files, you will find, that for each DBmethods subfolder there are a *.model.ts and a *.schema.ts, which is not depicted in the diagram above. This is because it is not a part of the central logic, but they will be explained in the next section.
+Now if you look in the files, you will find, that for each collections subfolder there are a *.model.ts and a *.schema.ts, which is not depicted in the diagram above. This is because it is not a part of the central logic, but they will be explained in the next section.
 
 ### HTTP endpoint (routes.ts)
 This is where the endpoint descriptions for the API is located. It is here the different routes for the API is assigned to a function.

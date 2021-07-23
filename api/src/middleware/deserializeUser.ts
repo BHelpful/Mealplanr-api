@@ -1,7 +1,7 @@
 import { get } from 'lodash';
 import { Request, Response, NextFunction } from 'express';
 import { decode } from '../utils/jwt.utils';
-import { reIssueAccessToken } from '../DBmethods/session/session.service';
+import { reIssueAccessToken } from '../collections/session/session.service';
 
 /**
  * This function handles the access and refresh token logic

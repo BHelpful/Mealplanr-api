@@ -3,10 +3,10 @@ import {
 	createUserSessionHandler,
 	getUserSessionsHandler,
 	invalidateUserSessionHandler,
-} from './DBmethods/session/session.controller';
-import { createUserSessionSchema } from './DBmethods/session/session.schema';
-import { createUserHandler } from './DBmethods/user/user.controller';
-import { createUserSchema } from './DBmethods/user/user.schema';
+} from './collections/session/session.controller';
+import { createUserSessionSchema } from './collections/session/session.schema';
+import { createUserHandler } from './collections/user/user.controller';
+import { createUserSchema } from './collections/user/user.schema';
 import { requiresUser, validateRequest } from './middleware';
 
 /**
