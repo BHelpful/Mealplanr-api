@@ -19,7 +19,7 @@ export default function (app: Express) {
 		res.sendStatus(200)
 	);
 
-	// TODO find out how swagger works
+	// TODO find out how swagger works and how to implement it
 	/**
 	 * @swagger
 	 * components:
