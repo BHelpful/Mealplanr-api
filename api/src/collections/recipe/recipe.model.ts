@@ -1,4 +1,5 @@
 import mongoose, { Schema, Document } from 'mongoose';
+const m2s = require('mongoose-to-swagger');
 import { CategoryDocument } from '../category/category.model';
 import {
 	IngredientListSubschema,
@@ -29,7 +30,12 @@ export const RecipeSchema = new Schema(
 	{
 		public: { type: Boolean, default: false },
 		categories: { type: [Schema.Types.ObjectId], ref: 'categories' },
-		creator: { type: Schema.Types.ObjectId, ref: 'users', required: true },
+		creator: {
+			type: Schema.Types.ObjectId,
+			ref: 'users',
+			required: true,
+			description: 'ObjectId refering to users collection',
+		},
 		title: { type: String, required: true },
 		description: { type: String, required: true },
 		estimate: { type: Schema.Types.Date, required: true },
@@ -47,6 +53,8 @@ export const RecipeSchema = new Schema(
 	{ timestamps: true }
 );
 
-const Recipe = mongoose.model<RecipeDocument>('recipes', RecipeSchema);
+const recipeModel = mongoose.model<RecipeDocument>('recipes', RecipeSchema);
 
-export default Recipe;
+export const recipeSM = m2s(recipeModel);
+
+export default recipeModel;

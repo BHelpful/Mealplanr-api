@@ -1,8 +1,8 @@
 import { LeanDocument, FilterQuery, UpdateQuery } from 'mongoose';
 import config from 'config';
 import { get, omit } from 'lodash';
-import User, { UserDocument } from '../user/user.model';
-import Session, { SessionDocument } from './session.model';
+import userModel, { UserDocument } from '../user/user.model';
+import sessionModel, { SessionDocument } from './session.model';
 import { sign, decode } from '../../utils/jwt.utils';
 import { findUser } from '../user/user.service';
 
@@ -26,7 +26,7 @@ export async function validatePassword({
 	email: UserDocument['email'];
 	password: string;
 }) {
-	const user = await User.findOne({ email });
+	const user = await userModel.findOne({ email });
 
 	if (!user) {
 		return false;
@@ -54,7 +54,7 @@ export async function validatePassword({
  * @returns a session document
  */
 export async function createSession(userId: string, userAgent: string) {
-	const session = await Session.create({ user: userId, userAgent });
+	const session = await sessionModel.create({ user: userId, userAgent });
 
 	return session.toJSON();
 }
@@ -105,7 +105,7 @@ export async function reIssueAccessToken({
 	if (!decoded || !get(decoded, '_id')) return false;
 
 	// Get the session
-	const session = await Session.findById(get(decoded, '_id'));
+	const session = await sessionModel.findById(get(decoded, '_id'));
 
 	// Make sure the session is still valid
 	if (!session || !session?.valid) return false;
@@ -131,7 +131,7 @@ export async function updateSession(
 	query: FilterQuery<SessionDocument>,
 	update: UpdateQuery<SessionDocument>
 ) {
-	return Session.updateOne(query, update);
+	return sessionModel.updateOne(query, update);
 }
 
 /**
@@ -141,5 +141,5 @@ export async function updateSession(
  * @returns the sessions matching the querry
  */
 export async function findSessions(query: FilterQuery<SessionDocument>) {
-	return Session.find(query).lean();
+	return sessionModel.find(query).lean();
 }

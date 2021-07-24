@@ -1,4 +1,5 @@
 import mongoose, { Schema, Document } from 'mongoose';
+const m2s = require('mongoose-to-swagger');
 
 export interface IngredientDocument extends Document {
 	type: string;
@@ -13,9 +14,11 @@ export const IngredientSchema = new Schema({
 	alternatives: { type: [Schema.Types.ObjectId], ref: 'ingredients' },
 });
 
-const Ingredient = mongoose.model<IngredientDocument>(
+const ingredientModel = mongoose.model<IngredientDocument>(
 	'ingredients',
 	IngredientSchema
 );
 
-export default Ingredient;
+export const ingredientSM = m2s(ingredientModel);
+
+export default ingredientModel;

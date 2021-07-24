@@ -1,5 +1,5 @@
 import { DocumentDefinition, FilterQuery } from 'mongoose';
-import User, { UserDocument } from './user.model';
+import userModel, { UserDocument } from './user.model';
 
 /**
  * This function is used to create a new user.
@@ -16,7 +16,7 @@ import User, { UserDocument } from './user.model';
  */
 export async function createUser(input: DocumentDefinition<UserDocument>) {
 	try {
-		return await User.create(input);
+		return await userModel.create(input);
 	} catch (error) {
 		throw new Error(error);
 	}
@@ -29,5 +29,5 @@ export async function createUser(input: DocumentDefinition<UserDocument>) {
  * @returns a promise that resolves to the user that was found
  */
 export async function findUser(query: FilterQuery<UserDocument>) {
-	return User.findOne(query).lean();
+	return userModel.findOne(query).lean();
 }

@@ -10,35 +10,7 @@ import { deserializeUser } from './middleware';
 const port = config.get('port') as number;
 const host = config.get('host') as string;
 
-// swagger configuration
-const swaggerUI = require('swagger-ui-express');
-const swaggerJsDoc = require('swagger-jsdoc');
-
-const options = {
-	definition: {
-		openapi: '3.0.0',
-		info: {
-			title: 'Mealplanr API',
-			version: '1.0.0',
-			description: 'An Express API for Mealplanr',
-		},
-		servers: [
-			{
-				url: 'http://localhost:1337',
-			},
-			{
-				url: 'http://urlOnServer:1337',
-			},
-		],
-	},
-	apis: ['./routes.ts'],
-};
-const specs = swaggerJsDoc(options);
-
 const app = express();
-
-// set up the Swagger UI
-app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(specs));
 
 // this will attach the user to every single request
 // that comes into the application

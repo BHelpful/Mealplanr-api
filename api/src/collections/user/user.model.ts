@@ -1,4 +1,5 @@
 import mongoose, { Schema, Document } from 'mongoose';
+const m2s = require('mongoose-to-swagger');
 import bcrypt from 'bcrypt';
 import config from 'config';
 import {
@@ -81,6 +82,8 @@ UserSchema.methods.comparePassword = async function (
 	return bcrypt.compare(candidatePassword, user.password).catch((e) => false);
 };
 
-const User = mongoose.model<UserDocument>('users', UserSchema);
+const userModel = mongoose.model<UserDocument>('users', UserSchema);
 
-export default User;
+export const userSM = m2s(userModel);
+
+export default userModel;

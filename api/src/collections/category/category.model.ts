@@ -1,4 +1,5 @@
 import mongoose, { Schema, Document } from 'mongoose';
+const m2s = require('mongoose-to-swagger');
 
 export interface CategoryDocument extends Document {
 	same: string;
@@ -9,9 +10,8 @@ export const CategorySchema = new Schema({
 	recipes: { type: [String], required: true },
 });
 
-const CategoryModel = mongoose.model<CategoryDocument>(
-	'category',
-	CategorySchema
-);
+const categoryModel = mongoose.model<CategoryDocument>('category', CategorySchema);
 
-export default CategoryModel;
+export const categorySM = m2s(categoryModel);
+
+export default categoryModel;
