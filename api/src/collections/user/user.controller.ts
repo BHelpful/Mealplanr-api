@@ -16,7 +16,7 @@ export async function createUserHandler(req: Request, res: Response) {
 		// Removes password from the user object using omit instead of delete.
 		// This is because we don't want the password to be accesable later only
 		// in its hashed state.
-		return res.send(omit(user.toJSON(), 'password'));
+		return res.status(200).send(omit(user.toJSON(), 'password'));
 	} catch (e) {
 		log.error(e);
 		// Sets status code to 409, which is a conflict error.

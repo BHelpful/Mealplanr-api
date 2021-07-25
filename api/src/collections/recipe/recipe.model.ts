@@ -15,8 +15,8 @@ export interface RecipeDocument extends Document {
 	creator: UserDocument['_id'];
 	title: string;
 	description: string;
-	estimate: Date;
-	images: [string];
+	estimate: number;
+	images: [Buffer];
 	ingredients: [IngredientDocument['_id']];
 	preparation: [string];
 	instructions: [string];
@@ -28,27 +28,68 @@ export interface RecipeDocument extends Document {
 }
 export const RecipeSchema = new Schema(
 	{
-		public: { type: Boolean, default: false },
-		categories: { type: [Schema.Types.ObjectId], ref: 'categories' },
+		public: {
+			type: Boolean,
+			default: false,
+			description: 'Whether the recipe should be publicly available',
+		},
+		categories: {
+			type: [Schema.Types.ObjectId],
+			ref: 'categories',
+			description: 'ObjectId refering to categories collection',
+		},
 		creator: {
 			type: Schema.Types.ObjectId,
 			ref: 'users',
 			required: true,
 			description: 'ObjectId refering to users collection',
 		},
-		title: { type: String, required: true },
-		description: { type: String, required: true },
-		estimate: { type: Schema.Types.Date, required: true },
-		images: { type: [String] },
+		title: {
+			type: String,
+			required: true,
+			description: 'Title of the recipe',
+		},
+		description: {
+			type: String,
+			required: true,
+			description: 'Description of the recipe',
+		},
+		estimate: {
+			type: [Number],
+			required: true,
+			description:
+				'Estimated time of the recipe (arr[0] is time, arr[1] is 1 or 2 mapped to m, h)',
+		},
+		images: {
+			type: [Schema.Types.Buffer],
+			description: 'Large storage type to store images of the recipe',
+		},
 		ingredients: {
 			type: [IngredientListSubschema],
 			required: true,
+			description: 'List of ingredients',
 		},
-		preparation: { type: [String] },
-		instructions: { type: [String], required: true },
-		rating: { type: [RatingSubschema] },
-		servings: { type: Number, required: true },
-		sidedish: { type: [Schema.Types.ObjectId], ref: 'recipes' },
+		preparation: { type: [String], description: 'Preparation steps' },
+		instructions: {
+			type: [String],
+			required: true,
+			description: 'Instructions for the recipe',
+		},
+		rating: {
+			type: [RatingSubschema],
+			description: 'Ratings of the recipe',
+		},
+		servings: {
+			type: Number,
+			required: true,
+			description: 'Number of servings',
+		},
+		sidedish: {
+			type: [Schema.Types.ObjectId],
+			ref: 'recipes',
+			description:
+				'List of recipes that can be used as sidedish (ObjectId refering to recipes)',
+		},
 	},
 	{ timestamps: true }
 );

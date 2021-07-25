@@ -12,9 +12,21 @@ export interface UserOptionsAddressDocument extends Document {
 	postalcode: string;
 }
 export const UserOptionsAddressSubschema = new Schema({
-	streetname: { type: String, required: true },
-	housenumber: { type: Number, required: true },
-	postalcode: { type: String, required: true },
+	streetname: {
+		type: String,
+		required: true,
+		description: 'The street name where the user lives',
+	},
+	housenumber: {
+		type: Number,
+		required: true,
+		description: 'The house number',
+	},
+	postalcode: {
+		type: String,
+		required: true,
+		description: 'Postal code of the address',
+	},
 });
 
 export interface UserOptionsDocument extends Document {
@@ -26,12 +38,37 @@ export interface UserOptionsDocument extends Document {
 	gCalendar: boolean;
 }
 export const UserOptionsSubschema = new Schema({
-	diet: { type: String, required: true },
-	country: { type: String, required: true },
-	notifications: { type: Boolean, required: true },
-	address: { type: UserOptionsAddressSubschema, required: false },
-	stores: { type: [Schema.Types.ObjectId], ref: 'stores', required: true },
-	gCalendar: { type: Boolean, required: true },
+	diet: {
+		type: String,
+		required: true,
+		description: 'The diet of the user.',
+	},
+	country: {
+		type: String,
+		required: true,
+		description: 'Country of the user',
+	},
+	notifications: {
+		type: Boolean,
+		required: true,
+		description: 'Whether or not the user wants to recieve notifications',
+	},
+	address: {
+		type: UserOptionsAddressSubschema,
+		required: false,
+		description: 'Address of the user',
+	},
+	stores: {
+		type: [Schema.Types.ObjectId],
+		ref: 'stores',
+		required: true,
+		description: 'List of stores the user is wants to shop in.',
+	},
+	gCalendar: {
+		type: Boolean,
+		required: true,
+		description: 'Is the user subscribed to Google Calendar',
+	},
 });
 
 export interface PlanDocument extends Document {
@@ -39,37 +76,18 @@ export interface PlanDocument extends Document {
 	datedex: Date;
 }
 export const PlanSubschema = new Schema({
-	recipes: { type: [Schema.Types.ObjectId], ref: 'recipes', required: true },
-	datedex: { type: Schema.Types.Date, required: true },
-});
-
-export interface ShoppingListItemDocument extends Document {
-	ingredient: [IngredientDocument['_id']];
-	store: StoreDocument['_id'];
-}
-export const ShoppingListItemSubschema = new Schema({
-	ingredient: {
+	recipes: {
 		type: [Schema.Types.ObjectId],
-		ref: 'ingredients',
+		ref: 'recipes',
 		required: true,
+		description: 'The recipes that are part of this plan.',
 	},
-	store: { type: Schema.Types.ObjectId, ref: 'stores', required: false },
-});
-
-export interface ShoppingListDocument extends Document {
-	ingredients: [ShoppingListItemDocument];
-}
-export const ShoppingListSubschema = new Schema({
-	ingredients: { type: [ShoppingListItemSubschema], required: true },
-});
-
-export interface RatingDocument extends Document {
-	user: UserDocument['_id'];
-	rating: number;
-}
-export const RatingSubschema = new Schema({
-	user: { type: Schema.Types.ObjectId, ref: 'users', required: true },
-	rating: { type: Number, required: true },
+	datedex: {
+		type: Schema.Types.Date,
+		required: true,
+		description:
+			'The start date of the plan (this defines what the 7 days of the plan is going to be)',
+	},
 });
 
 export interface IngredientListDocument extends Document {
@@ -82,7 +100,61 @@ export const IngredientListSubschema = new Schema({
 		type: Schema.Types.ObjectId,
 		ref: 'ingredients',
 		required: true,
+		description: 'ObjectId refering to ingredients',
 	},
-	amount: { type: Number, required: true },
-	unit: { type: String, required: true },
+	amount: {
+		type: Number,
+		required: true,
+		description: 'The amount of the ingredient.',
+	},
+	unit: {
+		type: String,
+		required: true,
+		description: 'The unit of the amount of the ingredient.',
+	},
+});
+
+export interface ShoppingListItemDocument extends Document {
+	ingredient: [IngredientListDocument];
+	store: StoreDocument['_id'];
+}
+export const ShoppingListItemSubschema = new Schema({
+	ingredient: {
+		type: [IngredientListSubschema],
+		ref: 'ingredients',
+		required: true,
+		description: 'The ingredient that is added to the shopping list.',
+	},
+	store: {
+		type: Schema.Types.ObjectId,
+		ref: 'stores',
+		required: false,
+		description: 'The store relevant to the ingredient',
+	},
+});
+
+export interface ShoppingListDocument extends Document {
+	ingredients: [ShoppingListItemDocument];
+}
+export const ShoppingListSubschema = new Schema({
+	ingredients: {
+		type: [ShoppingListItemSubschema],
+		required: true,
+		description: 'List of ingredients',
+	},
+});
+
+export interface RatingDocument extends Document {
+	user: UserDocument['_id'];
+	rating: number;
+}
+export const RatingSubschema = new Schema({
+	user: {
+		type: Schema.Types.ObjectId,
+		ref: 'users',
+		required: true,
+		description:
+			'The user who rated the recipe. (ObjectId refering to users)',
+	},
+	rating: { type: Number, required: true, description: 'Rating from 1 to 5' },
 });

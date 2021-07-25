@@ -5,7 +5,7 @@ export interface StoreDocument extends Document {
 	name: string;
 }
 export const StoreSchema = new Schema({
-	name: { type: String, required: true },
+	name: { type: String, required: true, description: 'Store name' },
 });
 
 const storeModel = mongoose.model<StoreDocument>('store', StoreSchema);

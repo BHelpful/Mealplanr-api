@@ -29,18 +29,33 @@ export interface UserDocument extends Document {
 }
 const UserSchema = new Schema(
 	{
-		name: { type: String, required: true },
-		email: { type: String, required: true, unique: true },
-		password: { type: String },
-		colection: { type: [Schema.Types.ObjectId], ref: 'recipes' },
-		options: { type: UserOptionsSubschema },
-		plan: { type: PlanSubschema },
-		oAuth: { type: String },
+		name: { type: String, required: true, description: 'Name of the user' },
+		email: {
+			type: String,
+			required: true,
+			unique: true,
+			description: 'Email of the user',
+		},
+		password: { type: String, description: 'Password of the user' },
+		colection: {
+			type: [Schema.Types.ObjectId],
+			ref: 'recipes',
+			description:
+				'List of recipes now owned by the user (ObjectId refering to recipes)',
+		},
+		options: { type: UserOptionsSubschema, description: 'User options' },
+		plan: { type: PlanSubschema, description: 'The mealplan of the user' },
+		oAuth: { type: String, description: 'OAuth of the user' },
 		availableIngredients: {
 			type: [Schema.Types.ObjectId],
 			ref: 'ingredients',
+			description:
+				'List of ingredients already available to the user at home',
 		},
-		shoppingList: { type: ShoppingListSubschema },
+		shoppingList: {
+			type: ShoppingListSubschema,
+			description: 'Shopping list of the user',
+		},
 	},
 	{ timestamps: true }
 );
