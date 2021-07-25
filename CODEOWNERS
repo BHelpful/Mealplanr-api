@@ -6,7 +6,7 @@
 documents.ts @BHelpful/noSQL
 
 # Owns the file for routing as well as containing the swagger api documentation
-routes.ts @BHelpful/Swagger-api-documentation
+/api/scr/routes @BHelpful/Swagger-api-documentation
 
 # Owns all in the api folder
 /api/scr/ @BHelpful/RESTful-API

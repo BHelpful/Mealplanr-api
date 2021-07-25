@@ -13,7 +13,7 @@ Below here is a diagram that shows the different types of parts of the API and h
 </p>
 Now if you look in the files, you will find, that for each collections subfolder there are a *.model.ts and a *.schema.ts, which is not depicted in the diagram above. This is because it is not a part of the central logic, but they will be explained in the next section.
 
-### HTTP endpoint (routes.ts)
+### HTTP endpoint (/routes)
 This is where the endpoint descriptions for the API is located. It is here the different routes for the API is assigned to a function.
 
 From here the each route will have access to use middleware and a controller. It is also here in the routes that the schema is used. The schemas are used to pass into the middleware called validateRequest, which will check if the request is valid basedn on the schema.

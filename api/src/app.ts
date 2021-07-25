@@ -2,9 +2,22 @@ import express from 'express';
 import config from 'config';
 import log from './logger';
 import connect from './connect';
-import routes from './routes';
 import mongoose from 'mongoose';
 import { deserializeUser } from './middleware';
+import usersRouter, { usersPost } from './routes/users';
+import sessionsRouter, {
+	sessionsPost,
+	sessionsGet,
+	sessionsDelete,
+} from './routes/sessions';
+import * as swaggerDocument from './swagger.json';
+import { categorySM } from './collections/category/category.model';
+import { ingredientSM } from './collections/ingredient/ingredient.model';
+import { recipeSM } from './collections/recipe/recipe.model';
+import { sessionSM } from './collections/session/session.model';
+import { storeSM } from './collections/store/store.model';
+import { userSM } from './collections/user/user.model';
+const swaggerUI = require('swagger-ui-express');
 
 // gets items from default config file
 const port = config.get('port') as number;
@@ -20,6 +33,32 @@ app.use(deserializeUser);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// defining the parsed swagger file in order to be able to add to it
+var parsedSwaggerDoc = JSON.parse(JSON.stringify(swaggerDocument));
+
+// Adding mongoose models to swagger docs
+parsedSwaggerDoc.definitions.Ingredient = ingredientSM;
+parsedSwaggerDoc.definitions.Category = categorySM;
+parsedSwaggerDoc.definitions.Session = sessionSM;
+parsedSwaggerDoc.definitions.Store = storeSM;
+parsedSwaggerDoc.definitions.Recipe = recipeSM;
+parsedSwaggerDoc.definitions.User = userSM;
+
+// This is where the basic routes are defined
+// (for each route the different methods will be added to the swagger file)
+app.use('/users', usersRouter);
+parsedSwaggerDoc.paths['/users'] = usersPost;
+
+app.use('/sessions', sessionsRouter);
+parsedSwaggerDoc.paths['/sessions'] = {
+	...sessionsPost,
+	...sessionsGet,
+	...sessionsDelete,
+};
+
+// set up the Swagger UI
+app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(parsedSwaggerDoc));
+
 // this is used to get info on the connection to the DB.
 const db = mongoose.connection;
 
@@ -32,7 +71,4 @@ app.listen(port, host, () => {
 		// exit the process with a failure
 		process.exit(1);
 	});
-
-	// pass express app to routes
-	routes(app);
 });
