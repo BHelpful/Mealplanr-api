@@ -77,12 +77,12 @@ export default function (app: Express) {
 		},
 	};
 	// Create a new user
-	parsedSwaggerDoc.paths['/api/users'] = usersPost;
 	app.post(
 		'/api/users',
 		validateRequest(createUserSchema),
 		createUserHandler
 	);
+	parsedSwaggerDoc.paths['/api/users'] = usersPost;
 
 	const sessionsPost = {
 		post: {
@@ -124,18 +124,95 @@ export default function (app: Express) {
 		},
 	};
 	// login
-	parsedSwaggerDoc.paths['/api/sessions'] = sessionsPost;
 	app.post(
 		'/api/sessions',
 		validateRequest(createUserSessionSchema),
 		createUserSessionHandler
 	);
 
+	const sessionsGet = {
+		get: {
+			summary: 'Get all active sessions',
+			description: 'Gets all the sessions that is still valid',
+			tags: ['sessions'],
+			produces: ['application/json'],
+			parameters: [
+				{
+					in: 'header',
+					name: 'x-refresh',
+					description: 'refreshToken',
+					required: true,
+					schema: {
+						type: 'string',
+						format: 'uuid',
+					},
+				},
+				{
+					in: 'header',
+					name: 'authorization',
+					description: 'accessToken',
+					required: true,
+					schema: {
+						type: 'string',
+						format: 'uuid',
+					},
+				},
+			],
+			responses: {
+				'200': {
+					description: 'OK',
+					schema: { type: 'array', items: sessionSM },
+				},
+			},
+		},
+	};
 	// Get the user's valid sessions i.e. the sessions where the user is logged in.
 	app.get('/api/sessions', requiresUser, getUserSessionsHandler);
 
+	const sessionsDelete = {
+		delete: {
+			summary: 'Logout',
+			description:
+				"Invalidate a user's session, which will in turn log the user out",
+			tags: ['sessions'],
+			produces: ['application/json'],
+			parameters: [
+				{
+					in: 'header',
+					name: 'x-refresh',
+					description: 'refreshToken',
+					required: true,
+					schema: {
+						type: 'string',
+						format: 'uuid',
+					},
+				},
+				{
+					in: 'header',
+					name: 'authorization',
+					description: 'accessToken',
+					required: true,
+					schema: {
+						type: 'string',
+						format: 'uuid',
+					},
+				},
+			],
+			responses: {
+				'200': {
+					description: 'OK',
+				},
+			},
+		},
+	};
 	// logout (invalidate a user's session)
 	app.delete('/api/sessions', requiresUser, invalidateUserSessionHandler);
+
+	parsedSwaggerDoc.paths['/api/sessions'] = {
+		...sessionsPost,
+		...sessionsGet,
+		...sessionsDelete,
+	};
 
 	// set up the Swagger UI
 	app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(parsedSwaggerDoc));
