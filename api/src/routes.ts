@@ -4,7 +4,10 @@ import {
 	getUserSessionsHandler,
 	invalidateUserSessionHandler,
 } from './collections/session/session.controller';
-import { createUserSessionSchema } from './collections/session/session.schema';
+import {
+	createUserSessionSchema,
+	sessionPostStructure,
+} from './collections/session/session.schema';
 import { createUserHandler } from './collections/user/user.controller';
 import { categorySM } from './collections/category/category.model';
 import { ingredientSM } from './collections/ingredient/ingredient.model';
@@ -48,7 +51,7 @@ export default function (app: Express) {
 			summary: 'Register user',
 			description:
 				'Register user (validating the body of the request before calling the method to create a new user)',
-			tags: ['user'],
+			tags: ['users'],
 			produces: ['application/json'],
 			parameters: [
 				{
@@ -65,7 +68,6 @@ export default function (app: Express) {
 			responses: {
 				'200': {
 					description: 'OK',
-					// TODO create schema yourself containing only the information that is send back. (but keep the omit version to user elsewhere)
 					schema: omit(userSM, 'password'),
 				},
 				'409': {
@@ -82,7 +84,47 @@ export default function (app: Express) {
 		createUserHandler
 	);
 
+	const sessionsPost = {
+		post: {
+			summary: 'Log in',
+			description:
+				'Create a new session for the user (thereby logging in)',
+			tags: ['sessions'],
+			produces: ['application/json'],
+			parameters: [
+				{
+					name: 'body',
+					in: 'body',
+					description: 'Create session body object',
+					required: true,
+					schema: {
+						type: 'object',
+						properties: sessionPostStructure,
+					},
+				},
+			],
+			responses: {
+				'200': {
+					description: 'OK',
+					schema: {
+						type: 'object',
+						properties: {
+							accessToken: {
+								type: 'string',
+								example: 'JWT accessToken',
+							},
+							refreshToken: {
+								type: 'string',
+								example: 'JWT accessToken',
+							},
+						},
+					},
+				},
+			},
+		},
+	};
 	// login
+	parsedSwaggerDoc.paths['/api/sessions'] = sessionsPost;
 	app.post(
 		'/api/sessions',
 		validateRequest(createUserSessionSchema),
