@@ -20,6 +20,7 @@ import { requiresUser, validateRequest } from './middleware';
 
 // swagger configuration
 import * as swaggerDocument from './swagger.json';
+import { omit } from 'lodash';
 const swaggerUI = require('swagger-ui-express');
 
 /**
@@ -42,7 +43,6 @@ export default function (app: Express) {
 		res.sendStatus(200)
 	);
 
-	// TODO research all possiple elements of documentation for swagger in order to complete the documentation for the API
 	const usersPost = {
 		post: {
 			summary: 'Register user',
@@ -58,15 +58,15 @@ export default function (app: Express) {
 					required: true,
 					schema: {
 						type: 'object',
-						properties: {
-							...userPostStructure,
-						},
+						properties: userPostStructure,
 					},
 				},
 			],
 			responses: {
 				'200': {
 					description: 'OK',
+					// TODO create schema yourself containing only the information that is send back. (but keep the omit version to user elsewhere)
+					schema: omit(userSM, 'password'),
 				},
 				'409': {
 					description: 'Conflict error - user already exists',
