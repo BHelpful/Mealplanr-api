@@ -30,7 +30,6 @@ const swaggerUI = require('swagger-ui-express');
 export default function (app: Express) {
 	var parsedSwaggerDoc = JSON.parse(JSON.stringify(swaggerDocument));
 
-	// TODO go to all of the models (and documents) and add descriptions for each attribute in the schemas like "creator" in recipe
 	// Adding mongoose models to swagger docs
 	parsedSwaggerDoc.definitions.Ingredient = ingredientSM;
 	parsedSwaggerDoc.definitions.Category = categorySM;

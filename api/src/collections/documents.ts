@@ -94,6 +94,7 @@ export interface IngredientListDocument extends Document {
 	ingredient: IngredientDocument['_id'];
 	amount: number;
 	unit: string;
+	store: StoreDocument;
 }
 export const IngredientListSubschema = new Schema({
 	ingredient: {
@@ -112,19 +113,6 @@ export const IngredientListSubschema = new Schema({
 		required: true,
 		description: 'The unit of the amount of the ingredient.',
 	},
-});
-
-export interface ShoppingListItemDocument extends Document {
-	ingredient: [IngredientListDocument];
-	store: StoreDocument['_id'];
-}
-export const ShoppingListItemSubschema = new Schema({
-	ingredient: {
-		type: [IngredientListSubschema],
-		ref: 'ingredients',
-		required: true,
-		description: 'The ingredient that is added to the shopping list.',
-	},
 	store: {
 		type: Schema.Types.ObjectId,
 		ref: 'stores',
@@ -134,11 +122,11 @@ export const ShoppingListItemSubschema = new Schema({
 });
 
 export interface ShoppingListDocument extends Document {
-	ingredients: [ShoppingListItemDocument];
+	ingredients: [IngredientListDocument];
 }
 export const ShoppingListSubschema = new Schema({
 	ingredients: {
-		type: [ShoppingListItemSubschema],
+		type: [IngredientListSubschema],
 		required: true,
 		description: 'List of ingredients',
 	},

@@ -20,8 +20,16 @@ export const IngredientSchema = new Schema({
 		required: true,
 		description: 'The season of the ingredient e.g. spring',
 	},
-	diet: { type: [String], required: true },
-	alternatives: { type: [Schema.Types.ObjectId], ref: 'ingredients' },
+	diet: {
+		type: [String],
+		required: true,
+		description: 'The diet of the ingredient e.g. vegetarian',
+	},
+	alternatives: {
+		type: [Schema.Types.ObjectId],
+		ref: 'ingredients',
+		description: 'The alternatives of the ingredient',
+	},
 });
 
 const ingredientModel = mongoose.model<IngredientDocument>(
