@@ -75,6 +75,7 @@ export default function (app: Express) {
 			},
 		},
 	};
+	// Create a new user
 	parsedSwaggerDoc.paths['/api/users'] = usersPost;
 	app.post(
 		'/api/users',

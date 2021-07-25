@@ -6,7 +6,7 @@ import { object, string, ref } from 'yup';
 
 // The schema of the body of the request will is split up in order to use it for swagger documentation in routes.ts:
 export const userPostStructure = {
-	names: string().required('Name is required'),
+	name: string().required('Name is required'),
 	password: string()
 		.required('Password is required')
 		.min(6, 'Password is too short - should be 6 chars minimum.')
