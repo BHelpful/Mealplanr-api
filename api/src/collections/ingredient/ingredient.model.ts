@@ -1,4 +1,4 @@
-import mongoose, { Schema, Document } from 'mongoose';
+import { Schema, Document, model } from 'mongoose';
 import { CategoryDocument } from '../category/category.model';
 const m2s = require('mongoose-to-swagger');
 
@@ -32,7 +32,7 @@ export const IngredientSchema = new Schema({
 	},
 });
 
-const ingredientModel = mongoose.model<IngredientDocument>(
+const ingredientModel = model<IngredientDocument>(
 	'ingredients',
 	IngredientSchema
 );

@@ -1,4 +1,4 @@
-import mongoose, { Schema, Document } from 'mongoose';
+import { Schema, Document, model } from 'mongoose';
 const m2s = require('mongoose-to-swagger');
 
 export interface CategoryDocument extends Document {
@@ -15,7 +15,7 @@ export const CategorySchema = new Schema({
 	},
 });
 
-const categoryModel = mongoose.model<CategoryDocument>(
+const categoryModel = model<CategoryDocument>(
 	'category',
 	CategorySchema
 );

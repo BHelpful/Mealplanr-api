@@ -1,4 +1,4 @@
-import express from 'express';
+import { Router } from 'express';
 import { omit } from 'lodash';
 import { createUserHandler } from '../collections/user/user.controller';
 import { userSM } from '../collections/user/user.model';
@@ -8,7 +8,7 @@ import {
 } from '../collections/user/user.schema';
 import { validateRequest } from '../middleware';
 
-const router = express.Router();
+const router = Router();
 
 export const usersPost = {
 	post: {

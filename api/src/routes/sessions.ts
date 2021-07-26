@@ -1,4 +1,4 @@
-import express from 'express';
+import { Router } from 'express';
 import {
 	createUserSessionHandler,
 	getUserSessionsHandler,
@@ -11,7 +11,7 @@ import {
 } from '../collections/session/session.schema';
 import { requiresUser, validateRequest } from '../middleware';
 
-const router = express.Router();
+const router = Router();
 
 export const sessionsPost = {
 	post: {

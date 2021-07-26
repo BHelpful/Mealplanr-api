@@ -1,6 +1,6 @@
-import config from 'config';
 import { get } from 'lodash';
 import { Request, Response } from 'express';
+import config from 'config';
 import {
 	validatePassword,
 	createSession,

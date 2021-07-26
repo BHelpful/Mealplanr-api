@@ -1,8 +1,9 @@
 import express from 'express';
+import { connection } from 'mongoose';
+import { serve, setup } from 'swagger-ui-express';
 import config from 'config';
 import log from './logger';
 import connect from './connect';
-import mongoose from 'mongoose';
 import { deserializeUser } from './middleware';
 import usersRouter, { usersPost } from './routes/users';
 import sessionsRouter, {
@@ -17,7 +18,6 @@ import { recipeSM } from './collections/recipe/recipe.model';
 import { sessionSM } from './collections/session/session.model';
 import { storeSM } from './collections/store/store.model';
 import { userSM } from './collections/user/user.model';
-const swaggerUI = require('swagger-ui-express');
 
 // gets items from default config file
 const port = config.get('port') as number;
@@ -57,10 +57,10 @@ parsedSwaggerDoc.paths['/sessions'] = {
 };
 
 // set up the Swagger UI
-app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(parsedSwaggerDoc));
+app.use('/api-docs', serve, setup(parsedSwaggerDoc));
 
 // this is used to get info on the connection to the DB.
-const db = mongoose.connection;
+const db = connection;
 
 app.listen(port, host, () => {
 	log.info(`Server is running at http://${host}:${port}/`);

@@ -1,6 +1,6 @@
-import mongoose, { Schema, Document } from 'mongoose';
-const m2s = require('mongoose-to-swagger');
+import { Schema, Document, model } from 'mongoose';
 import { UserDocument } from '../user/user.model';
+const m2s = require('mongoose-to-swagger');
 
 export interface SessionDocument extends Document {
 	user: UserDocument['_id'];
@@ -32,7 +32,7 @@ const SessionSchema = new Schema(
 	{ timestamps: true }
 );
 
-const sessionModel = mongoose.model<SessionDocument>('session', SessionSchema);
+const sessionModel = model<SessionDocument>('session', SessionSchema);
 
 export const sessionSM = m2s(sessionModel);
 

@@ -1,4 +1,4 @@
-import mongoose, { Schema, Document } from 'mongoose';
+import { Schema, Document, model, HookNextFunction } from 'mongoose';
 const m2s = require('mongoose-to-swagger');
 import bcrypt from 'bcrypt';
 import config from 'config';
@@ -62,7 +62,7 @@ const UserSchema = new Schema(
 
 // we need to get user's password into a hash before it is added to the database
 // this is done in the model using the bcrypt
-UserSchema.pre('save', async function (next: mongoose.HookNextFunction) {
+UserSchema.pre('save', async function (next: HookNextFunction) {
 	let user = this as UserDocument;
 
 	// only hash the password if it has been modified (or is new)
@@ -97,7 +97,7 @@ UserSchema.methods.comparePassword = async function (
 	return bcrypt.compare(candidatePassword, user.password).catch((e) => false);
 };
 
-const userModel = mongoose.model<UserDocument>('users', UserSchema);
+const userModel = model<UserDocument>('users', UserSchema);
 
 export const userSM = m2s(userModel);
 
