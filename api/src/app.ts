@@ -18,6 +18,7 @@ import { recipeSM } from './collections/recipe/recipe.model';
 import { sessionSM } from './collections/session/session.model';
 import { storeSM } from './collections/store/store.model';
 import { userSM } from './collections/user/user.model';
+var compression = require('compression');
 
 // gets items from default config file
 const port = config.get('port') as number;
@@ -32,6 +33,12 @@ app.use(deserializeUser);
 // need to use this in order to understand the JSON body from RESTful requests
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// use this to compress the responses (gzip Compression)
+app.use(compression());
+
+// assigning app-wide cache settings
+app.use(express.static(__dirname + '/public', { maxAge: 31557600 }));
 
 // defining the parsed swagger file in order to be able to add to it
 var parsedSwaggerDoc = JSON.parse(JSON.stringify(swaggerDocument));
