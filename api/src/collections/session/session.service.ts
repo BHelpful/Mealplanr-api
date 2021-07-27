@@ -110,7 +110,7 @@ export async function reIssueAccessToken({
 	// Make sure the session is still valid
 	if (!session || !session?.valid) return false;
 
-	const user = await findUser({ _id: session.user });
+	const user = await findUser({ _id: session.userId });
 
 	if (!user) return false;
 

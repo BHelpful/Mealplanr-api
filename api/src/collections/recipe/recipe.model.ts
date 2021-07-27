@@ -1,4 +1,5 @@
 import { Schema, Document, model } from 'mongoose';
+import { nanoid } from 'nanoid';
 const m2s = require('mongoose-to-swagger');
 import { CategoryDocument } from '../category/category.model';
 import {
@@ -10,9 +11,10 @@ import { IngredientDocument } from '../ingredient/ingredient.model';
 import { UserDocument } from '../user/user.model';
 
 export interface RecipeDocument extends Document {
+	recipeId: string;
 	public: boolean;
-	categories: [CategoryDocument['_id']];
-	creator: UserDocument['_id'];
+	categoriesId: [CategoryDocument['_id']];
+	creatorId: UserDocument['_id'];
 	title: string;
 	description: string;
 	estimate: number;
@@ -22,23 +24,31 @@ export interface RecipeDocument extends Document {
 	instructions: [string];
 	rating: [RatingDocument];
 	servings: number;
-	sidedish: [RecipeDocument['_id']];
+	sidedishesId: [RecipeDocument['_id']];
 	createdAt: Date;
 	updatedAt: Date;
 }
 export const RecipeSchema = new Schema(
 	{
+		recipeId: {
+			type: String,
+			required: true,
+			unique: true,
+			default: () => nanoid(10),
+			description: 'The id of the recipe',
+		},
 		public: {
 			type: Boolean,
+			required: true,
 			default: false,
 			description: 'Whether the recipe should be publicly available',
 		},
-		categories: {
+		categoriesId: {
 			type: [Schema.Types.ObjectId],
 			ref: 'categories',
 			description: 'ObjectId refering to categories collection',
 		},
-		creator: {
+		creatorId: {
 			type: Schema.Types.ObjectId,
 			ref: 'users',
 			required: true,
@@ -84,7 +94,7 @@ export const RecipeSchema = new Schema(
 			required: true,
 			description: 'Number of servings',
 		},
-		sidedish: {
+		sidedishesId: {
 			type: [Schema.Types.ObjectId],
 			ref: 'recipes',
 			description:

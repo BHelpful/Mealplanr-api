@@ -3,7 +3,7 @@ import { UserDocument } from '../user/user.model';
 const m2s = require('mongoose-to-swagger');
 
 export interface SessionDocument extends Document {
-	user: UserDocument['_id'];
+	userId: UserDocument['_id'];
 	valid: boolean;
 	userAgent: string;
 	createdAt: Date;
@@ -12,7 +12,7 @@ export interface SessionDocument extends Document {
 
 const SessionSchema = new Schema(
 	{
-		user: {
+		userId: {
 			type: Schema.Types.ObjectId,
 			ref: 'users',
 			description:

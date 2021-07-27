@@ -17,11 +17,11 @@ export interface UserDocument extends Document {
 	name: string;
 	email: string;
 	password: string;
-	colection: [RecipeDocument['_id']];
+	colectionId: [RecipeDocument['_id']];
 	options: UserOptionsDocument;
 	plan: PlanDocument;
 	oAuth: string;
-	availableIngredients: [IngredientDocument['_id']];
+	availableIngredientsId: [IngredientDocument['_id']];
 	shoppingList: ShoppingListDocument;
 	createdAt: Date;
 	updatedAt: Date;
@@ -37,7 +37,7 @@ const UserSchema = new Schema(
 			description: 'Email of the user',
 		},
 		password: { type: String, description: 'Password of the user' },
-		colection: {
+		colectionId: {
 			type: [Schema.Types.ObjectId],
 			ref: 'recipes',
 			description:
@@ -46,7 +46,7 @@ const UserSchema = new Schema(
 		options: { type: UserOptionsSubschema, description: 'User options' },
 		plan: { type: PlanSubschema, description: 'The mealplan of the user' },
 		oAuth: { type: String, description: 'OAuth of the user' },
-		availableIngredients: {
+		availableIngredientsId: {
 			type: [Schema.Types.ObjectId],
 			ref: 'ingredients',
 			description:

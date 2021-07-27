@@ -5,12 +5,6 @@ import config from 'config';
 import log from './logger';
 import connect from './connect';
 import { deserializeUser } from './middleware';
-import usersRouter, { usersPost } from './routes/users';
-import sessionsRouter, {
-	sessionsPost,
-	sessionsGet,
-	sessionsDelete,
-} from './routes/sessions';
 import * as swaggerDocument from './swagger.json';
 import { categorySM } from './collections/category/category.model';
 import { ingredientSM } from './collections/ingredient/ingredient.model';
@@ -18,6 +12,14 @@ import { recipeSM } from './collections/recipe/recipe.model';
 import { sessionSM } from './collections/session/session.model';
 import { storeSM } from './collections/store/store.model';
 import { userSM } from './collections/user/user.model';
+import usersRouter, { usersPost } from './routes/users';
+import sessionsRouter, {
+	sessionsPost,
+	sessionsGet,
+	sessionsDelete,
+} from './routes/sessions';
+import recipeRouter, { recipesPost } from './routes/recipes';
+import { omit } from 'lodash';
 var compression = require('compression');
 
 // gets items from default config file
@@ -61,6 +63,11 @@ parsedSwaggerDoc.paths['/sessions'] = {
 	...sessionsPost,
 	...sessionsGet,
 	...sessionsDelete,
+};
+
+app.use('/recipes', recipeRouter);
+parsedSwaggerDoc.paths['/recipes'] = {
+	...recipesPost,
 };
 
 // set up the Swagger UI

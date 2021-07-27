@@ -34,7 +34,7 @@ export interface UserOptionsDocument extends Document {
 	country: string;
 	notifications: boolean;
 	address: UserOptionsAddressDocument;
-	stores: [StoreDocument['_id']];
+	storesId: [StoreDocument['_id']];
 	gCalendar: boolean;
 }
 export const UserOptionsSubschema = new Schema({
@@ -58,7 +58,7 @@ export const UserOptionsSubschema = new Schema({
 		required: false,
 		description: 'Address of the user',
 	},
-	stores: {
+	storesId: {
 		type: [Schema.Types.ObjectId],
 		ref: 'stores',
 		required: true,
@@ -72,11 +72,11 @@ export const UserOptionsSubschema = new Schema({
 });
 
 export interface PlanDocument extends Document {
-	recipes: [RecipeDocument['_id']];
+	recipesId: [RecipeDocument['_id']];
 	datedex: Date;
 }
 export const PlanSubschema = new Schema({
-	recipes: {
+	recipesId: {
 		type: [Schema.Types.ObjectId],
 		ref: 'recipes',
 		required: true,
@@ -91,13 +91,13 @@ export const PlanSubschema = new Schema({
 });
 
 export interface IngredientListDocument extends Document {
-	ingredient: IngredientDocument['_id'];
+	ingredientId: IngredientDocument['_id'];
 	amount: number;
 	unit: string;
-	store: StoreDocument;
+	storeId: StoreDocument;
 }
 export const IngredientListSubschema = new Schema({
-	ingredient: {
+	ingredientId: {
 		type: Schema.Types.ObjectId,
 		ref: 'ingredients',
 		required: true,
@@ -113,7 +113,7 @@ export const IngredientListSubschema = new Schema({
 		required: true,
 		description: 'The unit of the amount of the ingredient.',
 	},
-	store: {
+	storeId: {
 		type: Schema.Types.ObjectId,
 		ref: 'stores',
 		required: false,
@@ -133,11 +133,11 @@ export const ShoppingListSubschema = new Schema({
 });
 
 export interface RatingDocument extends Document {
-	user: UserDocument['_id'];
+	userId: UserDocument['_id'];
 	rating: number;
 }
 export const RatingSubschema = new Schema({
-	user: {
+	userId: {
 		type: Schema.Types.ObjectId,
 		ref: 'users',
 		required: true,

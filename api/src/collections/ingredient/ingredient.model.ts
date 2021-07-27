@@ -3,13 +3,13 @@ import { CategoryDocument } from '../category/category.model';
 const m2s = require('mongoose-to-swagger');
 
 export interface IngredientDocument extends Document {
-	type: CategoryDocument['_id'];
+	typeId: CategoryDocument['_id'];
 	season: string;
 	diet: [string];
-	alternatives: [IngredientDocument['_id']];
+	alternativesId: [IngredientDocument['_id']];
 }
 export const IngredientSchema = new Schema({
-	type: {
+	typeId: {
 		type: Schema.Types.ObjectId,
 		ref: 'categories',
 		required: true,
@@ -25,7 +25,7 @@ export const IngredientSchema = new Schema({
 		required: true,
 		description: 'The diet of the ingredient e.g. vegetarian',
 	},
-	alternatives: {
+	alternativesId: {
 		type: [Schema.Types.ObjectId],
 		ref: 'ingredients',
 		description: 'The alternatives of the ingredient',
