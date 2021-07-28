@@ -4,17 +4,17 @@ import {
 	UpdateQuery,
 	QueryOptions,
 } from 'mongoose';
-import Recipe, { RecipeDocument } from './recipe.model';
+import recipeModel, { RecipeDocument } from './recipe.model';
 
 export function createRecipe(input: DocumentDefinition<RecipeDocument>) {
-	return Recipe.create(input);
+	return recipeModel.create(input);
 }
 
 export function findRecipe(
 	query: FilterQuery<RecipeDocument>,
 	options: QueryOptions = { lean: true }
 ) {
-	return Recipe.findOne(query, {}, options);
+	return recipeModel.findOne(query, {}, options);
 }
 
 export function findAndUpdateRecipe(
@@ -22,9 +22,9 @@ export function findAndUpdateRecipe(
 	update: UpdateQuery<RecipeDocument>,
 	options: QueryOptions
 ) {
-	return Recipe.findOneAndUpdate(query, update, options);
+	return recipeModel.findOneAndUpdate(query, update, options);
 }
 
 export function deleteRecipe(query: FilterQuery<RecipeDocument>) {
-	return Recipe.deleteOne(query);
+	return recipeModel.deleteOne(query);
 }

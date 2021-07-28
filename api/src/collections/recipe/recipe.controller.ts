@@ -31,7 +31,11 @@ export async function updateRecipeHandler(req: Request, res: Response) {
 		return res.sendStatus(401);
 	}
 
-	const updatedRecipe = await findAndUpdateRecipe({ recipeId }, update, { new: true });
+	const updatedRecipe = await findAndUpdateRecipe({ recipeId }, update, {
+		new: true,
+		// This is false because setting it true deprecated https://mongoosejs.com/docs/deprecations.html#findandmodify
+		useFindAndModify: false,
+	});
 
 	return res.send(updatedRecipe);
 }

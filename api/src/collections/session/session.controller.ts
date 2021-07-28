@@ -74,7 +74,7 @@ export async function invalidateUserSessionHandler(
 export async function getUserSessionsHandler(req: Request, res: Response) {
 	const userId = get(req, 'user._id');
 
-	const sessions = await findSessions({ user: userId, valid: true });
+	const sessions = await findSessions({ userId: userId, valid: true });
 
 	return res.send(sessions);
 }

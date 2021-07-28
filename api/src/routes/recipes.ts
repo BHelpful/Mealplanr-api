@@ -1,8 +1,17 @@
 import { Router } from 'express';
 import { omit } from 'lodash';
-import { createRecipeHandler } from '../collections/recipe/recipe.controller';
+import {
+	createRecipeHandler,
+	deleteRecipeHandler,
+	getRecipeHandler,
+	updateRecipeHandler,
+} from '../collections/recipe/recipe.controller';
 import { recipeSM } from '../collections/recipe/recipe.model';
-import { createRecipeSchema } from '../collections/recipe/recipe.schema';
+import {
+	createRecipeSchema,
+	deleteRecipeSchema,
+	updateRecipeSchema,
+} from '../collections/recipe/recipe.schema';
 import { requiresUser, validateRequest } from '../middleware';
 
 const router = Router();
@@ -42,6 +51,23 @@ router.post(
 	'/',
 	[requiresUser, validateRequest(createRecipeSchema)],
 	createRecipeHandler
+);
+
+// Update a post
+router.put(
+	'/:recipeId',
+	[requiresUser, validateRequest(updateRecipeSchema)],
+	updateRecipeHandler
+);
+
+// Get a post
+router.get('/:recipeId', getRecipeHandler);
+
+// Delete a post
+router.delete(
+	'/:recipeId',
+	[requiresUser, validateRequest(deleteRecipeSchema)],
+	deleteRecipeHandler
 );
 
 export default router;

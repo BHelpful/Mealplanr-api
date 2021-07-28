@@ -17,7 +17,7 @@ export interface RecipeDocument extends Document {
 	creatorId: UserDocument['_id'];
 	title: string;
 	description: string;
-	estimate: number;
+	estimate: [string];
 	images: [Buffer];
 	ingredients: [IngredientDocument['_id']];
 	preparation: [string];
@@ -65,7 +65,7 @@ export const RecipeSchema = new Schema(
 			description: 'Description of the recipe',
 		},
 		estimate: {
-			type: [Number],
+			type: [String],
 			required: true,
 			description:
 				'Estimated time of the recipe (arr[0] is time, arr[1] is 1 or 2 mapped to m, h)',

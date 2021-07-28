@@ -54,7 +54,7 @@ export async function validatePassword({
  * @returns a session document
  */
 export async function createSession(userId: string, userAgent: string) {
-	const session = await sessionModel.create({ user: userId, userAgent });
+	const session = await sessionModel.create({ userId: userId, userAgent });
 
 	return session.toJSON();
 }
