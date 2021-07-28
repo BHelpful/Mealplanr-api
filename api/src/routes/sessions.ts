@@ -91,6 +91,9 @@ export const sessionsGet = {
 				description: 'OK',
 				schema: { type: 'array', items: sessionSM },
 			},
+			'403': {
+				description: 'User not logged in',
+			},
 		},
 	},
 };
@@ -129,6 +132,9 @@ export const sessionsDelete = {
 		responses: {
 			'200': {
 				description: 'OK',
+			},
+			'403': {
+				description: 'User not logged in',
 			},
 		},
 	},

@@ -40,6 +40,10 @@ export const createRecipeSchema = object({
 	...payload,
 });
 
+export const getRecipeSchema = object({
+	...params,
+});
+
 export const updateRecipeSchema = object({
 	...params,
 	...payload,

@@ -18,8 +18,12 @@ import sessionsRouter, {
 	sessionsGet,
 	sessionsDelete,
 } from './routes/sessions';
-import recipeRouter, { recipesPost } from './routes/recipes';
-import { omit } from 'lodash';
+import recipeRouter, {
+	recipesDelete,
+	recipesGet,
+	recipesPost,
+	recipesPut,
+} from './routes/recipes';
 var compression = require('compression');
 
 // gets items from default config file
@@ -68,6 +72,11 @@ parsedSwaggerDoc.paths['/sessions'] = {
 app.use('/recipes', recipeRouter);
 parsedSwaggerDoc.paths['/recipes'] = {
 	...recipesPost,
+};
+parsedSwaggerDoc.paths['/recipes/{recipeId}'] = {
+	...recipesPut,
+	...recipesGet,
+	...recipesDelete,
 };
 
 // set up the Swagger UI

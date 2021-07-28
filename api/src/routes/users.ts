@@ -37,6 +37,9 @@ export const usersPost = {
 			'409': {
 				description: 'Conflict error - user already exists',
 			},
+			'400': {
+				description: 'Bad Request',
+			},
 		},
 	},
 };
