@@ -73,7 +73,6 @@ export const recipesPut = {
 				description: 'Id of the recipe',
 				required: true,
 				type: 'string',
-				format: 'uuid',
 			},
 			{
 				name: 'body',
@@ -130,7 +129,6 @@ export const recipesGet = {
 				description: 'Id of the recipe',
 				required: true,
 				type: 'string',
-				format: 'uuid',
 			},
 		],
 		responses: {
@@ -157,7 +155,6 @@ export const recipesDelete = {
 				description: 'Id of the recipe',
 				required: true,
 				type: 'string',
-				format: 'uuid',
 			},
 		],
 		responses: {
