@@ -85,8 +85,6 @@ export async function getUserHandler(req: Request, res: Response) {
 	const accessCode = get(req, 'query.accessCode');
 	const accessCodeCheck = config.get('accessCode') as string;
 
-	log.info(accessCode);
-	log.info(accessCodeCheck);
 	if (accessCode !== accessCodeCheck) {
 		return res.status(403).send('Access code is invalid.');
 	}

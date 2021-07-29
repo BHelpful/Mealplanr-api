@@ -7,14 +7,14 @@ import log from '../logger';
 // Uppon validation the method will allow for the following method at its method-call
 // to be called.
 /**
- * This function 
+ * This function
  *
  * @remarks
- * 
  *
- * @param x - 
- * @param y - 
- * @returns 
+ *
+ * @param x -
+ * @param y -
+ * @returns
  */
 const validate =
 	(schema: AnySchema) =>
