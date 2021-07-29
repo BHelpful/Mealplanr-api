@@ -1,4 +1,9 @@
-import { DocumentDefinition, FilterQuery } from 'mongoose';
+import {
+	DocumentDefinition,
+	FilterQuery,
+	QueryOptions,
+	UpdateQuery,
+} from 'mongoose';
 import userModel, { UserDocument } from './user.model';
 
 /**
@@ -30,4 +35,30 @@ export async function createUser(input: DocumentDefinition<UserDocument>) {
  */
 export async function findUser(query: FilterQuery<UserDocument>) {
 	return userModel.findOne(query).lean();
+}
+
+/**
+ * This function will find, update and return a user
+ *
+ * @param query - a query object that will be used to find a user from the DB
+ * @param update - a query object that will be used to specify the update
+ * @param options - options for the findOne function from mongoose
+ * @returns a user document
+ */
+export function findAndUpdateUser(
+	query: FilterQuery<UserDocument>,
+	update: UpdateQuery<UserDocument>,
+	options: QueryOptions
+) {
+	return userModel.findOneAndUpdate(query, update, options);
+}
+
+/**
+ * This function will find and delete a user
+ *
+ * @param query - a query object that will be used to find a user from the DB
+ * @returns a user document
+ */
+export function deleteUser(query: FilterQuery<UserDocument>) {
+	return userModel.deleteOne(query);
 }

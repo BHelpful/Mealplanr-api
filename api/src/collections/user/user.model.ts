@@ -12,6 +12,7 @@ import {
 } from '../documents';
 import { RecipeDocument } from '../recipe/recipe.model';
 import { IngredientDocument } from '../ingredient/ingredient.model';
+import log from '../../logger';
 
 export interface UserDocument extends Document {
 	name: string;
@@ -29,7 +30,7 @@ export interface UserDocument extends Document {
 }
 const UserSchema = new Schema(
 	{
-		name: { type: String, required: true, description: 'Name of the user' },
+		name: { type: String, description: 'Name of the user' },
 		email: {
 			type: String,
 			required: true,

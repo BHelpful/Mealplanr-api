@@ -21,7 +21,7 @@ export const recipesPost = {
 	post: {
 		summary: 'Create new recipe',
 		description: "Creates a new recipe to add to the user's collection",
-		tags: ['Recipes'],
+		tags: ['recipes'],
 		produces: ['application/json'],
 		parameters: [
 			{
@@ -64,7 +64,7 @@ export const recipesPut = {
 	put: {
 		summary: 'Update recipe',
 		description: 'Updates a recipe that the user owns',
-		tags: ['Recipes'],
+		tags: ['recipes'],
 		produces: ['application/json'],
 		parameters: [
 			{
@@ -120,7 +120,7 @@ export const recipesGet = {
 	get: {
 		summary: 'Get a recipe',
 		description: 'Get a recipe based on the recipeId',
-		tags: ['Recipes'],
+		tags: ['recipes'],
 		produces: ['application/json'],
 		parameters: [
 			{
@@ -146,7 +146,7 @@ export const recipesDelete = {
 	delete: {
 		summary: 'Delete a recipe',
 		description: 'Delete a recipe based on the recipeId',
-		tags: ['Recipes'],
+		tags: ['recipes'],
 		produces: ['application/json'],
 		parameters: [
 			{

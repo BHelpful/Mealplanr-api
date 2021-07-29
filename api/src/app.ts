@@ -12,7 +12,12 @@ import { recipeSM } from './collections/recipe/recipe.model';
 import { sessionSM } from './collections/session/session.model';
 import { storeSM } from './collections/store/store.model';
 import { userSM } from './collections/user/user.model';
-import usersRouter, { usersPost } from './routes/users';
+import usersRouter, {
+	usersDelete,
+	usersGet,
+	usersPost,
+	usersPut,
+} from './routes/users';
 import sessionsRouter, {
 	sessionsPost,
 	sessionsGet,
@@ -60,7 +65,12 @@ parsedSwaggerDoc.definitions.User = userSM;
 // This is where the basic routes are defined
 // (for each route the different methods will be added to the swagger file)
 app.use('/users', usersRouter);
-parsedSwaggerDoc.paths['/users'] = usersPost;
+parsedSwaggerDoc.paths['/users'] = {
+	...usersPost,
+	...usersGet,
+	...usersPut,
+	...usersDelete,
+};
 
 app.use('/sessions', sessionsRouter);
 parsedSwaggerDoc.paths['/sessions'] = {

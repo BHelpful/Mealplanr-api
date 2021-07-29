@@ -1,7 +1,14 @@
 import { Request, Response } from 'express';
-import { omit } from 'lodash';
-import { createUser } from './user.service';
+import { get, omit } from 'lodash';
+import {
+	createUser,
+	deleteUser,
+	findAndUpdateUser,
+	findUser,
+} from './user.service';
 import log from '../../logger';
+import config from 'config';
+import bcrypt from 'bcrypt';
 
 /**
  * This function is used to request the creation of a new user.
@@ -22,4 +29,97 @@ export async function createUserHandler(req: Request, res: Response) {
 		// Sets status code to 409, which is a conflict error.
 		return res.status(409).send(e.message);
 	}
+}
+
+/**
+ * This function is used to request the update of a user.
+ *
+ * @param req - The request object.
+ * @param res - The response object.
+ * @returns a response with the updated user.
+ */
+export async function updateUserHandler(req: Request, res: Response) {
+	const currUserMail = get(req, 'user.email');
+	const userMail = get(req, 'params.userMail');
+	const update = req.body;
+
+	// TODO move to user.model.ts to something similar as UserSchema.pre('save')
+	if (update.password) {
+		// Random additional data
+		const salt = await bcrypt.genSalt(config.get('saltWorkFactor'));
+
+		const hash = await bcrypt.hashSync(update.password, salt);
+
+		update.password = hash;
+	}
+
+	const user = await findUser({ email: userMail });
+
+	if (!user) {
+		return res.sendStatus(404);
+	}
+
+	if (String(user.email) !== currUserMail) {
+		return res.sendStatus(401);
+	}
+
+	const updatedUser = await findAndUpdateUser({ email: userMail }, update, {
+		lean: true,
+		new: true,
+		// This is false because setting it true deprecated https://mongoosejs.com/docs/deprecations.html#findandmodify
+		useFindAndModify: false,
+	});
+
+	return res.send(omit(updatedUser, 'password'));
+}
+
+/**
+ * This function is used to request a user.
+ *
+ * @param req - The request object.
+ * @param res - The response object.
+ * @returns a response with the user.
+ */
+export async function getUserHandler(req: Request, res: Response) {
+	const userMail = get(req, 'params.userMail');
+	const accessCode = get(req, 'body.accessCode');
+	const accessCodeCheck = config.get('accessCode') as string;
+
+	if (accessCode !== accessCodeCheck) {
+		return res.sendStatus(403);
+	}
+
+	const user = await findUser({ email: userMail });
+
+	if (!user) {
+		return res.sendStatus(404);
+	}
+
+	return res.send(omit(user, 'password'));
+}
+
+/**
+ * This function is used to request the deletion of a user.
+ *
+ * @param req - The request object.
+ * @param res - The response object.
+ * @returns a response with status 200 if successful
+ */
+export async function deleteUserHandler(req: Request, res: Response) {
+	const currUserMail = get(req, 'user.email');
+	const userMail = get(req, 'params.userMail');
+
+	if (String(currUserMail) !== String(userMail)) {
+		return res.sendStatus(401);
+	}
+
+	const user = await findUser({ email: userMail });
+
+	if (!user) {
+		return res.sendStatus(404);
+	}
+
+	await deleteUser({ email: userMail });
+
+	return res.sendStatus(200);
 }
