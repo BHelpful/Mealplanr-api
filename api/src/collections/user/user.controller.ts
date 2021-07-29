@@ -81,18 +81,20 @@ export async function updateUserHandler(req: Request, res: Response) {
  * @returns a response with the user.
  */
 export async function getUserHandler(req: Request, res: Response) {
-	const userMail = get(req, 'params.userMail');
-	const accessCode = get(req, 'body.accessCode');
+	const userMail = get(req, 'query.userMail');
+	const accessCode = get(req, 'query.accessCode');
 	const accessCodeCheck = config.get('accessCode') as string;
 
+	log.info(accessCode);
+	log.info(accessCodeCheck);
 	if (accessCode !== accessCodeCheck) {
-		return res.sendStatus(403);
+		return res.status(403).send('Access code is invalid.');
 	}
 
 	const user = await findUser({ email: userMail });
 
 	if (!user) {
-		return res.sendStatus(404);
+		return res.status(404).send('User not found.');
 	}
 
 	return res.send(omit(user, 'password'));

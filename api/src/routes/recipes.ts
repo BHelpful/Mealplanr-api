@@ -125,7 +125,7 @@ export const recipesGet = {
 		parameters: [
 			{
 				name: 'recipeId',
-				in: 'path',
+				in: 'query',
 				description: 'Id of the recipe',
 				required: true,
 				type: 'string',

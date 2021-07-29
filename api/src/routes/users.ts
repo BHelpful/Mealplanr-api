@@ -63,8 +63,16 @@ export const usersGet = {
 		parameters: [
 			{
 				name: 'userMail',
-				in: 'path',
+				in: 'query',
 				description: 'Email of the user',
+				required: true,
+				type: 'string',
+			},
+			{
+				name: 'accessCode',
+				in: 'query',
+				description:
+					'Access code to gain access to the users collection',
 				required: true,
 				type: 'string',
 			},
@@ -78,7 +86,7 @@ export const usersGet = {
 	},
 };
 // Get a user
-router.get('/:userMail', validateRequest(getUserSchema), getUserHandler);
+router.get('/', validateRequest(getUserSchema), getUserHandler);
 
 export const usersPut = {
 	put: {

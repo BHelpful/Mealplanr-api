@@ -62,7 +62,7 @@ export async function updateRecipeHandler(req: Request, res: Response) {
  * @returns a response with the recipe.
  */
 export async function getRecipeHandler(req: Request, res: Response) {
-	const recipeId = get(req, 'params.recipeId');
+	const recipeId = get(req, 'query.recipeId');
 	const recipe = await findRecipe({ recipeId });
 
 	if (!recipe) {

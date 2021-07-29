@@ -50,7 +50,11 @@ export const createUserSchema = object({
 });
 
 export const getUserSchema = object({
-	...params,
+	query: object({
+		userMail: string()
+			.email('Must be a valid email')
+			.required('Email is required'),
+	}),
 });
 
 export const updateUserSchema = object({

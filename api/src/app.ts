@@ -1,6 +1,7 @@
 import express from 'express';
 import { connection } from 'mongoose';
 import { serve, setup } from 'swagger-ui-express';
+import cors from 'cors';
 import config from 'config';
 import log from './logger';
 import connect from './connect';
@@ -50,6 +51,8 @@ app.use(compression());
 
 // assigning app-wide cache settings
 app.use(express.static(__dirname + '/public', { maxAge: 31557600 }));
+
+app.use(cors());
 
 // defining the parsed swagger file in order to be able to add to it
 var parsedSwaggerDoc = JSON.parse(JSON.stringify(swaggerDocument));
