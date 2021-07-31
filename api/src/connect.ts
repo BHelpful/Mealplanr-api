@@ -1,4 +1,5 @@
 import { connect as mConnect } from 'mongoose';
+var tunnel = require('tunnel-ssh');
 import config from 'config';
 import log from './logger';
 
@@ -11,17 +12,22 @@ import log from './logger';
  */
 function connect() {
 	const dbUri = config.get('dbUri') as string;
-
-	return mConnect(dbUri, {
-		useNewUrlParser: true,
-		useUnifiedTopology: true,
-	})
-		.then(() => {
-			log.info('Connection success');
+	const tunnelConfig = config.get('tunnelConfig') as string;
+	return tunnel(tunnelConfig, function (error: any, server: any) {
+		if (error) {
+			console.log('SSH connection error: ' + error);
+		}
+		return mConnect(dbUri, {
+			useNewUrlParser: true,
+			useUnifiedTopology: true,
 		})
-		.catch((error) => {
-			log.error('Error in connecting', error);
-		});
+			.then(() => {
+				log.info('Connection success');
+			})
+			.catch((error) => {
+				log.error('Error in connecting', error);
+			});
+	});
 }
 
 export default connect;
