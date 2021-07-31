@@ -3,6 +3,7 @@ import { omit } from 'lodash';
 import {
 	createUserHandler,
 	deleteUserHandler,
+	getUserExistsHandler,
 	getUserHandler,
 	updateUserHandler,
 } from '../collections/user/user.controller';
@@ -62,19 +63,24 @@ export const usersGet = {
 		produces: ['application/json'],
 		parameters: [
 			{
-				name: 'userMail',
-				in: 'query',
-				description: 'Email of the user',
+				in: 'header',
+				name: 'x-refresh',
+				description: 'refreshToken',
 				required: true,
-				type: 'string',
+				schema: {
+					type: 'string',
+					format: 'uuid',
+				},
 			},
 			{
-				name: 'accessCode',
-				in: 'query',
-				description:
-					'Access code to gain access to the users collection',
+				in: 'header',
+				name: 'authorization',
+				description: 'accessToken',
 				required: true,
-				type: 'string',
+				schema: {
+					type: 'string',
+					format: 'uuid',
+				},
 			},
 		],
 		responses: {
@@ -86,7 +92,32 @@ export const usersGet = {
 	},
 };
 // Get a user
-router.get('/', validateRequest(getUserSchema), getUserHandler);
+router.get('/', requiresUser, getUserHandler);
+
+export const usersExistsGet = {
+	get: {
+		summary: 'Check if a user exists',
+		description: 'Check if a user exists',
+		tags: ['users'],
+		produces: ['application/json'],
+		parameters: [
+			{
+				name: 'userMail',
+				in: 'query',
+				description: 'Email of the user',
+				required: true,
+				type: 'string',
+			},
+		],
+		responses: {
+			'200': {
+				description: 'User exists',
+			},
+		},
+	},
+};
+// Checks if a user exists
+router.get('/exists', validateRequest(getUserSchema), getUserExistsHandler);
 
 export const usersPut = {
 	put: {
@@ -110,6 +141,26 @@ export const usersPut = {
 				schema: {
 					type: 'object',
 					properties: userCreateeStructure,
+				},
+			},
+			{
+				in: 'header',
+				name: 'x-refresh',
+				description: 'refreshToken',
+				required: true,
+				schema: {
+					type: 'string',
+					format: 'uuid',
+				},
+			},
+			{
+				in: 'header',
+				name: 'authorization',
+				description: 'accessToken',
+				required: true,
+				schema: {
+					type: 'string',
+					format: 'uuid',
 				},
 			},
 		],
@@ -141,6 +192,26 @@ export const usersDelete = {
 				description: 'Email of the user',
 				required: true,
 				type: 'string',
+			},
+			{
+				in: 'header',
+				name: 'x-refresh',
+				description: 'refreshToken',
+				required: true,
+				schema: {
+					type: 'string',
+					format: 'uuid',
+				},
+			},
+			{
+				in: 'header',
+				name: 'authorization',
+				description: 'accessToken',
+				required: true,
+				schema: {
+					type: 'string',
+					format: 'uuid',
+				},
 			},
 		],
 		responses: {

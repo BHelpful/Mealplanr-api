@@ -15,6 +15,7 @@ import { storeSM } from './collections/store/store.model';
 import { userSM } from './collections/user/user.model';
 import usersRouter, {
 	usersDelete,
+	usersExistsGet,
 	usersGet,
 	usersPost,
 	usersPut,
@@ -70,6 +71,7 @@ parsedSwaggerDoc.definitions.User = userSM;
 app.use('/users', usersRouter);
 parsedSwaggerDoc.paths['/users'] = {
 	...usersPost,
+	...usersExistsGet,
 	...usersGet,
 	...usersPut,
 	...usersDelete,

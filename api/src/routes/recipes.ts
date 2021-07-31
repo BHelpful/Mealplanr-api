@@ -38,6 +38,26 @@ export const recipesPost = {
 					'properties._id',
 				]),
 			},
+			{
+				in: 'header',
+				name: 'x-refresh',
+				description: 'refreshToken',
+				required: true,
+				schema: {
+					type: 'string',
+					format: 'uuid',
+				},
+			},
+			{
+				in: 'header',
+				name: 'authorization',
+				description: 'accessToken',
+				required: true,
+				schema: {
+					type: 'string',
+					format: 'uuid',
+				},
+			},
 		],
 		responses: {
 			'200': {
@@ -87,6 +107,26 @@ export const recipesPut = {
 					'properties.ingredients._id',
 					'properties._id',
 				]),
+			},
+			{
+				in: 'header',
+				name: 'x-refresh',
+				description: 'refreshToken',
+				required: true,
+				schema: {
+					type: 'string',
+					format: 'uuid',
+				},
+			},
+			{
+				in: 'header',
+				name: 'authorization',
+				description: 'accessToken',
+				required: true,
+				schema: {
+					type: 'string',
+					format: 'uuid',
+				},
 			},
 		],
 		responses: {
@@ -155,6 +195,26 @@ export const recipesDelete = {
 				description: 'Id of the recipe',
 				required: true,
 				type: 'string',
+			},
+			{
+				in: 'header',
+				name: 'x-refresh',
+				description: 'refreshToken',
+				required: true,
+				schema: {
+					type: 'string',
+					format: 'uuid',
+				},
+			},
+			{
+				in: 'header',
+				name: 'authorization',
+				description: 'accessToken',
+				required: true,
+				schema: {
+					type: 'string',
+					format: 'uuid',
+				},
 			},
 		],
 		responses: {

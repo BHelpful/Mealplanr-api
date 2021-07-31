@@ -9,6 +9,7 @@ import {
 import log from '../../logger';
 import config from 'config';
 import bcrypt from 'bcrypt';
+import { findSessions } from '../session/session.service';
 
 /**
  * This function is used to request the creation of a new user.
@@ -81,13 +82,27 @@ export async function updateUserHandler(req: Request, res: Response) {
  * @returns a response with the user.
  */
 export async function getUserHandler(req: Request, res: Response) {
-	const userMail = get(req, 'query.userMail');
-	const accessCode = get(req, 'query.accessCode');
-	const accessCodeCheck = config.get('accessCode') as string;
+	// get the user's id from the request
+	const userId = get(req, 'user._id');
 
-	if (accessCode !== accessCodeCheck) {
-		return res.status(403).send('Access code is invalid.');
+	const user = await findUser({ _id: userId });
+
+	if (!user) {
+		return res.status(404).send('User not found.');
 	}
+
+	return res.send(omit(user, 'password'));
+}
+
+/**
+ * This function is used to check if a user exists.
+ *
+ * @param req - The request object.
+ * @param res - The response object.
+ * @returns a response with an anwser for if the user exists.
+ */
+export async function getUserExistsHandler(req: Request, res: Response) {
+	const userMail = get(req, 'query.userMail');
 
 	const user = await findUser({ email: userMail });
 
@@ -95,7 +110,7 @@ export async function getUserHandler(req: Request, res: Response) {
 		return res.status(404).send('User not found.');
 	}
 
-	return res.send(omit(user, 'password'));
+	return res.send('User exists');
 }
 
 /**
