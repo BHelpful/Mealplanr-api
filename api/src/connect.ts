@@ -1,4 +1,4 @@
-import { connect as mConnect } from 'mongoose';
+import { connect } from 'mongoose';
 var tunnel = require('tunnel-ssh');
 import config from 'config';
 import log from './logger';
@@ -10,14 +10,14 @@ import log from './logger';
  * @remarks
  * It logs on success and on connection error.
  */
-function connect() {
+function connectDB() {
 	const dbUri = config.get('dbUri') as string;
 	const tunnelConfig = config.get('tunnelConfig') as string;
 	return tunnel(tunnelConfig, function (error: any, server: any) {
 		if (error) {
 			console.log('SSH connection error: ' + error);
 		}
-		return mConnect(dbUri, {
+		return connect(dbUri, {
 			useNewUrlParser: true,
 			useUnifiedTopology: true,
 		})
@@ -30,4 +30,4 @@ function connect() {
 	});
 }
 
-export default connect;
+export default connectDB;

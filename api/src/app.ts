@@ -4,7 +4,7 @@ import { serve, setup } from 'swagger-ui-express';
 import cors from 'cors';
 import config from 'config';
 import log from './logger';
-import connect from './connect';
+import connectDB from './connect';
 import { deserializeUser } from './middleware';
 import * as swaggerDocument from './swagger.json';
 import { categorySM } from './collections/category/category.model';
@@ -101,7 +101,7 @@ const db = connection;
 app.listen(port, host, () => {
 	log.info(`Server is running at http://${host}:${port}/`);
 	// connect to the mongoDB database
-	connect();
+	connectDB();
 	db.on('error', (err) => {
 		log.error(err);
 		// exit the process with a failure
