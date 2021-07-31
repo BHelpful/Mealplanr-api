@@ -57,6 +57,7 @@ var allowedOrigins = [
 	'http://localhost:3000',
 	'http://localhost',
 	'http://bhelpful.net',
+	'http://bhelpful.net:3000',
 ];
 app.use(
 	cors({
