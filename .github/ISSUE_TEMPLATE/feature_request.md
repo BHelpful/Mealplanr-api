@@ -6,7 +6,7 @@ labels: 'enhancement'
 assignees: ''
 
 ---
-## Description of problem <!-- (can just be reference to issue like fx "Closes #1") -->
+## Description of problem
 <!-- A clear and concise description of what the problem is. Ex. I'm always frustrated when [...] -->
 
 
