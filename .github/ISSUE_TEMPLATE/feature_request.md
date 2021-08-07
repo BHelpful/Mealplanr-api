@@ -1,16 +1,16 @@
 ---
-name: Feature request
+name: Feature Request
 about: Suggest an idea for this project
 title: ''
 labels: 'enhancement'
 assignees: ''
 
 ---
-## Description of problem
-<!-- A clear and concise description of what the problem is. Ex. I'm always frustrated when [...] -->
+## Description of a problem or missing feature
+<!-- A clear and concise description of what the problem or feature is. Ex. I'm always frustrated when [...] -->
 
 
-## Description of solution
+## Description of a possible solution
 <!-- A clear and concise description of what you want to happen. -->
 
 
