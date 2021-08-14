@@ -2,9 +2,9 @@ name: Auto Assign to Project(s)
 
 on:
   issues:
-    types: [opened]
+    types: [opened, reopened]
   pull_request:
-    types: [opened]
+    types: [opened, reopened]
 env:
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -17,6 +17,5 @@ jobs:
 # ! Repo Project---------------------------------------------------------------------------------------
     - name: Assign issues to repo project
       uses: srggrs/assign-one-project-github-action@1.2.1
-      if: github.event.action == 'opened'
       with:
         project: 'https://github.com/BHelpful/Mealplanr-api/projects/1'

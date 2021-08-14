@@ -2,9 +2,9 @@ name: Auto Assign to Project(s)
 
 on:
   issues:
-    types: [opened]
+    types: [opened, reopened]
   pull_request:
-    types: [opened]
+    types: [opened, reopened]
 env:
   MY_GITHUB_TOKEN: ${{ secrets.MY_GITHUB_TOKEN }}
 
@@ -14,19 +14,14 @@ jobs:
     name: Assign to One Project
     steps:
 # ! Mealplanr Project---------------------------------------------------------------------------------------
-    - name: Assign issues to repo project
+    - name: Assign issues and PRs to repo project
       uses: srggrs/assign-one-project-github-action@1.2.1
-      if: github.event.action == 'opened'
       with:
         project: 'https://github.com/orgs/BHelpful/projects/2'
 
 # ! BHelpful Project---------------------------------------------------------------------------------------
-    - name: Assign pull requests BHelpful project
+    - name: Assign PRs BHelpful project
       uses: srggrs/assign-one-project-github-action@1.2.1
-      if: |
-        github.event == 'pull_request' &&
-        (
-          github.event.action == 'opened'
-        )
+      if: github.event_name == 'pull_request'
       with:
         project: 'https://github.com/orgs/BHelpful/projects/1'
