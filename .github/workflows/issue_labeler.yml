@@ -9,22 +9,22 @@ jobs:
     steps:
       - uses: Naturalclar/issue-action@v1.0.0
         with:
-          keywords: '["branch update"]'
+          keywords: '["branch update", "Branch update"]'
           labels: '["branch update"]'
           github-token: "${{ secrets.GITHUB_TOKEN }}"
       - uses: Naturalclar/issue-action@v1.0.0
         with:
-          keywords: '["admin", "administrator"]'
+          keywords: '["admin","Admin", "administrator","Administrator"]'
           labels: '["admin"]'
           github-token: "${{ secrets.GITHUB_TOKEN }}"
       - uses: Naturalclar/issue-action@v1.0.0
         with:
-          keywords: '["bug", "error"]'
+          keywords: '["bug", "error","Bug", "Error", "err", "Err"]'
           labels: '["bug"]'
           github-token: "${{ secrets.GITHUB_TOKEN }}"
       - uses: Naturalclar/issue-action@v1.0.0
         with:
-          keywords: '["doc", "documentation"]'
+          keywords: '["doc", "documentation","Doc", "Documentation", "docs", "Docs", "doc-string","docstring","Doc-string","DocString","doc string","Doc string"]'
           labels: '["documentation"]'
           github-token: "${{ secrets.GITHUB_TOKEN }}"
       - uses: Naturalclar/issue-action@v1.0.0
@@ -34,36 +34,111 @@ jobs:
           github-token: "${{ secrets.GITHUB_TOKEN }}"
       - uses: Naturalclar/issue-action@v1.0.0
         with:
-          keywords: '["general"]'
+          keywords: '["general", "General"]'
           labels: '["general"]'
           github-token: "${{ secrets.GITHUB_TOKEN }}"
       - uses: Naturalclar/issue-action@v1.0.0
         with:
-          keywords: '["important", "important!"]'
+          keywords: '["IMPORTANT!","IMPORTANT","Important","important", "important!"]'
           labels: '["IMPORTANT!"]'
           github-token: "${{ secrets.GITHUB_TOKEN }}"
       - uses: Naturalclar/issue-action@v1.0.0
         with:
-          keywords: '["invalid"]'
+          keywords: '["invalid", "Invalid"]'
           labels: '["invalid"]'
           github-token: "${{ secrets.GITHUB_TOKEN }}"
       - uses: Naturalclar/issue-action@v1.0.0
         with:
-          keywords: '["no code", "not coding"]'
+          keywords: '["no code", "not coding","No code", "Not coding"]'
           labels: '["not coding"]'
           github-token: "${{ secrets.GITHUB_TOKEN }}"
       - uses: Naturalclar/issue-action@v1.0.0
         with:
-          keywords: '["?", "question"]'
+          keywords: '["?", "question", "Question"]'
           labels: '["question"]'
           github-token: "${{ secrets.GITHUB_TOKEN }}"
       - uses: Naturalclar/issue-action@v1.0.0
         with:
-          keywords: '["CSS", "css", "styling"]'
+          keywords: '["CSS", "css", "Css", "styling"]'
           labels: '["CSS"]'
           github-token: "${{ secrets.GITHUB_TOKEN }}"
       - uses: Naturalclar/issue-action@v1.0.0
         with:
           keywords: '["- [ ] #", "- [x] #"]'
           labels: '["Grouped Task"]'
+          github-token: "${{ secrets.GITHUB_TOKEN }}"
+      - uses: Naturalclar/issue-action@v1.0.0
+        with:
+          keywords: '["Recipe","recipe"]'
+          labels: '["Recipe"]'
+          github-token: "${{ secrets.GITHUB_TOKEN }}"
+      - uses: Naturalclar/issue-action@v1.0.0
+        with:
+          keywords: '["MealPlan","Mealplan", "Meal plan", "meal plan"]'
+          labels: '["MealPlan"]'
+          github-token: "${{ secrets.GITHUB_TOKEN }}"
+      - uses: Naturalclar/issue-action@v1.0.0
+        with:
+          keywords: '["Settings","settings"]'
+          labels: '["Settings"]'
+          github-token: "${{ secrets.GITHUB_TOKEN }}"
+      - uses: Naturalclar/issue-action@v1.0.0
+        with:
+          keywords: '["User","user"]'
+          labels: '["User"]'
+          github-token: "${{ secrets.GITHUB_TOKEN }}"
+      - uses: Naturalclar/issue-action@v1.0.0
+        with:
+          keywords: '["Session","session"]'
+          labels: '["Session"]'
+          github-token: "${{ secrets.GITHUB_TOKEN }}"
+      - uses: Naturalclar/issue-action@v1.0.0
+        with:
+          keywords: '["Ingredient","ingredient"]'
+          labels: '["Ingredient"]'
+          github-token: "${{ secrets.GITHUB_TOKEN }}"
+      - uses: Naturalclar/issue-action@v1.0.0
+        with:
+          keywords: '["Store","store"]'
+          labels: '["Store"]'
+          github-token: "${{ secrets.GITHUB_TOKEN }}"
+      - uses: Naturalclar/issue-action@v1.0.0
+        with:
+          keywords: '["Category","category"]'
+          labels: '["Category"]'
+          github-token: "${{ secrets.GITHUB_TOKEN }}"
+      - uses: Naturalclar/issue-action@v1.0.0
+        with:
+          keywords: '["Middleware","middleware"]'
+          labels: '["Middleware"]'
+          github-token: "${{ secrets.GITHUB_TOKEN }}"
+      - uses: Naturalclar/issue-action@v1.0.0
+        with:
+          keywords: '["Route","route"]'
+          labels: '["Route"]'
+          github-token: "${{ secrets.GITHUB_TOKEN }}"
+      - uses: Naturalclar/issue-action@v1.0.0
+        with:
+          keywords: '["Utils","utils", "Util", "util"]'
+          labels: '["Utils"]'
+          github-token: "${{ secrets.GITHUB_TOKEN }}"
+      - uses: Naturalclar/issue-action@v1.0.0
+        with:
+          keywords: '["Model","model"]'
+          labels: '["Model"]'
+          github-token: "${{ secrets.GITHUB_TOKEN }}"
+      - uses: Naturalclar/issue-action@v1.0.0
+        with:
+          keywords: '["Schema","schema"]'
+          labels: '["Schema"]'
+          github-token: "${{ secrets.GITHUB_TOKEN }}"
+      - uses: Naturalclar/issue-action@v1.0.0
+        with:
+          keywords: '["Controller","controller"]'
+          labels: '["Controller"]'
+          github-token: "${{ secrets.GITHUB_TOKEN }}"
+      - uses: Naturalclar/issue-action@v1.0.0
+        with:
+          keywords: '["Service","service"]'
+          labels: '["Service"]'
           github-token: "${{ secrets.GITHUB_TOKEN }}"
