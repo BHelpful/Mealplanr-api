@@ -37,8 +37,8 @@ export const userUpdateStructure = {
 	),
 };
 
-const params = {
-	params: object({
+const query = {
+	query: object({
 		userMail: string()
 			.email('Must be a valid email')
 			.required('Email is required'),
@@ -58,10 +58,10 @@ export const getUserSchema = object({
 });
 
 export const updateUserSchema = object({
-	...params,
+	...query,
 	body: object(userUpdateStructure),
 });
 
 export const deleteUserSchema = object({
-	...params,
+	...query,
 });
