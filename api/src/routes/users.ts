@@ -128,7 +128,7 @@ export const usersPut = {
 		parameters: [
 			{
 				name: 'userMail',
-				in: 'path',
+				in: 'query',
 				description: 'Email of the user',
 				required: true,
 				type: 'string',
@@ -174,7 +174,7 @@ export const usersPut = {
 };
 // Update a user
 router.put(
-	'/:userMail',
+	'/',
 	[requiresUser, validateRequest(updateUserSchema)],
 	updateUserHandler
 );
@@ -188,7 +188,7 @@ export const usersDelete = {
 		parameters: [
 			{
 				name: 'userMail',
-				in: 'path',
+				in: 'query',
 				description: 'Email of the user',
 				required: true,
 				type: 'string',
@@ -223,7 +223,7 @@ export const usersDelete = {
 };
 // Delete a user
 router.delete(
-	'/:userMail',
+	'/',
 	[requiresUser, validateRequest(deleteUserSchema)],
 	deleteUserHandler
 );

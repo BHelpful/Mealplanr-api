@@ -89,7 +89,7 @@ export const recipesPut = {
 		parameters: [
 			{
 				name: 'recipeId',
-				in: 'path',
+				in: 'query',
 				description: 'Id of the recipe',
 				required: true,
 				type: 'string',
@@ -151,7 +151,7 @@ export const recipesPut = {
 };
 // Update a recipe
 router.put(
-	'/:recipeId',
+	'/',
 	[requiresUser, validateRequest(updateRecipeSchema)],
 	updateRecipeHandler
 );
@@ -180,7 +180,7 @@ export const recipesGet = {
 	},
 };
 // Get a recipe
-router.get('/:recipeId', validateRequest(getRecipeSchema), getRecipeHandler);
+router.get('/', validateRequest(getRecipeSchema), getRecipeHandler);
 
 export const recipesDelete = {
 	delete: {
@@ -191,7 +191,7 @@ export const recipesDelete = {
 		parameters: [
 			{
 				name: 'recipeId',
-				in: 'path',
+				in: 'query',
 				description: 'Id of the recipe',
 				required: true,
 				type: 'string',
@@ -238,7 +238,7 @@ export const recipesDelete = {
 };
 // Delete a recipe
 router.delete(
-	'/:recipeId',
+	'/',
 	[requiresUser, validateRequest(deleteRecipeSchema)],
 	deleteRecipeHandler
 );

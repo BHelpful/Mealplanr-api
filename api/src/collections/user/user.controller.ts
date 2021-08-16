@@ -41,7 +41,7 @@ export async function createUserHandler(req: Request, res: Response) {
  */
 export async function updateUserHandler(req: Request, res: Response) {
 	const currUserMail = get(req, 'user.email');
-	const userMail = get(req, 'params.userMail');
+	const userMail = get(req, 'query.userMail');
 	const update = req.body;
 
 	// TODO move to user.model.ts to something similar as UserSchema.pre('save')
@@ -122,7 +122,7 @@ export async function getUserExistsHandler(req: Request, res: Response) {
  */
 export async function deleteUserHandler(req: Request, res: Response) {
 	const currUserMail = get(req, 'user.email');
-	const userMail = get(req, 'params.userMail');
+	const userMail = get(req, 'query.userMail');
 
 	if (String(currUserMail) !== String(userMail)) {
 		return res.sendStatus(401);
