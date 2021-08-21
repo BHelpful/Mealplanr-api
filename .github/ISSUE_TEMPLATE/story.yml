@@ -16,14 +16,6 @@ body:
     validations:
       required: true
   - type: textarea
-    id: ux
-    attributes:
-      label: UX
-      description: Design of the feature. If no design is available leave questions for UX here.
-      placeholder: Implement the following design...
-    validations:
-      required: true
-  - type: textarea
     id: acceptance-criteria
     attributes:
       label: Acceptance criteria
@@ -50,7 +42,6 @@ body:
         ```
         - Acceptance criteria written and reviewed by QA, PM and SE
         - Behaviour scenarios written
-        - Signed off UX design
         - Estimated and appropriately scoped
         ```
         
@@ -74,7 +65,7 @@ body:
         - Verified by QA
             - Functionally manually verified on a setup like the actual setup
             - QA verifies test coverage aligns with master test plan
-        - Verified by UX and product owner / verified by the team
+        - Verified by product owner / verified by the team
         - Documentation of tech debt
         - Persistent technical documentation updated / written
             - Ready is updated / written
