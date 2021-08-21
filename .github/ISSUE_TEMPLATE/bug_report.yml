@@ -24,16 +24,14 @@ body:
     validations:
       required: true
   - type: dropdown
-    id: browsers
+    id: bug-location
     attributes:
-      label: What browsers are you seeing the problem on?
+      label: Origin of the bug or security woundability
       multiple: true
       options:
-        - Firefox
-        - Chrome
-        - Safari
-        - Microsoft Edge
-        - Opera
+        - Code scanning
+        - Browser
+        - Postman
     validations:
       required: true
   - type: textarea
@@ -46,12 +44,12 @@ body:
     id: attatchments
     attributes:
       label: Attatchments
-      description: Please attatch images and videos/GIFs to paint a better picture of the bug.
+      description: Please attatch links, images, and videos/GIFs to paint a better picture of the bug.
   - type: checkboxes
     id: terms
     attributes:
       label: Code of Conduct
-      description: By submitting this issue, you agree to follow our [Code of Conduct](https://github.com/BHelpful/Mealplanr-api/blob/master/docs/CODE_OF_CONDUCT.md)
+      description: By submitting this issue, you agree to follow our [Code of Conduct](https://github.com/BHelpful/Mealplanr/blob/master/docs/CODE_OF_CONDUCT.md)
       options:
         - label: I agree to follow this project's Code of Conduct
           required: true

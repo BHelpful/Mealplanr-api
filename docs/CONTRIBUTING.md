@@ -1,4 +1,4 @@
-# Contributing to Online-Help-List
+# Contributing to MealPlanr API
 We love your input! we want to make contributing to this project as easy and transparent as possible, whether it's:
 
 - Reporting a bug
