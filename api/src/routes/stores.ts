@@ -1,7 +1,18 @@
 import { Router } from 'express';
-import { omit } from 'lodash';
+import {
+	createStoreHandler,
+	deleteStoreHandler,
+	getStoreHandler,
+	updateStoreHandler,
+} from '../collections/store/store.controller';
+import { storeSM } from '../collections/store/store.model';
+import {
+	createStoreSchema,
+	deleteStoreSchema,
+	getStoreSchema,
+	updateStoreSchema,
+} from '../collections/store/store.schema';
 import { requiresUser, validateRequest } from '../middleware';
-import {createStoreSchema,updateStoreSchema,getStoreSchema,deleteStoreSchema} from './store.schema.ts';
 
 const router = Router();
 
@@ -10,7 +21,8 @@ const router = Router();
 export const storesPost = {
 	post: {
 		summary: 'Create new store',
-		description: "Creates a new store to be used in settings and for mealplans and shoppinglist",
+		description:
+			'Creates a new store to be used in settings and for mealplans and shoppinglist',
 		tags: ['stores'],
 		produces: ['application/json'],
 		parameters: [

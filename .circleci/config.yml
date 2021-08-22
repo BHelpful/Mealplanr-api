@@ -1,0 +1,28 @@
+version: 2.1
+jobs:
+  run_tests:
+    docker:
+      - image: circleci/node:10-browsers
+    steps:
+      - checkout
+      - run:
+          name: Navigate to project folder
+          command: |
+            cd ./api
+      - run:
+          name: Install dependencies
+          command: |
+            yarn install
+      - run:
+          name: Run unit tests
+          command: |
+            yarn unit_test
+      - store_test_results:
+          path: test-results
+      - store_artifacts:
+          path: test-results
+
+workflows:
+  build_test:
+    jobs:
+      - run_tests

@@ -85,10 +85,6 @@ export async function deleteStoreHandler(req: Request, res: Response) {
 		return res.sendStatus(404);
 	}
 
-	if (String(store.creatorId) !== String(userId)) {
-		return res.sendStatus(401);
-	}
-
 	await deleteStore({ storeId });
 
 	return res.sendStatus(200);
