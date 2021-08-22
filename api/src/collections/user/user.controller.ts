@@ -7,7 +7,6 @@ import {
 	findUser,
 } from './user.service';
 import log from '../../logger';
-import config from 'config';
 import bcrypt from 'bcrypt';
 
 /**
@@ -46,7 +45,9 @@ export async function updateUserHandler(req: Request, res: Response) {
 	// TODO move to user.model.ts to something similar as UserSchema.pre('save')
 	if (update.password) {
 		// Random additional data
-		const salt = await bcrypt.genSalt(config.get('saltWorkFactor'));
+		const salt = await bcrypt.genSalt(
+			parseInt(process.env.SALT_WORKER_FACTOR)
+		);
 
 		const hash = await bcrypt.hashSync(update.password, salt);
 

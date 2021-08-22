@@ -1,11 +1,11 @@
 import log from '../logger';
 import request from 'supertest';
 import chai from 'chai';
+import app from '../app';
 
 const assert = chai.assert;
 const expect = chai.expect;
 
-const app = require('../app.ts');
 const conn = require('../connect.ts');
 
 describe('POST /users', () => {

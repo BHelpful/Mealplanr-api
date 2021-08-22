@@ -1,11 +1,6 @@
 import jwt from 'jsonwebtoken';
-import config from 'config';
-
-const ENV = require('dotenv');
-ENV.config();
 
 const privateKey = process.env.PRIVATE_KEY;
-// const privateKey = config.get('privateKey') as string;
 
 /**
  * This function is used to generate a JWT token.

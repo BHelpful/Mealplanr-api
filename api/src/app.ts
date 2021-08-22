@@ -1,3 +1,4 @@
+require('dotenv').config();
 import express from 'express';
 import { serve, setup } from 'swagger-ui-express';
 import cors from 'cors';
@@ -109,4 +110,4 @@ parsedSwaggerDoc.paths['/recipes'] = {
 // set up the Swagger UI
 app.use('/api-docs', serve, setup(parsedSwaggerDoc));
 
-module.exports = app;
+export default app;

@@ -1,13 +1,13 @@
 import log from './logger';
-import config from 'config';
 import { connection } from 'mongoose';
+import app from './app';
 
 const conn = require('./connect.ts');
-const app = require('./app.ts');
 
 // gets items from default config file
-const port = config.get('port') as number;
-const host = config.get('host') as string;
+const port: number = parseInt(process.env.PORT) || 3000;
+const host: string = process.env.HOST || 'localhost';
+
 // this is used to get info on the connection to the DB.
 const db = connection;
 

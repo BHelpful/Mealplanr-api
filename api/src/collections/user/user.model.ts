@@ -1,7 +1,6 @@
 import { Schema, Document, model, HookNextFunction } from 'mongoose';
 const m2s = require('mongoose-to-swagger');
 import bcrypt from 'bcrypt';
-import config from 'config';
 import {
 	PlanDocument,
 	PlanSubschema,
@@ -70,7 +69,9 @@ UserSchema.pre('save', async function (next: HookNextFunction) {
 	if (!user.isModified('password')) return next();
 
 	// Random additional data
-	const salt = await bcrypt.genSalt(config.get('saltWorkFactor'));
+	const salt = await bcrypt.genSalt(
+		parseInt(process.env.SALT_WORKER_FACTOR)
+	);
 
 	const hash = await bcrypt.hashSync(user.password, salt);
 

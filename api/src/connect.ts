@@ -1,7 +1,7 @@
 import { connect, disconnect } from 'mongoose';
-import config from 'config';
 import log from './logger';
-const dbUri = config.get('dbUri') as string;
+
+const dbUri = process.env.DB_URI as string;
 
 /**
  * This function connects to the mongoDB database on the server
