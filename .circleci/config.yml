@@ -5,7 +5,7 @@ jobs:
       - image: circleci/node:10-browsers
     steps:
       - checkout:
-          path: ~/api
+          path: ~/Mealplanr-api/api
       - run: ls -la
       - run:
           name: Install dependencies
