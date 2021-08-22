@@ -3,9 +3,9 @@ jobs:
   run_tests:
     docker:
       - image: circleci/node:10-browsers
-    working_directory: ~/Mealplanr-api/api
     steps:
-      - checkout
+      - checkout:
+          path: ~/api
       - run: ls -la
       - run:
           name: Install dependencies
