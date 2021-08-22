@@ -9,7 +9,6 @@ import {
 import log from '../../logger';
 import config from 'config';
 import bcrypt from 'bcrypt';
-import { findSessions } from '../session/session.service';
 
 /**
  * This function is used to request the creation of a new user.
@@ -28,7 +27,7 @@ export async function createUserHandler(req: Request, res: Response) {
 	} catch (e) {
 		log.error(e);
 		// Sets status code to 409, which is a conflict error.
-		return res.status(409).send(e.message);
+		return res.status(409).send('User already exists');
 	}
 }
 
@@ -54,14 +53,21 @@ export async function updateUserHandler(req: Request, res: Response) {
 		update.password = hash;
 	}
 
+	const existingUser = await findUser({ email: update?.email });
+	if (existingUser && existingUser.email !== currUserMail) {
+		return res
+			.status(409)
+			.send('Other user already exists with that email');
+	}
+
 	const user = await findUser({ email: userMail });
 
 	if (!user) {
-		return res.sendStatus(404);
+		return res.status(404).send('User not found');
 	}
 
 	if (String(user.email) !== currUserMail) {
-		return res.sendStatus(401);
+		return res.status(401).send("You can't update other users");
 	}
 
 	const updatedUser = await findAndUpdateUser({ email: userMail }, update, {
@@ -125,16 +131,16 @@ export async function deleteUserHandler(req: Request, res: Response) {
 	const userMail = get(req, 'query.userMail');
 
 	if (String(currUserMail) !== String(userMail)) {
-		return res.sendStatus(401);
+		return res.status(401).send("You can't delete other users");
 	}
 
 	const user = await findUser({ email: userMail });
 
 	if (!user) {
-		return res.sendStatus(404);
+		return res.status(404).send('User not found.');
 	}
 
 	await deleteUser({ email: userMail });
 
-	return res.sendStatus(200);
+	return res.send('User deleted');
 }
