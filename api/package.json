@@ -5,7 +5,7 @@
   "license": "MIT",
   "scripts": {
     "dev": "nodemon --config nodemon.json src/server.ts",
-    "unit_test": "set NODE_ENV=test&& ts-mocha src/**/*.spec.ts --timeout 10000 --recursive --exit"
+    "unit_test": "set NODE_ENV=test&& ts-mocha src/**/*.spec.ts --timeout 2000 --recursive --exit"
   },
   "dependencies": {
     "bcrypt": "^5.0.1",

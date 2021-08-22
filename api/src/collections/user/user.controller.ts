@@ -46,7 +46,7 @@ export async function updateUserHandler(req: Request, res: Response) {
 	if (update.password) {
 		// Random additional data
 		const salt = await bcrypt.genSalt(
-			parseInt(process.env.SALT_WORKER_FACTOR)
+			parseInt(process.env.SALT_WORKER_FACTOR, 10)
 		);
 
 		const hash = await bcrypt.hashSync(update.password, salt);

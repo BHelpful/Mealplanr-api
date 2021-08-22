@@ -70,7 +70,7 @@ UserSchema.pre('save', async function (next: HookNextFunction) {
 
 	// Random additional data
 	const salt = await bcrypt.genSalt(
-		parseInt(process.env.SALT_WORKER_FACTOR)
+		parseInt(process.env.SALT_WORKER_FACTOR, 10)
 	);
 
 	const hash = await bcrypt.hashSync(user.password, salt);
