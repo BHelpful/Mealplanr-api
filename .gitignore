@@ -2,3 +2,4 @@ node_modules
 /api/config/default.ts
 /api/config/tunnel_rsa
 /api/config/api_rsa
+.env
