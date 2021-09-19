@@ -47,7 +47,7 @@ export async function updateRecipeHandler(req: Request, res: Response) {
 
 	const updatedRecipe = await findAndUpdateRecipe({ recipeId }, update, {
 		new: true,
-		// This is false because setting it true deprecated https://mongoosejs.com/docs/deprecations.html#findandmodify
+		// useFindAndModify is false because setting it true is deprecated https://mongoosejs.com/docs/deprecations.html#findandmodify
 		useFindAndModify: false,
 	});
 

@@ -16,7 +16,6 @@ import {
  * @returns a response with the store.
  */
 export async function createStoreHandler(req: Request, res: Response) {
-	// TODO: add some sort of check, as not just anybody using the api should be able to add a store.
 	const body = req.body;
 
 	try {
@@ -40,7 +39,6 @@ export async function createStoreHandler(req: Request, res: Response) {
  * @returns a response with the updated store.
  */
 export async function updateStoreHandler(req: Request, res: Response) {
-	// TODO: add some sort of check, as not just anybody using the api should be able to update a store.
 	const storeId = get(req, 'query.storeId');
 	const update = req.body;
 
@@ -91,7 +89,6 @@ export async function getStoreHandler(req: Request, res: Response) {
  * @returns a response with status 200 if successful
  */
 export async function deleteStoreHandler(req: Request, res: Response) {
-	// TODO: add some sort of check, as not just anybody using the api should be able to delete a store.
 	const storeId = get(req, 'query.storeId');
 
 	const store = await findStore({ _id: storeId });
