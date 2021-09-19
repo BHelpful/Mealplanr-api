@@ -52,11 +52,7 @@ export async function findAndUpdateStore(
 	options: QueryOptions
 ) {
 	try {
-		return await storeModel.findOneAndUpdate(
-			query,
-			{ $set: update },
-			options
-		);
+		return await storeModel.updateOne(query, { $set: update }, options);
 	} catch (error) {
 		throw new Error(error as string);
 	}
