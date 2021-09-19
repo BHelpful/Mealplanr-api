@@ -80,7 +80,7 @@ export function createAccessToken({
 	const accessToken = sign(
 		{ ...user, session: session._id },
 		{
-			expiresIn: process.env.ACCESS_TOKEN_TTL,
+			expiresIn: process.env.ACCESS_TOKEN_TTL as string,
 		} // 15 minutes
 	);
 

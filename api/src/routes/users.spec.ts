@@ -1,4 +1,3 @@
-import log from '../logger';
 import request from 'supertest';
 import chai from 'chai';
 import app from '../app';

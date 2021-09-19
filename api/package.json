@@ -4,7 +4,7 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "dev": "nodemon --config nodemon.json src/server.ts",
+    "start": "nodemon --config nodemon.json src/server.ts",
     "unit_test": "set NODE_ENV=test&& ts-mocha src/**/*.spec.ts --timeout 2000 --recursive --exit"
   },
   "dependencies": {

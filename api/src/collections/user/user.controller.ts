@@ -24,7 +24,7 @@ export async function createUserHandler(req: Request, res: Response) {
 		// in its hashed state.
 		return res.status(200).send(omit(user.toJSON(), 'password'));
 	} catch (e) {
-		log.error(e);
+		log.error(e as string);
 		// Sets status code to 409, which is a conflict error.
 		return res.status(409).send('User already exists');
 	}
@@ -46,7 +46,7 @@ export async function updateUserHandler(req: Request, res: Response) {
 	if (update.password) {
 		// Random additional data
 		const salt = await bcrypt.genSalt(
-			parseInt(process.env.SALT_WORKER_FACTOR, 10)
+			parseInt(process.env.SALT_WORKER_FACTOR as string, 10)
 		);
 
 		const hash = await bcrypt.hashSync(update.password, salt);
