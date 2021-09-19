@@ -20,7 +20,9 @@ export async function createStoreHandler(req: Request, res: Response) {
 	const body = req.body;
 
 	try {
-		if ((await findStore(body))?.name === body.name) {
+		if (
+			(await findStore({ name: { $eq: body.name } }))?.name === body.name
+		) {
 			return res.status(409).send('Store already exists');
 		}
 		const store = await createStore({ ...body });
