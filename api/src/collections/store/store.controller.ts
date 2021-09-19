@@ -50,7 +50,9 @@ export async function updateStoreHandler(req: Request, res: Response) {
 		return res.sendStatus(404);
 	}
 
-	if ((await findStore(update))?.name === update.name) {
+	if (
+		(await findStore({ name: { $eq: update.name } }))?.name === update.name
+	) {
 		return res.status(409).send('Store already exists');
 	}
 
