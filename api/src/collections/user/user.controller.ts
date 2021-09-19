@@ -67,7 +67,7 @@ export async function updateUserHandler(req: Request, res: Response) {
 		return res.status(404).send('User not found');
 	}
 
-	if (String(user.email) !== currUserMail) {
+	if ((user.email as string) !== currUserMail) {
 		return res.status(401).send("You can't update other users");
 	}
 

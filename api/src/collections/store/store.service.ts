@@ -12,8 +12,12 @@ import storeModel, { StoreDocument } from './store.model';
  * @param body - The body of the store (based on the storeModel)
  * @returns a store document
  */
-export function createStore(body: DocumentDefinition<StoreDocument>) {
-	return storeModel.create(body);
+export async function createStore(body: DocumentDefinition<StoreDocument>) {
+	try {
+		return await storeModel.create(body);
+	} catch (error) {
+		throw new Error(error as string);
+	}
 }
 
 /**
@@ -23,11 +27,15 @@ export function createStore(body: DocumentDefinition<StoreDocument>) {
  * @param options - options for the findOne function from mongoose
  * @returns a store document
  */
-export function findStore(
+export async function findStore(
 	query: FilterQuery<StoreDocument>,
 	options: QueryOptions = { lean: true }
 ) {
-	return storeModel.findOne(query, {}, options);
+	try {
+		return await storeModel.findOne(query, {}, options);
+	} catch (error) {
+		throw new Error(error as string);
+	}
 }
 
 /**
@@ -38,12 +46,16 @@ export function findStore(
  * @param options - options for the findOne function from mongoose
  * @returns a store document
  */
-export function findAndUpdateStore(
+export async function findAndUpdateStore(
 	query: FilterQuery<StoreDocument>,
 	update: UpdateQuery<StoreDocument>,
 	options: QueryOptions
 ) {
-	return storeModel.findOneAndUpdate(query, update, options);
+	try {
+		return await storeModel.findOneAndUpdate(query, update, options);
+	} catch (error) {
+		throw new Error(error as string);
+	}
 }
 
 /**
@@ -52,6 +64,10 @@ export function findAndUpdateStore(
  * @param query - a query object that will be used to find a store from the DB
  * @returns a store document
  */
-export function deleteStore(query: FilterQuery<StoreDocument>) {
-	return storeModel.deleteOne(query);
+export async function deleteStore(query: FilterQuery<StoreDocument>) {
+	try {
+		return await storeModel.deleteOne(query);
+	} catch (error) {
+		throw new Error(error as string);
+	}
 }
