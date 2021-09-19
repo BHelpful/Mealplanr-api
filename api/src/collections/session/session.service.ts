@@ -132,7 +132,11 @@ export async function updateSession(
 	query: FilterQuery<SessionDocument>,
 	update: UpdateQuery<SessionDocument>
 ) {
-	return sessionModel.updateOne(query, update);
+	try {
+		return await sessionModel.updateOne(query, update);
+	} catch (error) {
+		throw new Error(error as string);
+	}
 }
 
 /**
@@ -142,5 +146,9 @@ export async function updateSession(
  * @returns the sessions matching the querry
  */
 export async function findSessions(query: FilterQuery<SessionDocument>) {
-	return sessionModel.find(query).lean();
+	try {
+		return await sessionModel.find(query).lean();
+	} catch (error) {
+		throw new Error(error as string);
+	}
 }
