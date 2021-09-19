@@ -6,7 +6,7 @@ const conn = require('./connect.ts');
 
 // gets items from default config file
 const port: number = parseInt(process.env.PORT as string, 10) || 3000;
-const host: string = process.env.HOST || 'localhost';
+const host: string = (process.env.HOST as string) || 'localhost';
 
 // this is used to get info on the connection to the DB.
 const db = connection;

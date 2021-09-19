@@ -12,7 +12,7 @@ const dbUri = process.env.DB_URI as string;
  */
 function connectDB() {
 	return new Promise((resolve, reject) => {
-		if (process.env.NODE_ENV === 'test') {
+		if ((process.env.NODE_ENV as string) === 'test') {
 			// In test environment, we don't want to connect to the real DB.
 			const mongoose = require('mongoose');
 			const Mockgoose = require('mockgoose').Mockgoose;
