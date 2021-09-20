@@ -34,8 +34,7 @@ export async function createRecipeHandler(req: Request, res: Response) {
 export async function updateRecipeHandler(req: Request, res: Response) {
 	const userId = get(req, 'user._id');
 	const recipeId = get(req, 'query.recipeId');
-	req.body = sanitize(req.body);
-	const update = req.body;
+	const update = sanitize(req.body);
 
 	const recipe = await findRecipe({ recipeId });
 
