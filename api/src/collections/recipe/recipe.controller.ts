@@ -6,7 +6,7 @@ import {
 	findAndUpdateRecipe,
 	deleteRecipe,
 } from './recipe.service';
-var sanitize = require('mongo-sanitize');
+var sanitize = require("mongo-sanitize");
 
 /**
  * This function is used to request the creation of a new recipe.
@@ -34,7 +34,7 @@ export async function createRecipeHandler(req: Request, res: Response) {
 export async function updateRecipeHandler(req: Request, res: Response) {
 	const userId = get(req, 'user._id');
 	const recipeId = get(req, 'query.recipeId');
-	const update = sanitize(req.body);
+	const update = req.body;
 
 	const recipe = await findRecipe({ recipeId });
 

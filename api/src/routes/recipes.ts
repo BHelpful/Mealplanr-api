@@ -14,6 +14,7 @@ import {
 	updateRecipeSchema,
 } from '../collections/recipe/recipe.schema';
 import { requiresUser, validateRequest } from '../middleware';
+import sanitizeQuery from '../middleware/sanitizeQuery';
 
 const router = Router();
 
@@ -152,7 +153,7 @@ export const recipesPut = {
 // Update a recipe
 router.put(
 	'/',
-	[requiresUser, validateRequest(updateRecipeSchema)],
+	[requiresUser, validateRequest(updateRecipeSchema), sanitizeQuery],
 	updateRecipeHandler
 );
 
