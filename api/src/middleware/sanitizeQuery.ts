@@ -19,7 +19,7 @@ const sanitizeQuery = async (
 	req.body = sanitize(req.body);
 	req.query = sanitize(req.query);
 	req.params = sanitize(req.params);
-	next();
+	return next();
 };
 
 export default sanitizeQuery;
