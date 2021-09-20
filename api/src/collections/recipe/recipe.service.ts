@@ -12,8 +12,12 @@ import recipeModel, { RecipeDocument } from './recipe.model';
  * @param body - The body of the recipe (based on the recipeModel)
  * @returns a recipe document
  */
-export function createRecipe(body: DocumentDefinition<RecipeDocument>) {
-	return recipeModel.create(body);
+export async function createRecipe(body: DocumentDefinition<RecipeDocument>) {
+	try {
+		return await recipeModel.create(body);
+	} catch (error) {
+		throw new Error(error as string);
+	}
 }
 
 /**
@@ -23,11 +27,15 @@ export function createRecipe(body: DocumentDefinition<RecipeDocument>) {
  * @param options - options for the findOne function from mongoose
  * @returns a recipe document
  */
-export function findRecipe(
+export async function findRecipe(
 	query: FilterQuery<RecipeDocument>,
 	options: QueryOptions = { lean: true }
 ) {
-	return recipeModel.findOne(query, {}, options);
+	try {
+		return await recipeModel.findOne(query, {}, options);
+	} catch (error) {
+		throw new Error(error as string);
+	}
 }
 
 /**
@@ -38,12 +46,16 @@ export function findRecipe(
  * @param options - options for the findOne function from mongoose
  * @returns a recipe document
  */
-export function findAndUpdateRecipe(
+export async function findAndUpdateRecipe(
 	query: FilterQuery<RecipeDocument>,
 	update: UpdateQuery<RecipeDocument>,
 	options: QueryOptions
 ) {
-	return recipeModel.findOneAndUpdate(query, update, options);
+	try {
+		return await recipeModel.findOneAndUpdate(query, update, options);
+	} catch (error) {
+		throw new Error(error as string);
+	}
 }
 
 /**
@@ -52,6 +64,10 @@ export function findAndUpdateRecipe(
  * @param query - a query object that will be used to find a recipe from the DB
  * @returns a recipe document
  */
-export function deleteRecipe(query: FilterQuery<RecipeDocument>) {
-	return recipeModel.deleteOne(query);
+export async function deleteRecipe(query: FilterQuery<RecipeDocument>) {
+	try {
+		return await recipeModel.deleteOne(query);
+	} catch (error) {
+		throw new Error(error as string);
+	}
 }

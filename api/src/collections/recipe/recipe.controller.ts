@@ -6,7 +6,6 @@ import {
 	findAndUpdateRecipe,
 	deleteRecipe,
 } from './recipe.service';
-
 /**
  * This function is used to request the creation of a new recipe.
  *
@@ -32,7 +31,7 @@ export async function createRecipeHandler(req: Request, res: Response) {
  */
 export async function updateRecipeHandler(req: Request, res: Response) {
 	const userId = get(req, 'user._id');
-	const recipeId = get(req, 'params.recipeId');
+	const recipeId = get(req, 'query.recipeId');
 	const update = req.body;
 
 	const recipe = await findRecipe({ recipeId });
@@ -47,7 +46,7 @@ export async function updateRecipeHandler(req: Request, res: Response) {
 
 	const updatedRecipe = await findAndUpdateRecipe({ recipeId }, update, {
 		new: true,
-		// This is false because setting it true deprecated https://mongoosejs.com/docs/deprecations.html#findandmodify
+		// useFindAndModify is false because setting it true is deprecated https://mongoosejs.com/docs/deprecations.html#findandmodify
 		useFindAndModify: false,
 	});
 
@@ -81,7 +80,7 @@ export async function getRecipeHandler(req: Request, res: Response) {
  */
 export async function deleteRecipeHandler(req: Request, res: Response) {
 	const userId = get(req, 'user._id');
-	const recipeId = get(req, 'params.recipeId');
+	const recipeId = get(req, 'query.recipeId');
 
 	const recipe = await findRecipe({ recipeId });
 

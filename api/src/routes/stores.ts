@@ -1,42 +1,37 @@
 import { Router } from 'express';
-import { omit } from 'lodash';
 import {
-	createRecipeHandler,
-	deleteRecipeHandler,
-	getRecipeHandler,
-	updateRecipeHandler,
-} from '../collections/recipe/recipe.controller';
-import { recipeSM } from '../collections/recipe/recipe.model';
+	createStoreHandler,
+	deleteStoreHandler,
+	getStoreHandler,
+	updateStoreHandler,
+} from '../collections/store/store.controller';
+import { storeSM } from '../collections/store/store.model';
 import {
-	createRecipeSchema,
-	deleteRecipeSchema,
-	getRecipeSchema,
-	updateRecipeSchema,
-} from '../collections/recipe/recipe.schema';
+	createStoreSchema,
+	deleteStoreSchema,
+	getStoreSchema,
+	updateStoreSchema,
+} from '../collections/store/store.schema';
 import { requiresUser, sanitizeQuery, validateRequest } from '../middleware';
 
 const router = Router();
 
-export const recipesPost = {
+// TODO: go over the responses of the swagger documentation and remove/add to match the what is being used for store controller
+
+export const storesPost = {
 	post: {
-		summary: 'Create new recipe',
-		description: "Creates a new recipe to add to the user's collection",
-		tags: ['recipes'],
+		summary: 'Create new store',
+		description:
+			'Creates a new store to be used in settings and for mealplans and shoppinglist',
+		tags: ['stores'],
 		produces: ['application/json'],
 		parameters: [
 			{
 				name: 'body',
 				in: 'body',
-				description: 'Create recipe body object',
+				description: 'Create store body object',
 				required: true,
-				schema: omit(recipeSM, [
-					'properties.rating',
-					'properties.updatedAt',
-					'properties.createdAt',
-					'properties.ingredients.store',
-					'properties.ingredients._id',
-					'properties._id',
-				]),
+				schema: storeSM,
 			},
 			{
 				in: 'header',
@@ -62,7 +57,7 @@ export const recipesPost = {
 		responses: {
 			'200': {
 				description: 'OK',
-				schema: recipeSM,
+				schema: storeSM,
 			},
 			'400': {
 				description: 'Bad Request',
@@ -73,40 +68,33 @@ export const recipesPost = {
 		},
 	},
 };
-// Create a new recipe
+// Create a new store
 router.post(
 	'/',
-	[sanitizeQuery, requiresUser, validateRequest(createRecipeSchema)],
-	createRecipeHandler
+	[sanitizeQuery, requiresUser, validateRequest(createStoreSchema)],
+	createStoreHandler
 );
 
-export const recipesPut = {
+export const storesPut = {
 	put: {
-		summary: 'Update recipe',
-		description: 'Updates a recipe that the user owns',
-		tags: ['recipes'],
+		summary: 'Update store',
+		description: 'Updates a store that is globally available',
+		tags: ['stores'],
 		produces: ['application/json'],
 		parameters: [
 			{
-				name: 'recipeId',
+				name: 'storeId',
 				in: 'query',
-				description: 'Id of the recipe',
+				description: 'Id of the store',
 				required: true,
 				type: 'string',
 			},
 			{
 				name: 'body',
 				in: 'body',
-				description: 'Create recipe body object',
+				description: 'Create store body object',
 				required: true,
-				schema: omit(recipeSM, [
-					'properties.rating',
-					'properties.updatedAt',
-					'properties.createdAt',
-					'properties.ingredients.store',
-					'properties.ingredients._id',
-					'properties._id',
-				]),
+				schema: storeSM,
 			},
 			{
 				in: 'header',
@@ -132,41 +120,41 @@ export const recipesPut = {
 		responses: {
 			'200': {
 				description: 'OK',
-				schema: recipeSM,
+				schema: storeSM,
 			},
 			'400': {
 				description: 'Bad Request',
 			},
 			'401': {
-				description: 'User not the creator of the recipe',
+				description: 'User not the creator of the store',
 			},
 			'403': {
 				description: 'User not logged in',
 			},
 			'404': {
-				description: 'No such recipe exists',
+				description: 'No such store exists',
 			},
 		},
 	},
 };
-// Update a recipe
+// Update a store
 router.put(
 	'/',
-	[sanitizeQuery, requiresUser, validateRequest(updateRecipeSchema)],
-	updateRecipeHandler
+	[sanitizeQuery, requiresUser, validateRequest(updateStoreSchema)],
+	updateStoreHandler
 );
 
-export const recipesGet = {
+export const storesGet = {
 	get: {
-		summary: 'Get a recipe',
-		description: 'Get a recipe based on the recipeId',
-		tags: ['recipes'],
+		summary: 'Get a store',
+		description: 'Get a store based on the storeId',
+		tags: ['stores'],
 		produces: ['application/json'],
 		parameters: [
 			{
-				name: 'recipeId',
+				name: 'storeId',
 				in: 'query',
-				description: 'Id of the recipe',
+				description: 'Id of the store',
 				required: true,
 				type: 'string',
 			},
@@ -174,29 +162,25 @@ export const recipesGet = {
 		responses: {
 			'200': {
 				description: 'OK',
-				schema: recipeSM,
+				schema: storeSM,
 			},
 		},
 	},
 };
-// Get a recipe
-router.get(
-	'/',
-	[sanitizeQuery, validateRequest(getRecipeSchema)],
-	getRecipeHandler
-);
+// Get a store
+router.get('/', [sanitizeQuery, validateRequest(getStoreSchema)], getStoreHandler);
 
-export const recipesDelete = {
+export const storesDelete = {
 	delete: {
-		summary: 'Delete a recipe',
-		description: 'Delete a recipe based on the recipeId',
-		tags: ['recipes'],
+		summary: 'Delete a store',
+		description: 'Delete a store based on the storeId',
+		tags: ['stores'],
 		produces: ['application/json'],
 		parameters: [
 			{
-				name: 'recipeId',
+				name: 'storeId',
 				in: 'query',
-				description: 'Id of the recipe',
+				description: 'Id of the store',
 				required: true,
 				type: 'string',
 			},
@@ -229,22 +213,22 @@ export const recipesDelete = {
 				description: 'Bad Request',
 			},
 			'401': {
-				description: 'User not the creator of the recipe',
+				description: 'User not the creator of the store',
 			},
 			'403': {
 				description: 'User not logged in',
 			},
 			'404': {
-				description: 'No such recipe exists',
+				description: 'No such store exists',
 			},
 		},
 	},
 };
-// Delete a recipe
+// Delete a store
 router.delete(
 	'/',
-	[sanitizeQuery, requiresUser, validateRequest(deleteRecipeSchema)],
-	deleteRecipeHandler
+	[sanitizeQuery, requiresUser, validateRequest(deleteStoreSchema)],
+	deleteStoreHandler
 );
 
 export default router;
