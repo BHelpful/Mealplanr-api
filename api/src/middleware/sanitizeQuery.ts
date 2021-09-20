@@ -2,11 +2,10 @@ import { Request, Response, NextFunction } from 'express';
 const sanitize = require('mongo-sanitize');
 
 /**
- * This function is middleware used to check if there is a user
+ * This function is middleware used to prevent NoSQL injection
  *
  * @remarks
- * The usecase is to check if a user is logged in before
- * e.g. running the seqence to log the user out.
+ * The usecase is to sanitize all queries from the user before execution.
  *
  * @param req - The request object.
  * @param res - The response object.
@@ -18,7 +17,9 @@ const sanitizeQuery = async (
 	next: NextFunction
 ) => {
 	req.body = sanitize(req.body);
-	return next();
+	req.query = sanitize(req.query);
+	req.params = sanitize(req.params);
+	next();
 };
 
 export default sanitizeQuery;
