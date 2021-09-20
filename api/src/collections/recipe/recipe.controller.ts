@@ -6,7 +6,7 @@ import {
 	findAndUpdateRecipe,
 	deleteRecipe,
 } from './recipe.service';
-var sanitize = require("mongo-sanitize");
+var sanitize = require('mongo-sanitize');
 
 /**
  * This function is used to request the creation of a new recipe.

@@ -12,7 +12,7 @@ import {
 	getStoreSchema,
 	updateStoreSchema,
 } from '../collections/store/store.schema';
-import { requiresUser, validateRequest } from '../middleware';
+import { requiresUser, sanitizeQuery, validateRequest } from '../middleware';
 
 const router = Router();
 
@@ -71,7 +71,7 @@ export const storesPost = {
 // Create a new store
 router.post(
 	'/',
-	[requiresUser, validateRequest(createStoreSchema)],
+	[sanitizeQuery, requiresUser, validateRequest(createStoreSchema)],
 	createStoreHandler
 );
 
@@ -140,7 +140,7 @@ export const storesPut = {
 // Update a store
 router.put(
 	'/',
-	[requiresUser, validateRequest(updateStoreSchema)],
+	[sanitizeQuery, requiresUser, validateRequest(updateStoreSchema)],
 	updateStoreHandler
 );
 
@@ -168,7 +168,7 @@ export const storesGet = {
 	},
 };
 // Get a store
-router.get('/', validateRequest(getStoreSchema), getStoreHandler);
+router.get('/', [sanitizeQuery, validateRequest(getStoreSchema)], getStoreHandler);
 
 export const storesDelete = {
 	delete: {
@@ -227,7 +227,7 @@ export const storesDelete = {
 // Delete a store
 router.delete(
 	'/',
-	[requiresUser, validateRequest(deleteStoreSchema)],
+	[sanitizeQuery, requiresUser, validateRequest(deleteStoreSchema)],
 	deleteStoreHandler
 );
 
