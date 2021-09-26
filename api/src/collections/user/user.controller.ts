@@ -43,16 +43,12 @@ export async function updateUserHandler(req: Request, res: Response) {
 	const update = req.body;
 
 	// TODO move to user.model.ts to something similar as UserSchema.pre('save')
-	if (update.password) {
-		// Random additional data
-		const salt = await bcrypt.genSalt(
-			parseInt(process.env.SALT_WORKER_FACTOR as string, 10)
-		);
-
-		const hash = await bcrypt.hashSync(update.password, salt);
-
-		update.password = hash;
-	}
+	// Random additional data
+	const salt = await bcrypt.genSalt(
+		parseInt(process.env.SALT_WORKER_FACTOR as string, 10)
+	);
+	const hash = await bcrypt.hashSync(update.password, salt);
+	update.password = hash;
 
 	const existingUser = await findUser({ email: update?.email });
 	if (existingUser && existingUser.email !== currUserMail) {
