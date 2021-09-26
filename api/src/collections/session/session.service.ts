@@ -1,5 +1,4 @@
 import { LeanDocument, FilterQuery, UpdateQuery } from 'mongoose';
-import config from 'config';
 import { get, omit } from 'lodash';
 import userModel, { UserDocument } from '../user/user.model';
 import sessionModel, { SessionDocument } from './session.model';
@@ -26,7 +25,7 @@ export async function validatePassword({
 	email: UserDocument['email'];
 	password: string;
 }) {
-	const user = await userModel.findOne({ email });
+	const user = await userModel.findOne({ email: { $eq: email } });
 
 	if (!user) {
 		return false;
@@ -80,7 +79,9 @@ export function createAccessToken({
 	// Build and return the new access token
 	const accessToken = sign(
 		{ ...user, session: session._id },
-		{ expiresIn: config.get('accessTokenTtl') } // 15 minutes
+		{
+			expiresIn: process.env.ACCESS_TOKEN_TTL as string,
+		} // 15 minutes
 	);
 
 	return accessToken;
@@ -131,7 +132,11 @@ export async function updateSession(
 	query: FilterQuery<SessionDocument>,
 	update: UpdateQuery<SessionDocument>
 ) {
-	return sessionModel.updateOne(query, update);
+	try {
+		return await sessionModel.updateOne(query, update);
+	} catch (error) {
+		throw new Error(error as string);
+	}
 }
 
 /**
@@ -141,5 +146,9 @@ export async function updateSession(
  * @returns the sessions matching the querry
  */
 export async function findSessions(query: FilterQuery<SessionDocument>) {
-	return sessionModel.find(query).lean();
+	try {
+		return await sessionModel.find(query).lean();
+	} catch (error) {
+		throw new Error(error as string);
+	}
 }
