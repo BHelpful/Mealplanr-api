@@ -13,7 +13,8 @@ import {
 	deleteUserSchema,
 	getUserSchema,
 	updateUserSchema,
-	userCreateeStructure,
+	userCreateStructure,
+	userUpdateStructure,
 } from '../collections/user/user.schema';
 import { requiresUser, sanitizeQuery, validateRequest } from '../middleware';
 
@@ -34,7 +35,7 @@ export const usersPost = {
 				required: true,
 				schema: {
 					type: 'object',
-					properties: userCreateeStructure,
+					properties: userCreateStructure,
 				},
 			},
 		],
@@ -148,7 +149,7 @@ export const usersPut = {
 				required: true,
 				schema: {
 					type: 'object',
-					properties: userCreateeStructure,
+					properties: userUpdateStructure,
 				},
 			},
 			{

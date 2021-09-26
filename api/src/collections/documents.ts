@@ -40,33 +40,31 @@ export interface UserOptionsDocument extends Document {
 export const UserOptionsSubschema = new Schema({
 	diet: {
 		type: String,
-		required: true,
 		description: 'The diet of the user.',
+	},
+	theme: {
+		type: String,
+		description: 'The theme of the UI for the user.',
 	},
 	country: {
 		type: String,
-		required: true,
 		description: 'Country of the user',
 	},
 	notifications: {
 		type: Boolean,
-		required: true,
 		description: 'Whether or not the user wants to recieve notifications',
 	},
 	address: {
 		type: UserOptionsAddressSubschema,
-		required: false,
 		description: 'Address of the user',
 	},
 	storesId: {
 		type: [Schema.Types.ObjectId],
 		ref: 'stores',
-		required: true,
 		description: 'List of stores the user is wants to shop in.',
 	},
 	gCalendar: {
 		type: Boolean,
-		required: true,
 		description: 'Is the user subscribed to Google Calendar',
 	},
 });
