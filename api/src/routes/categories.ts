@@ -1,40 +1,38 @@
 import { Router } from 'express';
 import { omit } from 'lodash';
 import {
-	createStoreHandler,
-	deleteStoreHandler,
-	getStoreHandler,
-	updateStoreHandler,
-} from '../collections/store/store.controller';
-import { storeSM } from '../collections/store/store.model';
+	createCategoryHandler,
+	deleteCategoryHandler,
+	getCategoryHandler,
+	updateCategoryHandler,
+} from '../collections/category/category.controller';
+import { categorySM } from '../collections/category/category.model';
 import {
-	createStoreSchema,
-	deleteStoreSchema,
-	getStoreSchema,
-	updateStoreSchema,
-} from '../collections/store/store.schema';
+	createCategorySchema,
+	deleteCategorySchema,
+	getCategorySchema,
+	updateCategorySchema,
+} from '../collections/category/category.schema';
 import { requiresUser, sanitizeQuery, validateRequest } from '../middleware';
 
 const router = Router();
 
-// TODO: go over the responses of the swagger documentation and remove/add to match the what is being used for store controller
+// TODO: go over the responses of the swagger documentation and remove/add to match the what is being used for category controller
 
-export const storesPost = {
+export const categoriesPost = {
 	post: {
-		summary: 'Create new store',
+		summary: 'Create new category',
 		description:
-			'Creates a new store to be used in settings and for mealplans and shoppinglist',
-		tags: ['stores'],
+			'Creates a new category to be used in settings and for mealplans and shoppinglist',
+		tags: ['categories'],
 		produces: ['application/json'],
 		parameters: [
 			{
 				name: 'body',
 				in: 'body',
-				description: 'Create store body object',
+				description: 'Create category body object',
 				required: true,
-				schema: omit(storeSM, [
-					'properties._id',
-				]),
+				schema: omit(categorySM, ['properties._id']),
 			},
 			{
 				in: 'header',
@@ -60,7 +58,7 @@ export const storesPost = {
 		responses: {
 			'200': {
 				description: 'OK',
-				schema: storeSM,
+				schema: categorySM,
 			},
 			'400': {
 				description: 'Bad Request',
@@ -71,35 +69,33 @@ export const storesPost = {
 		},
 	},
 };
-// Create a new store
+// Create a new category
 router.post(
 	'/',
-	[sanitizeQuery, requiresUser, validateRequest(createStoreSchema)],
-	createStoreHandler
+	[sanitizeQuery, requiresUser, validateRequest(createCategorySchema)],
+	createCategoryHandler
 );
 
-export const storesPut = {
+export const categoriesPut = {
 	put: {
-		summary: 'Update store',
-		description: 'Updates a store that is globally available',
-		tags: ['stores'],
+		summary: 'Update category',
+		description: 'Updates a category that is globally available',
+		tags: ['categories'],
 		produces: ['application/json'],
 		parameters: [
 			{
-				name: 'storeId',
+				name: 'categoryId',
 				in: 'query',
-				description: 'Id of the store',
+				description: 'Id of the category',
 				required: true,
 				type: 'string',
 			},
 			{
 				name: 'body',
 				in: 'body',
-				description: 'Create store body object',
+				description: 'Create category body object',
 				required: true,
-				schema: omit(storeSM, [
-					'properties._id',
-				]),
+				schema: omit(categorySM, ['properties._id']),
 			},
 			{
 				in: 'header',
@@ -125,41 +121,41 @@ export const storesPut = {
 		responses: {
 			'200': {
 				description: 'OK',
-				schema: storeSM,
+				schema: categorySM,
 			},
 			'400': {
 				description: 'Bad Request',
 			},
 			'401': {
-				description: 'User not the creator of the store',
+				description: 'User not the creator of the category',
 			},
 			'403': {
 				description: 'User not logged in',
 			},
 			'404': {
-				description: 'No such store exists',
+				description: 'No such category exists',
 			},
 		},
 	},
 };
-// Update a store
+// Update a category
 router.put(
 	'/',
-	[sanitizeQuery, requiresUser, validateRequest(updateStoreSchema)],
-	updateStoreHandler
+	[sanitizeQuery, requiresUser, validateRequest(updateCategorySchema)],
+	updateCategoryHandler
 );
 
-export const storesGet = {
+export const categoriesGet = {
 	get: {
-		summary: 'Get a store',
-		description: 'Get a store based on the storeId',
-		tags: ['stores'],
+		summary: 'Get a category',
+		description: 'Get a category based on the categoryId',
+		tags: ['categories'],
 		produces: ['application/json'],
 		parameters: [
 			{
-				name: 'storeId',
+				name: 'categoryId',
 				in: 'query',
-				description: 'Id of the store',
+				description: 'Id of the category',
 				required: true,
 				type: 'string',
 			},
@@ -167,25 +163,29 @@ export const storesGet = {
 		responses: {
 			'200': {
 				description: 'OK',
-				schema: storeSM,
+				schema: categorySM,
 			},
 		},
 	},
 };
-// Get a store
-router.get('/', [sanitizeQuery, validateRequest(getStoreSchema)], getStoreHandler);
+// Get a category
+router.get(
+	'/',
+	[sanitizeQuery, validateRequest(getCategorySchema)],
+	getCategoryHandler
+);
 
-export const storesDelete = {
+export const categoriesDelete = {
 	delete: {
-		summary: 'Delete a store',
-		description: 'Delete a store based on the storeId',
-		tags: ['stores'],
+		summary: 'Delete a category',
+		description: 'Delete a category based on the categoryId',
+		tags: ['categories'],
 		produces: ['application/json'],
 		parameters: [
 			{
-				name: 'storeId',
+				name: 'categoryId',
 				in: 'query',
-				description: 'Id of the store',
+				description: 'Id of the category',
 				required: true,
 				type: 'string',
 			},
@@ -218,22 +218,22 @@ export const storesDelete = {
 				description: 'Bad Request',
 			},
 			'401': {
-				description: 'User not the creator of the store',
+				description: 'User not the creator of the category',
 			},
 			'403': {
 				description: 'User not logged in',
 			},
 			'404': {
-				description: 'No such store exists',
+				description: 'No such category exists',
 			},
 		},
 	},
 };
-// Delete a store
+// Delete a category
 router.delete(
 	'/',
-	[sanitizeQuery, requiresUser, validateRequest(deleteStoreSchema)],
-	deleteStoreHandler
+	[sanitizeQuery, requiresUser, validateRequest(deleteCategorySchema)],
+	deleteCategoryHandler
 );
 
 export default router;
