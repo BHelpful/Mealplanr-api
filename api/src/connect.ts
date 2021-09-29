@@ -15,7 +15,7 @@ const dbUri = process.env.DB_URI as string;
  */
 export function connectDB() {
 	return new Promise((resolve, reject) => {
-		if ((process.env.NODE_ENV as string) === 'test') {
+		if (true) {
 			// In test environment, we don't want to connect to the real DB.
 			mockgoose.prepareStorage().then(() => {
 				connect(dbUri, {
