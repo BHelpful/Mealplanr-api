@@ -24,7 +24,6 @@ export async function createUserHandler(req: Request, res: Response) {
 		// in its hashed state.
 		return res.status(200).send(omit(user.toJSON(), 'password'));
 	} catch (e) {
-		log.error(e as string);
 		// Sets status code to 409, which is a conflict error.
 		return res.status(409).send('User already exists');
 	}
