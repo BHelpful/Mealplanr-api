@@ -26,7 +26,7 @@ describe('POST /users', () => {
 		expect(body?.hasOwnProperty('email')).toBe(true);
 		expect(body?.hasOwnProperty('createdAt')).toBe(true);
 		expect(body?.hasOwnProperty('updatedAt')).toBe(true);
-	}, 30000);
+	});
 
 	it('Fail, user already exists', async () => {
 		const res = await request(app).post('/users').send({
@@ -38,5 +38,5 @@ describe('POST /users', () => {
 		expect(res.body).not.toContain('_id');
 		expect(res.text).toBe('User already exists');
 		expect(res.status).toBe(409);
-	}, 30000);
+	});
 });
