@@ -1,8 +1,7 @@
 import log from './logger';
 import { connection } from 'mongoose';
 import app from './app';
-
-const conn = require('./connect.ts');
+import { connectDB } from './connect';
 
 // gets items from default config file
 const port: number = parseInt(process.env.PORT as string, 10) || 3000;
@@ -12,7 +11,7 @@ const host: string = (process.env.HOST as string) || 'localhost';
 const db = connection;
 
 // connect to the mongoDB database
-conn.connectDB().then(() => {
+connectDB().then(() => {
 	app.listen(port, host, () => {
 		log.info(`Server is running at http://${host}:${port}/`);
 

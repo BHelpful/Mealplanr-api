@@ -1,5 +1,8 @@
 import { connect, disconnect } from 'mongoose';
 import log from './logger';
+const mongoose = require('mongoose');
+import {Mockgoose} from "mockgoose";
+const mockgoose = new Mockgoose(mongoose);
 
 const dbUri = process.env.DB_URI as string;
 
@@ -10,14 +13,10 @@ const dbUri = process.env.DB_URI as string;
  * @remarks
  * It logs on success and on connection error.
  */
-function connectDB() {
+export function connectDB() {
 	return new Promise((resolve, reject) => {
 		if ((process.env.NODE_ENV as string) === 'test') {
 			// In test environment, we don't want to connect to the real DB.
-			const mongoose = require('mongoose');
-			const Mockgoose = require('mockgoose').Mockgoose;
-			const mockgoose = new Mockgoose(mongoose);
-
 			mockgoose.prepareStorage().then(() => {
 				connect(dbUri, {
 					useNewUrlParser: true,
@@ -52,8 +51,7 @@ function connectDB() {
 	});
 }
 
-function closeDB() {
+export async function closeDB() {
+	await mockgoose.shutdown();
 	return disconnect();
 }
-
-module.exports = { connectDB, closeDB };
