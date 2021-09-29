@@ -12,9 +12,9 @@ jobs:
           command: |
             yarn install
       - run:
-          name: Run unit tests
+          name: Run tests
           command: |
-            yarn test
+            yarn test_once
       - store_test_results:
           path: test-results
       - store_artifacts:
