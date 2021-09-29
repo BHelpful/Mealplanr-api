@@ -5,11 +5,11 @@ import { connectDB, closeDB } from '../connect';
 
 describe('POST /users', () => {
 	beforeAll(async () => {
-		await connectDB();
+		return await connectDB();
 	});
 
 	afterAll(async () => {
-		await closeDB();
+		return await closeDB();
 	});
 
 	it('Should create a new user', async () => {
