@@ -24,7 +24,7 @@ export async function connectDB() {
 		}).catch((error) => {
 			log.error('Error in connecting', error);
 		});
-		log.info('Connection success');
+		log.info('Mock connection success');
 	} else {
 		// If not in test environment, connect to the database
 		await connect(dbUri, {
