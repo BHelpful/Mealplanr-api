@@ -28,7 +28,7 @@ describe('POST /users', () => {
 		expect(body?.hasOwnProperty('updatedAt')).toBe(true);
 	});
 
-	it('Fail, user already exists', async () => {
+	it('Should fail as user already exists', async () => {
 		const res = await request(app).post('/users').send({
 			email: 'test@test.test',
 			password: '123456',
