@@ -6,7 +6,7 @@ jobs:
     working_directory: ~/Mealplanr-api/api
     steps:
       - checkout:
-          path: ~/Mealplanr-api/api
+          path: ~/Mealplanr-api
       - run:
           name: Install dependencies
           command: |
