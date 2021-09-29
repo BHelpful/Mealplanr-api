@@ -6,7 +6,7 @@
   "scripts": {
     "start": "nodemon --config nodemon.json src/server.ts",
     "test": "set NODE_ENV=test&& jest --watchAll",
-    "test_once": "set NODE_ENV=test&& jest"
+    "test:ci": "set NODE_ENV=test&& jest"
   },
   "dependencies": {
     "@types/jest": "^27.0.2",
