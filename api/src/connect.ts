@@ -13,45 +13,32 @@ const dbUri = process.env.DB_URI as string;
  * @remarks
  * It logs on success and on connection error.
  */
-export function connectDB() {
-	return new Promise((resolve, reject) => {
-		if (true) {
-			// In test environment, we don't want to connect to the real DB.
-			mockgoose.prepareStorage().then(() => {
-				connect(dbUri, {
-					useNewUrlParser: true,
-					useCreateIndex: true,
-					useUnifiedTopology: true,
-				})
-					.then((res) => {
-						log.info('Connection success');
-						resolve(res);
-					})
-					.catch((error) => {
-						log.error('Error in connecting', error);
-						return reject(error);
-					});
-			});
-		} else {
-			// If not in test environment, connect to the database
-			connect(dbUri, {
-				useNewUrlParser: true,
-				useCreateIndex: true,
-				useUnifiedTopology: true,
-			})
-				.then((res) => {
-					log.info('Connection success');
-					resolve(res);
-				})
-				.catch((error) => {
-					log.error('Error in connecting', error);
-					return reject(error);
-				});
-		}
-	});
+export async function connectDB() {
+	if ((process.env.NODE_ENV as string) === 'test') {
+		// In test environment, we don't want to connect to the real DB.
+		await mockgoose.prepareStorage();
+		await connect(dbUri, {
+			useNewUrlParser: true,
+			useCreateIndex: true,
+			useUnifiedTopology: true,
+		}).catch((error) => {
+			log.error('Error in connecting', error);
+		});
+		log.info('Connection success');
+	} else {
+		// If not in test environment, connect to the database
+		await connect(dbUri, {
+			useNewUrlParser: true,
+			useCreateIndex: true,
+			useUnifiedTopology: true,
+		}).catch((error) => {
+			log.error('Error in connecting', error);
+		});
+		log.info('Connection success');
+	}
 }
 
 export async function closeDB() {
 	await mockgoose.shutdown();
-	return disconnect();
+	await disconnect();
 }
