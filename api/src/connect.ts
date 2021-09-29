@@ -1,7 +1,7 @@
 import { connect, disconnect } from 'mongoose';
 import log from './logger';
 const mongoose = require('mongoose');
-import {Mockgoose} from "mockgoose";
+import { Mockgoose } from 'mockgoose';
 const mockgoose = new Mockgoose(mongoose);
 
 const dbUri = process.env.DB_URI as string;
