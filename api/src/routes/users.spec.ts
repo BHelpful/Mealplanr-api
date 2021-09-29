@@ -3,7 +3,7 @@ import app from '../app';
 
 import { connectDB, closeDB } from '../connect';
 
-describe('POST /users', () => {
+describe('POST /users', async () => {
 	beforeAll(async () => {
 		await connectDB();
 	});
