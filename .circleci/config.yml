@@ -2,11 +2,11 @@ version: 2.1
 jobs:
   run_tests:
     docker:
-      - image: circleci/node:14
+      - image: circleci/node:16
     working_directory: ~/Mealplanr-api/api
     steps:
       - checkout:
-          path: ~/Mealplanr-api
+          path: ~/Mealplanr-api/api
       - run:
           name: Install dependencies
           command: |
