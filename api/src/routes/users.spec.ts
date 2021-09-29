@@ -4,20 +4,12 @@ import app from '../app';
 import { connectDB, closeDB } from '../connect';
 
 describe('POST /users', () => {
-	beforeAll((done) => {
-		connectDB()
-			.then(() => {
-				done();
-			})
-			.catch((err) => done(err));
+	beforeAll(async () => {
+		await connectDB();
 	});
 
-	afterAll((done) => {
-		closeDB()
-		.then(() => {
-			done();
-		})
-		.catch((err) => done(err));
+	afterAll(async () => {
+		await closeDB();
 	});
 
 	it('Should create a new user', async () => {
