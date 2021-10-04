@@ -1,10 +1,8 @@
 import { connect, disconnect } from 'mongoose';
 import log from './logger';
-const mongoose = require('mongoose');
-import { Mockgoose } from 'mockgoose';
-const mockgoose = new Mockgoose(mongoose);
-
+import { MongoMemoryServer } from 'mongodb-memory-server';
 const dbUri = process.env.DB_URI as string;
+let mongod: MongoMemoryServer;
 
 /**
  * This function connects to the mongoDB database on the server
@@ -14,11 +12,11 @@ const dbUri = process.env.DB_URI as string;
  * It logs on success and on connection error.
  */
 export async function connectDB() {
-	if (true) {
+	if ((process.env.NODE_ENV as string) === 'test') {
 		// In test environment, we don't want to connect to the real DB.
-		// await mockgoose.prepareStorage();
-		// log.info('Mockgoose prepared');
-		await connect(dbUri, {
+		mongod = await MongoMemoryServer.create();
+		const uri = mongod.getUri();
+		await connect(uri, {
 			useNewUrlParser: true,
 			useCreateIndex: true,
 			useUnifiedTopology: true,
@@ -40,6 +38,5 @@ export async function connectDB() {
 }
 
 export async function closeDB() {
-	await mockgoose.shutdown();
 	await disconnect();
 }
