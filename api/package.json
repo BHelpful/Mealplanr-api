@@ -1,16 +1,14 @@
 {
   "name": "api",
   "version": "1.0.0",
-  "main": "index.js",
-  "license": "MIT",
+  "main": "server.ts",
+  "license": "AGPL-3.0",
   "scripts": {
     "start": "nodemon --config nodemon.json src/server.ts",
     "test": "jest --watchAll",
     "test:ci": "jest"
   },
   "dependencies": {
-    "@types/jest": "^27.0.2",
-    "@types/mongodb-memory-server": "^2.3.0",
     "bcrypt": "^5.0.1",
     "compression": "^1.7.4",
     "config": "^3.3.6",
@@ -36,6 +34,8 @@
     "yup": "^0.32.9"
   },
   "devDependencies": {
+    "@types/jest": "^27.0.2",
+    "@types/mongodb-memory-server": "^2.3.0",
     "@types/bcrypt": "^5.0.0",
     "@types/body-parser": "^1.19.1",
     "@types/chai": "^4.2.21",

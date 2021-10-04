@@ -15,10 +15,6 @@ jobs:
           name: Run tests
           command: |
             yarn test:ci
-      - store_test_results:
-          path: ../.circleci/test-results
-      - store_artifacts:
-          path: ../.circleci/test-results
 
 workflows:
   build_test:
