@@ -1,31 +1,14 @@
 import request from 'supertest';
 import app from '../app';
-import { MongoMemoryServer } from 'mongodb-memory-server';
-import { connect, disconnect } from 'mongoose';
-
 
 import { connectDB, closeDB } from '../connect';
-import log from '../logger';
-
-let mongod: MongoMemoryServer;
 
 describe('POST /users', () => {
 	beforeAll(async () => {
-		// await connectDB();
-		mongod = await MongoMemoryServer.create();
-		const uri = mongod.getUri();
-		await connect(uri, {
-			useNewUrlParser: true,
-			useCreateIndex: true,
-			useUnifiedTopology: true,
-		}).catch((error) => {
-			log.error('Error in connecting', error);
-		});
-		log.info('Mock connection success');
+		await connectDB();
 	});
 
 	afterAll(async () => {
-		await mongod.stop();
 		await closeDB();
 	});
 

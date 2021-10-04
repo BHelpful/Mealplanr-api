@@ -38,5 +38,6 @@ export async function connectDB() {
 }
 
 export async function closeDB() {
+	mongod.stop();
 	await disconnect();
 }
