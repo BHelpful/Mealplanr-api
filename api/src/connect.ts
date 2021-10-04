@@ -20,20 +20,26 @@ export async function connectDB() {
 			useNewUrlParser: true,
 			useCreateIndex: true,
 			useUnifiedTopology: true,
-		}).catch((error) => {
-			log.error('Error in connecting', error);
-		});
-		log.info('Mock connection success');
+		})
+			.then(() => {
+				log.info('Mock connection success');
+			})
+			.catch((error) => {
+				log.error('Error in mock connecting', error);
+			});
 	} else {
 		// If not in test environment, connect to the database
 		await connect(dbUri, {
 			useNewUrlParser: true,
 			useCreateIndex: true,
 			useUnifiedTopology: true,
-		}).catch((error) => {
-			log.error('Error in connecting', error);
-		});
-		log.info('Connection success');
+		})
+			.then(() => {
+				log.info('Connection success');
+			})
+			.catch((error) => {
+				log.error('Error in connecting', error);
+			});
 	}
 }
 
