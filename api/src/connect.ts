@@ -14,9 +14,10 @@ const dbUri = process.env.DB_URI as string;
  * It logs on success and on connection error.
  */
 export async function connectDB() {
-	if ((process.env.NODE_ENV as string) === 'test') {
+	if (true) {
 		// In test environment, we don't want to connect to the real DB.
-		await mockgoose.prepareStorage();
+		// await mockgoose.prepareStorage();
+		// log.info('Mockgoose prepared');
 		await connect(dbUri, {
 			useNewUrlParser: true,
 			useCreateIndex: true,
