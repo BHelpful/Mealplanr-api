@@ -34,6 +34,12 @@ import storeRouter, {
 	storesPost,
 	storesPut,
 } from './routes/stores';
+import categoryRouter, {
+	categoriesDelete,
+	categoriesGet,
+	categoriesPost,
+	categoriesPut,
+} from './routes/categories';
 
 const compression = require('compression');
 
@@ -119,6 +125,14 @@ parsedSwaggerDoc.paths['/stores'] = {
 	...storesPut,
 	...storesGet,
 	...storesDelete,
+};
+
+app.use('/categories', categoryRouter);
+parsedSwaggerDoc.paths['/categories'] = {
+	...categoriesPost,
+	...categoriesPut,
+	...categoriesGet,
+	...categoriesDelete,
 };
 
 // set up the Swagger UI

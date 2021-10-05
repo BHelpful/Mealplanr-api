@@ -15,10 +15,7 @@ export const CategorySchema = new Schema({
 	},
 });
 
-const categoryModel = model<CategoryDocument>(
-	'category',
-	CategorySchema
-);
+const categoryModel = model<CategoryDocument>('categories', CategorySchema);
 
 export const categorySM = m2s(categoryModel);
 
