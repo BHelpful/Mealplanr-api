@@ -3,3 +3,4 @@ node_modules
 /api/config/tunnel_rsa
 /api/config/api_rsa
 .env
+.DS_Store

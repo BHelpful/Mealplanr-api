@@ -1,7 +1,8 @@
 import { connect, disconnect } from 'mongoose';
 import log from './logger';
-
+import { MongoMemoryServer } from 'mongodb-memory-server';
 const dbUri = process.env.DB_URI as string;
+let mongod: MongoMemoryServer;
 
 /**
  * This function connects to the mongoDB database on the server
@@ -10,50 +11,39 @@ const dbUri = process.env.DB_URI as string;
  * @remarks
  * It logs on success and on connection error.
  */
-function connectDB() {
-	return new Promise((resolve, reject) => {
-		if ((process.env.NODE_ENV as string) === 'test') {
-			// In test environment, we don't want to connect to the real DB.
-			const mongoose = require('mongoose');
-			const Mockgoose = require('mockgoose').Mockgoose;
-			const mockgoose = new Mockgoose(mongoose);
-
-			mockgoose.prepareStorage().then(() => {
-				connect(dbUri, {
-					useNewUrlParser: true,
-					useCreateIndex: true,
-					useUnifiedTopology: true,
-				})
-					.then((res) => {
-						log.info('Connection success');
-						resolve(res);
-					})
-					.catch((error) => {
-						log.error('Error in connecting', error);
-						return reject(error);
-					});
-			});
-		} else {
-			// If not in test environment, connect to the database
-			connect(dbUri, {
-				useNewUrlParser: true,
-				useCreateIndex: true,
-				useUnifiedTopology: true,
+export async function connectDB() {
+	if ((process.env.NODE_ENV as string) === 'test') {
+		// In test environment, we don't want to connect to the real DB.
+		mongod = await MongoMemoryServer.create();
+		const uri = mongod.getUri();
+		await connect(uri, {
+			useNewUrlParser: true,
+			useCreateIndex: true,
+			useUnifiedTopology: true,
+		})
+			.then(() => {
+				log.info('Mock connection success');
 			})
-				.then((res) => {
-					log.info('Connection success');
-					resolve(res);
-				})
-				.catch((error) => {
-					log.error('Error in connecting', error);
-					return reject(error);
-				});
-		}
-	});
+			.catch((error) => {
+				log.error('Error in mock connecting', error);
+			});
+	} else {
+		// If not in test environment, connect to the database
+		await connect(dbUri, {
+			useNewUrlParser: true,
+			useCreateIndex: true,
+			useUnifiedTopology: true,
+		})
+			.then(() => {
+				log.info('Connection success');
+			})
+			.catch((error) => {
+				log.error('Error in connecting', error);
+			});
+	}
 }
 
-function closeDB() {
-	return disconnect();
+export async function closeDB() {
+	mongod.stop();
+	await disconnect();
 }
-
-module.exports = { connectDB, closeDB };

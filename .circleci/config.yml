@@ -2,7 +2,7 @@ version: 2.1
 jobs:
   run_tests:
     docker:
-      - image: circleci/node:16
+      - image: circleci/node:16.3.0
     working_directory: ~/Mealplanr-api/api
     steps:
       - checkout:
@@ -11,14 +11,10 @@ jobs:
           name: Install dependencies
           command: |
             yarn install
-      # - run:
-      #     name: Run unit tests
-      #     command: |
-      #       yarn unit_test
-      # - store_test_results:
-      #     path: test-results
-      # - store_artifacts:
-      #     path: test-results
+      - run:
+          name: Run tests
+          command: |
+            yarn test:ci
 
 workflows:
   build_test:
