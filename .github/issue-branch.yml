@@ -1,4 +1,4 @@
 gitSafeReplacementChar: '-'
 autoCloseIssue: false
-openDraftPR: true
+openDraftPR: false
 copyIssueLabelsToPR: true
