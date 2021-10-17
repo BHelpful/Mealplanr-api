@@ -5,6 +5,7 @@ import {
 	QueryOptions,
 } from 'mongoose';
 import ingredientModel, { IngredientDocument } from './ingredient.model';
+const sanitize = require('mongo-sanitize');
 
 /**
  * This function will create a new ingredient for a user and return the ingredient
@@ -16,6 +17,7 @@ export async function createIngredient(
 	body: DocumentDefinition<IngredientDocument>
 ) {
 	try {
+		body = sanitize(body);
 		return await ingredientModel.create(body);
 	} catch (error) {
 		throw new Error(error as string);
@@ -34,6 +36,7 @@ export async function findIngredient(
 	options: QueryOptions = { lean: true }
 ) {
 	try {
+		query = sanitize(query);
 		return await ingredientModel.findOne(query, {}, options);
 	} catch (error) {
 		throw new Error(error as string);
@@ -54,6 +57,8 @@ export async function findAndUpdateIngredient(
 	options: QueryOptions
 ) {
 	try {
+		query = sanitize(query);
+		update = sanitize(update);
 		return await ingredientModel.findOneAndUpdate(query, update, options);
 	} catch (error) {
 		throw new Error(error as string);
@@ -68,6 +73,7 @@ export async function findAndUpdateIngredient(
  */
 export async function deleteIngredient(query: FilterQuery<IngredientDocument>) {
 	try {
+		query = sanitize(query);
 		return await ingredientModel.deleteOne(query);
 	} catch (error) {
 		throw new Error(error as string);
