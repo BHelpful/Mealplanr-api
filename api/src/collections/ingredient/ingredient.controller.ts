@@ -19,10 +19,7 @@ export async function createIngredientHandler(req: Request, res: Response) {
 	const body = req.body;
 
 	try {
-		if (
-			(await findIngredient({ name: { $eq: body.name } }))?.name ===
-			body.name
-		) {
+		if ((await findIngredient({ name: body.name }))?.name === body.name) {
 			return res.status(409).send('Ingredient already exists');
 		}
 		const ingredient = await createIngredient({ ...body });
@@ -49,10 +46,7 @@ export async function updateIngredientHandler(req: Request, res: Response) {
 		return res.sendStatus(404);
 	}
 
-	if (
-		(await findIngredient({ name: { $eq: update.name } }))?.name ===
-		update.name
-	) {
+	if ((await findIngredient({ name: update.name }))?.name === update.name) {
 		return res.status(409).send('Ingredient already exists');
 	}
 
