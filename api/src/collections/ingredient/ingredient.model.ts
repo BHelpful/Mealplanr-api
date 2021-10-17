@@ -3,12 +3,19 @@ import { CategoryDocument } from '../category/category.model';
 const m2s = require('mongoose-to-swagger');
 
 export interface IngredientDocument extends Document {
+	name: string;
 	typeId: CategoryDocument['_id'];
 	season: string;
 	diet: [string];
 	alternativesId: [IngredientDocument['_id']];
 }
 export const IngredientSchema = new Schema({
+	name: {
+		type: String,
+		required: true,
+		unique: true,
+		description: 'Name of the ingredient',
+	},
 	typeId: {
 		type: Schema.Types.ObjectId,
 		ref: 'categories',
