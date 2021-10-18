@@ -1,6 +1,6 @@
 import { Schema, Document, model } from 'mongoose';
 import { CategoryDocument } from '../category/category.model';
-const m2s = require('mongoose-to-swagger');
+import m2s from 'mongoose-to-swagger';
 
 export interface IngredientDocument extends Document {
 	name: string;

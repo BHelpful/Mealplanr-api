@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import { omit } from 'lodash';
+import { getSwaggerObject, swaggerObjectType } from '.';
 import {
 	createIngredientHandler,
 	deleteIngredientHandler,
@@ -74,68 +75,32 @@ router.post(
 	createIngredientHandler
 );
 
-export const ingredientsPut = {
-	put: {
-		summary: 'Update ingredient',
-		description: 'Updates a ingredient that is globally available',
-		tags: ['ingredients'],
-		produces: ['application/json'],
-		parameters: [
-			{
-				name: 'ingredientId',
-				in: 'query',
-				description: 'Id of the ingredient',
-				required: true,
-				type: 'string',
-			},
-			{
-				name: 'body',
-				in: 'body',
-				description: 'Create ingredient body object',
-				required: true,
-				schema: omit(ingredientSM, ['properties._id']),
-			},
-			{
-				in: 'header',
-				name: 'x-refresh',
-				description: 'refreshToken',
-				required: true,
-				schema: {
-					type: 'string',
-					format: 'uuid',
-				},
-			},
-			{
-				in: 'header',
-				name: 'authorization',
-				description: 'accessToken',
-				required: true,
-				schema: {
-					type: 'string',
-					format: 'uuid',
-				},
-			},
-		],
-		responses: {
-			'200': {
-				description: 'OK',
-				schema: ingredientSM,
-			},
-			'400': {
-				description: 'Bad Request',
-			},
-			'401': {
-				description: 'User not the creator of the ingredient',
-			},
-			'403': {
-				description: 'User not logged in',
-			},
-			'404': {
-				description: 'No such ingredient exists',
-			},
+const ingredientsPutInput: swaggerObjectType = {
+	CRUD: 'put',
+	tag: 'ingredients',
+	item: 'ingredient',
+	summary: 'Update ingredient',
+	description: 'Updates a ingredient that is globally available',
+	model: ingredientSM,
+	requiresUser: true,
+	itemsIntpuOmit: ['properties._id'],
+	itemsResponseOmit: [],
+	invalidRequestObject: {
+		'400': {
+			description: 'Bad Request',
+		},
+		'401': {
+			description: 'User not the creator of the ingredient',
+		},
+		'403': {
+			description: 'User not logged in',
+		},
+		'404': {
+			description: 'No such ingredient exists',
 		},
 	},
 };
+export const ingredientsPut = { ...getSwaggerObject(ingredientsPutInput) };
 // Update a ingredient
 router.put(
 	'/',
