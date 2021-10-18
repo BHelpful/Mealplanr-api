@@ -1,5 +1,4 @@
 import { Router } from 'express';
-import { omit } from 'lodash';
 import { getSwaggerObject, swaggerObjectType } from '.';
 import {
 	createIngredientHandler,
@@ -18,56 +17,30 @@ import { requiresUser, sanitizeQuery, validateRequest } from '../middleware';
 
 const router = Router();
 
-export const ingredientsPost = {
-	post: {
-		summary: 'Create new ingredient',
-		description:
-			'Creates a new ingredient to be used in settings and for mealplans and shoppinglist',
-		tags: ['ingredients'],
-		produces: ['application/json'],
-		parameters: [
-			{
-				name: 'body',
-				in: 'body',
-				description: 'Create ingredient body object',
-				required: true,
-				schema: omit(ingredientSM, ['properties._id']),
-			},
-			{
-				in: 'header',
-				name: 'x-refresh',
-				description: 'refreshToken',
-				required: true,
-				schema: {
-					type: 'string',
-					format: 'uuid',
-				},
-			},
-			{
-				in: 'header',
-				name: 'authorization',
-				description: 'accessToken',
-				required: true,
-				schema: {
-					type: 'string',
-					format: 'uuid',
-				},
-			},
-		],
-		responses: {
-			'200': {
-				description: 'OK',
-				schema: ingredientSM,
-			},
-			'400': {
-				description: 'Bad Request',
-			},
-			'403': {
-				description: 'User not logged in',
-			},
+const ingredientsPostInput: swaggerObjectType = {
+	CRUD: 'post',
+	tag: 'ingredients',
+	item: 'ingredient',
+	summary: 'Create new ingredient',
+	description:
+		'Creates a new ingredient to be used in settings and for mealplans and shoppinglist',
+	model: ingredientSM,
+	requiresId: false,
+	requiresBody: true,
+	requiresUser: true,
+	respondWithObject: true,
+	itemsIntpuOmit: ['properties._id'],
+	itemsResponseOmit: [],
+	invalidRequestObject: {
+		'400': {
+			description: 'Bad Request',
+		},
+		'403': {
+			description: 'User not logged in',
 		},
 	},
 };
+export const ingredientsPost = { ...getSwaggerObject(ingredientsPostInput) };
 // Create a new ingredient
 router.post(
 	'/',
@@ -82,7 +55,10 @@ const ingredientsPutInput: swaggerObjectType = {
 	summary: 'Update ingredient',
 	description: 'Updates a ingredient that is globally available',
 	model: ingredientSM,
+	requiresId: true,
+	requiresBody: true,
 	requiresUser: true,
+	respondWithObject: true,
 	itemsIntpuOmit: ['properties._id'],
 	itemsResponseOmit: [],
 	invalidRequestObject: {
@@ -108,29 +84,23 @@ router.put(
 	updateIngredientHandler
 );
 
-export const ingredientsGet = {
-	get: {
-		summary: 'Get a ingredient',
-		description: 'Get a ingredient based on the ingredientId',
-		tags: ['ingredients'],
-		produces: ['application/json'],
-		parameters: [
-			{
-				name: 'ingredientId',
-				in: 'query',
-				description: 'Id of the ingredient',
-				required: true,
-				type: 'string',
-			},
-		],
-		responses: {
-			'200': {
-				description: 'OK',
-				schema: ingredientSM,
-			},
-		},
-	},
+const ingredientsGetInput: swaggerObjectType = {
+	CRUD: 'get',
+	tag: 'ingredients',
+	item: 'ingredient',
+	summary: 'Get a ingredient',
+	description: 'Get a ingredient based on the ingredientId',
+	model: ingredientSM,
+	requiresId: true,
+	requiresBody: false,
+	requiresUser: false,
+	respondWithObject: true,
+	itemsIntpuOmit: ['properties._id'],
+	itemsResponseOmit: [],
+	invalidRequestObject: {},
 };
+export const ingredientsGet = { ...getSwaggerObject(ingredientsGetInput) };
+
 // Get a ingredient
 router.get(
 	'/',
@@ -138,59 +108,36 @@ router.get(
 	getIngredientHandler
 );
 
-export const ingredientsDelete = {
-	delete: {
-		summary: 'Delete a ingredient',
-		description: 'Delete a ingredient based on the ingredientId',
-		tags: ['ingredients'],
-		produces: ['application/json'],
-		parameters: [
-			{
-				name: 'ingredientId',
-				in: 'query',
-				description: 'Id of the ingredient',
-				required: true,
-				type: 'string',
-			},
-			{
-				in: 'header',
-				name: 'x-refresh',
-				description: 'refreshToken',
-				required: true,
-				schema: {
-					type: 'string',
-					format: 'uuid',
-				},
-			},
-			{
-				in: 'header',
-				name: 'authorization',
-				description: 'accessToken',
-				required: true,
-				schema: {
-					type: 'string',
-					format: 'uuid',
-				},
-			},
-		],
-		responses: {
-			'200': {
-				description: 'OK',
-			},
-			'400': {
-				description: 'Bad Request',
-			},
-			'401': {
-				description: 'User not the creator of the ingredient',
-			},
-			'403': {
-				description: 'User not logged in',
-			},
-			'404': {
-				description: 'No such ingredient exists',
-			},
+const ingredientsDeleteInput: swaggerObjectType = {
+	CRUD: 'delete',
+	tag: 'ingredients',
+	item: 'ingredient',
+	summary: 'Delete a ingredient',
+	description: 'Delete a ingredient based on the ingredientId',
+	model: ingredientSM,
+	requiresId: true,
+	requiresBody: false,
+	requiresUser: true,
+	respondWithObject: false,
+	itemsIntpuOmit: [],
+	itemsResponseOmit: [],
+	invalidRequestObject: {
+		'400': {
+			description: 'Bad Request',
+		},
+		'401': {
+			description: 'User not the creator of the ingredient',
+		},
+		'403': {
+			description: 'User not logged in',
+		},
+		'404': {
+			description: 'No such ingredient exists',
 		},
 	},
+};
+export const ingredientsDelete = {
+	...getSwaggerObject(ingredientsDeleteInput),
 };
 // Delete a ingredient
 router.delete(

@@ -9,7 +9,10 @@ export type swaggerObjectType = {
 	summary: string;
 	description: string;
 	model: any;
+	requiresId: boolean;
+	requiresBody: boolean;
 	requiresUser: boolean;
+	respondWithObject: boolean;
 	itemsIntpuOmit: string[];
 	itemsResponseOmit: string[];
 	invalidRequestObject: any;
@@ -23,31 +26,42 @@ export function getSwaggerObject(param: swaggerObjectType) {
 			description: param.description,
 			tags: [param.tag],
 			produces: ['application/json'],
-			parameters: [
-				{
-					name: 'ingredientId',
-					in: 'query',
-					description: `Id of the ${param.item}`,
-					required: true,
-					type: 'string',
-				},
-				{
-					name: 'body',
-					in: 'body',
-					description: `Create ${param.item} body object`,
-					required: true,
-					schema: omit(param.model, param.itemsIntpuOmit),
-				},
-			],
+			parameters: [],
 			responses: {
 				'200': {
 					description: 'OK',
-					schema: omit(param.model, param.itemsResponseOmit),
 				},
 				...param.invalidRequestObject,
 			},
 		},
 	};
+
+	if (param.respondWithObject) {
+		obj.crud.responses['200'].schema = omit(
+			param.model,
+			param.itemsResponseOmit
+		);
+	}
+
+	if (param.requiresId) {
+		obj.crud.parameters.push({
+			name: `${param.item}Id`,
+			in: 'query',
+			description: `Id of the ${param.item}`,
+			required: true,
+			type: 'string',
+		});
+	}
+
+	if (param.requiresBody) {
+		obj.crud.parameters.push({
+			name: 'body',
+			in: 'body',
+			description: `Create ${param.item} body object`,
+			required: true,
+			schema: omit(param.model, param.itemsIntpuOmit),
+		});
+	}
 
 	if (param.requiresUser) {
 		obj.crud.parameters.push(
@@ -88,6 +102,7 @@ export function getSwaggerObject(param: swaggerObjectType) {
 			obj.delete = obj.crud;
 			break;
 	}
+
 	delete obj.crud;
 	return obj;
 }
