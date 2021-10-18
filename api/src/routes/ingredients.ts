@@ -17,8 +17,6 @@ import { requiresUser, sanitizeQuery, validateRequest } from '../middleware';
 
 const router = Router();
 
-// TODO: go over the responses of the swagger documentation and remove/add to match the what is being used for ingredient controller
-
 export const ingredientsPost = {
 	post: {
 		summary: 'Create new ingredient',
