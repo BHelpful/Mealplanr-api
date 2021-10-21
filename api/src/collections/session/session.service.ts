@@ -81,14 +81,12 @@ export function createAccessToken({
 		| LeanDocument<Omit<SessionDocument, 'password'>>;
 }) {
 	// Build and return the new access token
-	const accessToken = sign(
+	return sign(
 		{ ...user, session: session._id },
 		{
 			expiresIn: process.env.ACCESS_TOKEN_TTL as string,
 		} // 15 minutes
 	);
-
-	return accessToken;
 }
 
 /**
@@ -119,9 +117,7 @@ export async function reIssueAccessToken({
 
 	if (!user) return false;
 
-	const accessToken = createAccessToken({ user, session });
-
-	return accessToken;
+	return createAccessToken({ user, session });
 }
 
 /**
