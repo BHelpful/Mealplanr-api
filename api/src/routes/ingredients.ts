@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { getSwaggerObject, swaggerObjectType } from '.';
+import { getSwaggerObject } from '.';
 import {
 	createIngredientHandler,
 	deleteIngredientHandler,

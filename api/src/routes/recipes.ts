@@ -1,5 +1,4 @@
 import { Router } from 'express';
-import { omit } from 'lodash';
 import { getSwaggerObject } from '.';
 import {
 	createRecipeHandler,

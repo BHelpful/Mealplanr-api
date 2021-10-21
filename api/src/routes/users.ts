@@ -14,7 +14,6 @@ import {
 	getUserSchema,
 	updateUserSchema,
 	userCreateStructure,
-	userUpdateStructure,
 } from '../collections/user/user.schema';
 import { requiresUser, validateRequest } from '../middleware';
 
