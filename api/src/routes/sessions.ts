@@ -13,6 +13,12 @@ import { requiresUser, validateRequest } from '../middleware';
 
 const router = Router();
 
+// login
+router.post(
+	'/',
+	[validateRequest(createUserSessionSchema)],
+	createUserSessionHandler
+);
 export const sessionsPost = {
 	post: {
 		summary: 'Log in',
@@ -51,13 +57,9 @@ export const sessionsPost = {
 		},
 	},
 };
-// login
-router.post(
-	'/',
-	[validateRequest(createUserSessionSchema)],
-	createUserSessionHandler
-);
 
+// Get the user's valid sessions i.e. the sessions where the user is logged in.
+router.get('/', [requiresUser], getUserSessionsHandler);
 export const sessionsGet = {
 	get: {
 		summary: 'Get all active sessions',
@@ -97,9 +99,9 @@ export const sessionsGet = {
 		},
 	},
 };
-// Get the user's valid sessions i.e. the sessions where the user is logged in.
-router.get('/', [requiresUser], getUserSessionsHandler);
 
+// logout (invalidate a user's session)
+router.delete('/', [requiresUser], invalidateUserSessionHandler);
 export const sessionsDelete = {
 	delete: {
 		summary: 'Logout',
@@ -139,7 +141,5 @@ export const sessionsDelete = {
 		},
 	},
 };
-// logout (invalidate a user's session)
-router.delete('/', [requiresUser], invalidateUserSessionHandler);
 
 export default router;

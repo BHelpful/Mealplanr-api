@@ -20,6 +20,8 @@ import { requiresUser, validateRequest } from '../middleware';
 
 const router = Router();
 
+// Create a new user
+router.post('/', [validateRequest(createUserSchema)], createUserHandler);
 export const usersPost = {
 	post: {
 		summary: 'Register user',
@@ -53,9 +55,9 @@ export const usersPost = {
 		},
 	},
 };
-// Create a new user
-router.post('/', [validateRequest(createUserSchema)], createUserHandler);
 
+// Get a user
+router.get('/', [requiresUser], getUserHandler);
 export const usersGet = {
 	get: {
 		summary: 'Get a user',
@@ -92,9 +94,9 @@ export const usersGet = {
 		},
 	},
 };
-// Get a user
-router.get('/', [requiresUser], getUserHandler);
 
+// Checks if a user exists
+router.get('/exists', [validateRequest(getUserSchema)], getUserExistsHandler);
 export const usersExistsGet = {
 	get: {
 		summary: 'Check if a user exists',
@@ -117,9 +119,13 @@ export const usersExistsGet = {
 		},
 	},
 };
-// Checks if a user exists
-router.get('/exists', [validateRequest(getUserSchema)], getUserExistsHandler);
 
+// Update a user
+router.put(
+	'/',
+	[requiresUser, validateRequest(updateUserSchema)],
+	updateUserHandler
+);
 export const usersPut = {
 	put: {
 		summary: 'Update a user',
@@ -139,10 +145,7 @@ export const usersPut = {
 				in: 'body',
 				description: 'Update user body object',
 				required: true,
-				schema: {
-					type: 'object',
-					properties: userUpdateStructure,
-				},
+				schema: omit(userSM, 'password'),
 			},
 			{
 				in: 'header',
@@ -173,13 +176,13 @@ export const usersPut = {
 		},
 	},
 };
-// Update a user
-router.put(
-	'/',
-	[requiresUser, validateRequest(updateUserSchema)],
-	updateUserHandler
-);
 
+// Delete a user
+router.delete(
+	'/',
+	[requiresUser, validateRequest(deleteUserSchema)],
+	deleteUserHandler
+);
 export const usersDelete = {
 	delete: {
 		summary: 'Delete a user',
@@ -222,11 +225,5 @@ export const usersDelete = {
 		},
 	},
 };
-// Delete a user
-router.delete(
-	'/',
-	[requiresUser, validateRequest(deleteUserSchema)],
-	deleteUserHandler
-);
 
 export default router;

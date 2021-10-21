@@ -1,21 +1,24 @@
 import { omit } from 'lodash';
 
+// TODO: find a way to generically include session and user here, as they have a slightly different structure than the other routes
+// TODO: find a clever way to omit the _id field from the input model when it is a nested object like e.g. 'recipes.ingredients[]._id'
+
 export type crudMethods = 'get' | 'post' | 'put' | 'delete';
 
 export type swaggerObjectType = {
 	CRUD: crudMethods;
-	tag: string;
 	item: string;
+	tag: string;
 	summary: string;
 	description: string;
 	model: any;
-	requiresId: boolean;
+	OmitInputAttributes: string[];
+	OmitResponseAttributes: string[];
+	invalidResponses: any;
+	requiresQueryId: boolean;
 	requiresBody: boolean;
 	requiresUser: boolean;
 	respondWithObject: boolean;
-	itemsIntpuOmit: string[];
-	itemsResponseOmit: string[];
-	invalidRequestObject: any;
 };
 
 export function getSwaggerObject(param: swaggerObjectType) {
@@ -31,19 +34,22 @@ export function getSwaggerObject(param: swaggerObjectType) {
 				'200': {
 					description: 'OK',
 				},
-				...param.invalidRequestObject,
+				...param.invalidResponses,
 			},
 		},
 	};
 
 	if (param.respondWithObject) {
+		param.OmitResponseAttributes.forEach((part, index, theArray) => {
+			theArray[index] = `properties.${part}`;
+		});
 		obj.crud.responses['200'].schema = omit(
 			param.model,
-			param.itemsResponseOmit
+			param.OmitResponseAttributes
 		);
 	}
 
-	if (param.requiresId) {
+	if (param.requiresQueryId) {
 		obj.crud.parameters.push({
 			name: `${param.item}Id`,
 			in: 'query',
@@ -54,12 +60,16 @@ export function getSwaggerObject(param: swaggerObjectType) {
 	}
 
 	if (param.requiresBody) {
+		param.OmitInputAttributes.push('_id');
+		param.OmitInputAttributes.forEach((part, index, theArray) => {
+			theArray[index] = `properties.${part}`;
+		});
 		obj.crud.parameters.push({
 			name: 'body',
 			in: 'body',
 			description: `Create ${param.item} body object`,
 			required: true,
-			schema: omit(param.model, param.itemsIntpuOmit),
+			schema: omit(param.model, param.OmitInputAttributes),
 		});
 	}
 
