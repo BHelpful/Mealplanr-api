@@ -13,7 +13,7 @@ import {
 	getIngredientSchema,
 	updateIngredientSchema,
 } from '../collections/ingredient/ingredient.schema';
-import { requiresUser, sanitizeQuery, validateRequest } from '../middleware';
+import { requiresUser, validateRequest } from '../middleware';
 
 const router = Router();
 
@@ -44,7 +44,7 @@ export const ingredientsPost = { ...getSwaggerObject(ingredientsPostInput) };
 // Create a new ingredient
 router.post(
 	'/',
-	[sanitizeQuery, requiresUser, validateRequest(createIngredientSchema)],
+	[requiresUser, validateRequest(createIngredientSchema)],
 	createIngredientHandler
 );
 
@@ -80,7 +80,7 @@ export const ingredientsPut = { ...getSwaggerObject(ingredientsPutInput) };
 // Update a ingredient
 router.put(
 	'/',
-	[sanitizeQuery, requiresUser, validateRequest(updateIngredientSchema)],
+	[requiresUser, validateRequest(updateIngredientSchema)],
 	updateIngredientHandler
 );
 
@@ -104,7 +104,7 @@ export const ingredientsGet = { ...getSwaggerObject(ingredientsGetInput) };
 // Get a ingredient
 router.get(
 	'/',
-	[sanitizeQuery, validateRequest(getIngredientSchema)],
+	[validateRequest(getIngredientSchema)],
 	getIngredientHandler
 );
 
@@ -142,7 +142,7 @@ export const ingredientsDelete = {
 // Delete a ingredient
 router.delete(
 	'/',
-	[sanitizeQuery, requiresUser, validateRequest(deleteIngredientSchema)],
+	[requiresUser, validateRequest(deleteIngredientSchema)],
 	deleteIngredientHandler
 );
 

@@ -9,7 +9,7 @@ import {
 	createUserSessionSchema,
 	sessionPostStructure,
 } from '../collections/session/session.schema';
-import { requiresUser, sanitizeQuery, validateRequest } from '../middleware';
+import { requiresUser, validateRequest } from '../middleware';
 
 const router = Router();
 
@@ -54,7 +54,7 @@ export const sessionsPost = {
 // login
 router.post(
 	'/',
-	[sanitizeQuery, validateRequest(createUserSessionSchema)],
+	[validateRequest(createUserSessionSchema)],
 	createUserSessionHandler
 );
 
@@ -98,7 +98,7 @@ export const sessionsGet = {
 	},
 };
 // Get the user's valid sessions i.e. the sessions where the user is logged in.
-router.get('/', [sanitizeQuery, requiresUser], getUserSessionsHandler);
+router.get('/', [requiresUser], getUserSessionsHandler);
 
 export const sessionsDelete = {
 	delete: {
@@ -140,6 +140,6 @@ export const sessionsDelete = {
 	},
 };
 // logout (invalidate a user's session)
-router.delete('/', [sanitizeQuery, requiresUser], invalidateUserSessionHandler);
+router.delete('/', [requiresUser], invalidateUserSessionHandler);
 
 export default router;

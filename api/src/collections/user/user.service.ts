@@ -5,6 +5,7 @@ import {
 	UpdateQuery,
 } from 'mongoose';
 import userModel, { UserDocument } from './user.model';
+const sanitize = require('mongo-sanitize');
 
 /**
  * This function is used to create a new user.
@@ -21,6 +22,7 @@ import userModel, { UserDocument } from './user.model';
  */
 export async function createUser(input: DocumentDefinition<UserDocument>) {
 	try {
+		input = sanitize(input);
 		return await userModel.create(input);
 	} catch (error) {
 		throw new Error(error as string);
@@ -35,6 +37,7 @@ export async function createUser(input: DocumentDefinition<UserDocument>) {
  */
 export async function findUser(query: FilterQuery<UserDocument>) {
 	try {
+		query = sanitize(query);
 		return await userModel.findOne(query).lean();
 	} catch (error) {
 		throw new Error(error as string);
@@ -55,6 +58,8 @@ export async function findAndUpdateUser(
 	options: QueryOptions
 ) {
 	try {
+		query = sanitize(query);
+		update = sanitize(update);
 		return await userModel.findOneAndUpdate(query, update, options);
 	} catch (error) {
 		throw new Error(error as string);
@@ -69,6 +74,7 @@ export async function findAndUpdateUser(
  */
 export async function deleteUser(query: FilterQuery<UserDocument>) {
 	try {
+		query = sanitize(query);
 		return await userModel.deleteOne(query);
 	} catch (error) {
 		throw new Error(error as string);

@@ -13,7 +13,7 @@ import {
 	getCategorySchema,
 	updateCategorySchema,
 } from '../collections/category/category.schema';
-import { requiresUser, sanitizeQuery, validateRequest } from '../middleware';
+import { requiresUser, validateRequest } from '../middleware';
 
 const router = Router();
 
@@ -72,7 +72,7 @@ export const categoriesPost = {
 // Create a new category
 router.post(
 	'/',
-	[sanitizeQuery, requiresUser, validateRequest(createCategorySchema)],
+	[requiresUser, validateRequest(createCategorySchema)],
 	createCategoryHandler
 );
 
@@ -141,7 +141,7 @@ export const categoriesPut = {
 // Update a category
 router.put(
 	'/',
-	[sanitizeQuery, requiresUser, validateRequest(updateCategorySchema)],
+	[requiresUser, validateRequest(updateCategorySchema)],
 	updateCategoryHandler
 );
 
@@ -169,11 +169,7 @@ export const categoriesGet = {
 	},
 };
 // Get a category
-router.get(
-	'/',
-	[sanitizeQuery, validateRequest(getCategorySchema)],
-	getCategoryHandler
-);
+router.get('/', [validateRequest(getCategorySchema)], getCategoryHandler);
 
 export const categoriesDelete = {
 	delete: {
@@ -232,7 +228,7 @@ export const categoriesDelete = {
 // Delete a category
 router.delete(
 	'/',
-	[sanitizeQuery, requiresUser, validateRequest(deleteCategorySchema)],
+	[requiresUser, validateRequest(deleteCategorySchema)],
 	deleteCategoryHandler
 );
 

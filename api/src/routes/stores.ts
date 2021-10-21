@@ -13,7 +13,7 @@ import {
 	getStoreSchema,
 	updateStoreSchema,
 } from '../collections/store/store.schema';
-import { requiresUser, sanitizeQuery, validateRequest } from '../middleware';
+import { requiresUser, validateRequest } from '../middleware';
 
 const router = Router();
 
@@ -32,9 +32,7 @@ export const storesPost = {
 				in: 'body',
 				description: 'Create store body object',
 				required: true,
-				schema: omit(storeSM, [
-					'properties._id',
-				]),
+				schema: omit(storeSM, ['properties._id']),
 			},
 			{
 				in: 'header',
@@ -74,7 +72,7 @@ export const storesPost = {
 // Create a new store
 router.post(
 	'/',
-	[sanitizeQuery, requiresUser, validateRequest(createStoreSchema)],
+	[requiresUser, validateRequest(createStoreSchema)],
 	createStoreHandler
 );
 
@@ -97,9 +95,7 @@ export const storesPut = {
 				in: 'body',
 				description: 'Create store body object',
 				required: true,
-				schema: omit(storeSM, [
-					'properties._id',
-				]),
+				schema: omit(storeSM, ['properties._id']),
 			},
 			{
 				in: 'header',
@@ -145,7 +141,7 @@ export const storesPut = {
 // Update a store
 router.put(
 	'/',
-	[sanitizeQuery, requiresUser, validateRequest(updateStoreSchema)],
+	[requiresUser, validateRequest(updateStoreSchema)],
 	updateStoreHandler
 );
 
@@ -173,7 +169,7 @@ export const storesGet = {
 	},
 };
 // Get a store
-router.get('/', [sanitizeQuery, validateRequest(getStoreSchema)], getStoreHandler);
+router.get('/', [validateRequest(getStoreSchema)], getStoreHandler);
 
 export const storesDelete = {
 	delete: {
@@ -232,7 +228,7 @@ export const storesDelete = {
 // Delete a store
 router.delete(
 	'/',
-	[sanitizeQuery, requiresUser, validateRequest(deleteStoreSchema)],
+	[requiresUser, validateRequest(deleteStoreSchema)],
 	deleteStoreHandler
 );
 

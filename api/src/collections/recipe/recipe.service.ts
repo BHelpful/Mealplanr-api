@@ -5,6 +5,7 @@ import {
 	QueryOptions,
 } from 'mongoose';
 import recipeModel, { RecipeDocument } from './recipe.model';
+const sanitize = require('mongo-sanitize');
 
 /**
  * This function will create a new recipe for a user and return the recipe
@@ -14,6 +15,7 @@ import recipeModel, { RecipeDocument } from './recipe.model';
  */
 export async function createRecipe(body: DocumentDefinition<RecipeDocument>) {
 	try {
+		body = sanitize(body);
 		return await recipeModel.create(body);
 	} catch (error) {
 		throw new Error(error as string);
@@ -32,6 +34,7 @@ export async function findRecipe(
 	options: QueryOptions = { lean: true }
 ) {
 	try {
+		query = sanitize(query);
 		return await recipeModel.findOne(query, {}, options);
 	} catch (error) {
 		throw new Error(error as string);
@@ -52,6 +55,8 @@ export async function findAndUpdateRecipe(
 	options: QueryOptions
 ) {
 	try {
+		query = sanitize(query);
+		update = sanitize(update);
 		return await recipeModel.findOneAndUpdate(query, update, options);
 	} catch (error) {
 		throw new Error(error as string);
@@ -66,6 +71,7 @@ export async function findAndUpdateRecipe(
  */
 export async function deleteRecipe(query: FilterQuery<RecipeDocument>) {
 	try {
+		query = sanitize(query);
 		return await recipeModel.deleteOne(query);
 	} catch (error) {
 		throw new Error(error as string);

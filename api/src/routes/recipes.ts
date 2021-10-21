@@ -13,7 +13,7 @@ import {
 	getRecipeSchema,
 	updateRecipeSchema,
 } from '../collections/recipe/recipe.schema';
-import { requiresUser, sanitizeQuery, validateRequest } from '../middleware';
+import { requiresUser, validateRequest } from '../middleware';
 
 const router = Router();
 
@@ -76,7 +76,7 @@ export const recipesPost = {
 // Create a new recipe
 router.post(
 	'/',
-	[sanitizeQuery, requiresUser, validateRequest(createRecipeSchema)],
+	[requiresUser, validateRequest(createRecipeSchema)],
 	createRecipeHandler
 );
 
@@ -152,7 +152,7 @@ export const recipesPut = {
 // Update a recipe
 router.put(
 	'/',
-	[sanitizeQuery, requiresUser, validateRequest(updateRecipeSchema)],
+	[requiresUser, validateRequest(updateRecipeSchema)],
 	updateRecipeHandler
 );
 
@@ -180,11 +180,7 @@ export const recipesGet = {
 	},
 };
 // Get a recipe
-router.get(
-	'/',
-	[sanitizeQuery, validateRequest(getRecipeSchema)],
-	getRecipeHandler
-);
+router.get('/', [validateRequest(getRecipeSchema)], getRecipeHandler);
 
 export const recipesDelete = {
 	delete: {
@@ -243,7 +239,7 @@ export const recipesDelete = {
 // Delete a recipe
 router.delete(
 	'/',
-	[sanitizeQuery, requiresUser, validateRequest(deleteRecipeSchema)],
+	[requiresUser, validateRequest(deleteRecipeSchema)],
 	deleteRecipeHandler
 );
 

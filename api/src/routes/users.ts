@@ -16,7 +16,7 @@ import {
 	userCreateStructure,
 	userUpdateStructure,
 } from '../collections/user/user.schema';
-import { requiresUser, sanitizeQuery, validateRequest } from '../middleware';
+import { requiresUser, validateRequest } from '../middleware';
 
 const router = Router();
 
@@ -54,11 +54,7 @@ export const usersPost = {
 	},
 };
 // Create a new user
-router.post(
-	'/',
-	[sanitizeQuery, validateRequest(createUserSchema)],
-	createUserHandler
-);
+router.post('/', [validateRequest(createUserSchema)], createUserHandler);
 
 export const usersGet = {
 	get: {
@@ -97,7 +93,7 @@ export const usersGet = {
 	},
 };
 // Get a user
-router.get('/', [sanitizeQuery, requiresUser], getUserHandler);
+router.get('/', [requiresUser], getUserHandler);
 
 export const usersExistsGet = {
 	get: {
@@ -122,11 +118,7 @@ export const usersExistsGet = {
 	},
 };
 // Checks if a user exists
-router.get(
-	'/exists',
-	[sanitizeQuery, validateRequest(getUserSchema)],
-	getUserExistsHandler
-);
+router.get('/exists', [validateRequest(getUserSchema)], getUserExistsHandler);
 
 export const usersPut = {
 	put: {
@@ -184,7 +176,7 @@ export const usersPut = {
 // Update a user
 router.put(
 	'/',
-	[sanitizeQuery, requiresUser, validateRequest(updateUserSchema)],
+	[requiresUser, validateRequest(updateUserSchema)],
 	updateUserHandler
 );
 
@@ -233,7 +225,7 @@ export const usersDelete = {
 // Delete a user
 router.delete(
 	'/',
-	[sanitizeQuery, requiresUser, validateRequest(deleteUserSchema)],
+	[requiresUser, validateRequest(deleteUserSchema)],
 	deleteUserHandler
 );
 

@@ -5,6 +5,7 @@ import {
 	QueryOptions,
 } from 'mongoose';
 import categoryModel, { CategoryDocument } from './category.model';
+const sanitize = require('mongo-sanitize');
 
 /**
  * This function will create a new category for a user and return the category
@@ -12,8 +13,11 @@ import categoryModel, { CategoryDocument } from './category.model';
  * @param body - The body of the category (based on the categoryModel)
  * @returns a category document
  */
-export async function createCategory(body: DocumentDefinition<CategoryDocument>) {
+export async function createCategory(
+	body: DocumentDefinition<CategoryDocument>
+) {
 	try {
+		body = sanitize(body);
 		return await categoryModel.create(body);
 	} catch (error) {
 		throw new Error(error as string);
@@ -32,6 +36,7 @@ export async function findCategory(
 	options: QueryOptions = { lean: true }
 ) {
 	try {
+		query = sanitize(query);
 		return await categoryModel.findOne(query, {}, options);
 	} catch (error) {
 		throw new Error(error as string);
@@ -52,6 +57,8 @@ export async function findAndUpdateCategory(
 	options: QueryOptions
 ) {
 	try {
+		query = sanitize(query);
+		update = sanitize(update);
 		return await categoryModel.findOneAndUpdate(query, update, options);
 	} catch (error) {
 		throw new Error(error as string);
@@ -66,6 +73,7 @@ export async function findAndUpdateCategory(
  */
 export async function deleteCategory(query: FilterQuery<CategoryDocument>) {
 	try {
+		query = sanitize(query);
 		return await categoryModel.deleteOne(query);
 	} catch (error) {
 		throw new Error(error as string);
