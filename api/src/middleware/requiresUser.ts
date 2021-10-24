@@ -20,7 +20,7 @@ const requiresUser = async (
 	const user = get(req, 'user');
 
 	if (!user) {
-		return res.sendStatus(403);
+		return res.status(403).send('User not logged in.');
 	}
 
 	return next();

@@ -8,7 +8,7 @@ export type RequiredModel = {
 	omit?: string[];
 };
 
-export type swaggerObjectType = {
+export type swaggerObjectParamType = {
 	CRUD: crudMethods;
 	item: string;
 	tag: string;
@@ -21,7 +21,13 @@ export type swaggerObjectType = {
 	invalidResponses: any;
 };
 
-export function getSwaggerObject(param: swaggerObjectType) {
+/**
+ * @description Generates a swagger object for a given CRUD method
+ * @brief The "_id" of the object and all sub-objects is being removed from the swagger object in the method
+ * @param {swaggerObjectParamType} param
+ * @returns {any} Swagger object
+ */
+export function getSwaggerObject(param: swaggerObjectParamType): any {
 	let obj: any = { crud: {} };
 	obj.crud = {
 		...{
@@ -51,26 +57,27 @@ export function getSwaggerObject(param: swaggerObjectType) {
 
 	param.body.omit = param.body?.omit ?? [];
 	if (param.body.required && param.body?.omit) {
-		param.body.omit.push('_id');
+		param.body.omit.push('_id', 'updatedAt', 'createdAt');
 		param.body.omit.forEach((part, index, theArray) => {
 			theArray[index] = `properties.${part}`;
 		});
 
-		param.body.model.properties = removeIdFromNestedProperties(
-			param.body.model.properties
-		);
+		// Copy object to avoid mutating original
+		let tempModel = JSON.parse(JSON.stringify(param.body.model));
+
+		tempModel.properties = remIdAndTimestampFromProp(tempModel.properties);
 
 		obj.crud.parameters.push({
 			name: 'body',
 			in: 'body',
 			description: `Create ${param.item} body object`,
 			required: true,
-			schema: omit(param.body.model, param.body.omit),
+			schema: omit(tempModel, param.body.omit),
 		});
 	}
 
-	param.respondObject.omit = param.body?.omit ?? [];
-	if (param.respondObject && param.respondObject?.omit) {
+	param.respondObject.omit = param.respondObject?.omit ?? [];
+	if (param.respondObject.required && param.respondObject?.omit) {
 		param.respondObject.omit.forEach((part, index, theArray) => {
 			theArray[index] = `properties.${part}`;
 		});
@@ -124,29 +131,36 @@ export function getSwaggerObject(param: swaggerObjectType) {
 	return obj;
 }
 
-function removeIdFromNestedProperties(properties: any): any {
+/**
+ * Removes the id property from nested properties
+ * @param properties
+ *
+ * @returns {any} the properties without the id property
+ */
+function remIdAndTimestampFromProp(properties: any): any {
 	for (const [key] of Object.entries(properties)) {
 		if (properties[key].type === 'array') {
 			if (properties[key]?.items?.properties) {
-				properties[key].items.properties = removeIdFromNestedProperties(
+				properties[key].items.properties = remIdAndTimestampFromProp(
 					properties[key].items.properties
 				);
 				properties[key].items.properties = omit(
 					properties[key].items.properties,
-					'_id'
+					['_id', 'updatedAt', 'createdAt']
 				);
 			}
 		}
 
 		if (properties[key].type === 'object') {
 			if (properties[key]?.properties) {
-				properties[key].properties = removeIdFromNestedProperties(
+				properties[key].properties = remIdAndTimestampFromProp(
 					properties[key].properties
 				);
-				properties[key].properties = omit(
-					properties[key].properties,
-					'_id'
-				);
+				properties[key].properties = omit(properties[key].properties, [
+					'_id',
+					'updatedAt',
+					'createdAt',
+				]);
 			}
 		}
 	}

@@ -48,6 +48,9 @@ export const ingredientsPost = {
 			'403': {
 				description: 'User not logged in',
 			},
+			'409': {
+				description: 'Ingredient already exists',
+			},
 		},
 	}),
 };
@@ -79,14 +82,14 @@ export const ingredientsPut = {
 			'400': {
 				description: 'Bad Request',
 			},
-			'401': {
-				description: 'User not the creator of the ingredient',
-			},
 			'403': {
 				description: 'User not logged in',
 			},
 			'404': {
 				description: 'No such ingredient exists',
+			},
+			'409': {
+				description: 'Ingredient already exists',
 			},
 		},
 	}),
@@ -110,7 +113,14 @@ export const ingredientsGet = {
 			required: true,
 			model: ingredientSM,
 		},
-		invalidResponses: {},
+		invalidResponses: {
+			'400': {
+				description: 'Bad Request',
+			},
+			'404': {
+				description: 'No such ingredient exists',
+			},
+		},
 	}),
 };
 
@@ -138,9 +148,6 @@ export const ingredientsDelete = {
 		invalidResponses: {
 			'400': {
 				description: 'Bad Request',
-			},
-			'401': {
-				description: 'User not the creator of the ingredient',
 			},
 			'403': {
 				description: 'User not logged in',

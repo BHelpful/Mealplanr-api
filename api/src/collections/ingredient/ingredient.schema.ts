@@ -3,6 +3,7 @@ import { object, string, array } from 'yup';
 // schema for ingredient
 const payload = {
 	body: object({
+		name: string(),
 		typeId: string(),
 		season: string(),
 		diet: array().of(string()),

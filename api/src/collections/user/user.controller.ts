@@ -53,7 +53,7 @@ export async function updateUserHandler(req: Request, res: Response) {
 	if (existingUser && existingUser.email !== currUserMail) {
 		return res
 			.status(409)
-			.send('Other user already exists with that email');
+			.send('Other user already exists with that email.');
 	}
 
 	const user = await findUser({ email: userMail });
@@ -63,7 +63,7 @@ export async function updateUserHandler(req: Request, res: Response) {
 	}
 
 	if ((user.email as string) !== currUserMail) {
-		return res.status(401).send("You can't update other users");
+		return res.status(401).send("You can't update other users.");
 	}
 
 	const updatedUser = await findAndUpdateUser({ email: userMail }, update, {

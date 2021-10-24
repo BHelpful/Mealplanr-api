@@ -44,11 +44,11 @@ export const usersPost = {
 			omit: ['password'],
 		},
 		invalidResponses: {
-			'409': {
-				description: 'Conflict error - user already exists',
-			},
 			'400': {
 				description: 'Bad Request',
+			},
+			'409': {
+				description: 'Conflict error - user already exists',
 			},
 		},
 	}),
@@ -73,7 +73,14 @@ export const usersGet = {
 			model: userSM,
 			omit: ['password'],
 		},
-		invalidResponses: {},
+		invalidResponses: {
+			'404': {
+				description: 'User not found.',
+			},
+			'403': {
+				description: 'User not logged in.',
+			},
+		},
 	}),
 };
 
@@ -94,7 +101,14 @@ export const usersExistsGet = {
 		respondObject: {
 			required: false,
 		},
-		invalidResponses: {},
+		invalidResponses: {
+			'400': {
+				description: 'Bad Request',
+			},
+			'404': {
+				description: 'User not found.',
+			},
+		},
 	}),
 };
 
@@ -128,13 +142,16 @@ export const usersPut = {
 				description: 'Bad Request',
 			},
 			'401': {
-				description: 'User not the creator of the recipe',
+				description: "You can't update other users",
 			},
 			'403': {
 				description: 'User not logged in',
 			},
 			'404': {
-				description: 'No such recipe exists',
+				description: 'User not found',
+			},
+			'409': {
+				description: 'Other user already exists with that email',
 			},
 		},
 	}),
@@ -166,13 +183,13 @@ export const usersDelete = {
 				description: 'Bad Request',
 			},
 			'401': {
-				description: 'User not the creator of the recipe',
+				description: "You can't delete other users",
 			},
 			'403': {
 				description: 'User not logged in',
 			},
 			'404': {
-				description: 'No such recipe exists',
+				description: 'User not found.',
 			},
 		},
 	}),

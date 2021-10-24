@@ -48,6 +48,9 @@ export const storesPost = {
 			'403': {
 				description: 'User not logged in',
 			},
+			'409': {
+				description: 'Store already exists',
+			},
 		},
 	}),
 };
@@ -79,14 +82,14 @@ export const storesPut = {
 			'400': {
 				description: 'Bad Request',
 			},
-			'401': {
-				description: 'User not the creator of the store',
-			},
 			'403': {
 				description: 'User not logged in',
 			},
 			'404': {
 				description: 'No such store exists',
+			},
+			'409': {
+				description: 'Store already exists',
 			},
 		},
 	}),
@@ -102,7 +105,6 @@ export const storesGet = {
 		summary: 'Get a store',
 		description: 'Get a store based on the storeId',
 		requiresUser: false,
-		invalidResponses: {},
 		queryId: { required: true, id: 'storeId' },
 		body: {
 			required: false,
@@ -110,6 +112,14 @@ export const storesGet = {
 		respondObject: {
 			required: true,
 			model: storeSM,
+		},
+		invalidResponses: {
+			'400': {
+				description: 'Bad Request',
+			},
+			'404': {
+				description: 'No such store exists',
+			},
 		},
 	}),
 };
@@ -122,7 +132,7 @@ router.delete(
 );
 export const storesDelete = {
 	...getSwaggerObject({
-		CRUD: 'get',
+		CRUD: 'delete',
 		item: 'store',
 		tag: 'stores',
 		summary: 'Delete a store',
@@ -138,9 +148,6 @@ export const storesDelete = {
 		invalidResponses: {
 			'400': {
 				description: 'Bad Request',
-			},
-			'401': {
-				description: 'User not the creator of the store',
 			},
 			'403': {
 				description: 'User not logged in',

@@ -35,7 +35,7 @@ export const recipesPost = {
 		body: {
 			required: true,
 			model: recipeSM,
-			omit: ['rating', 'updatedAt', 'createdAt'],
+			omit: ['rating'],
 		},
 		respondObject: {
 			required: true,
@@ -70,7 +70,6 @@ export const recipesPut = {
 		body: {
 			required: true,
 			model: recipeSM,
-			omit: ['rating', 'updatedAt', 'createdAt'],
 		},
 		respondObject: {
 			required: true,
@@ -111,7 +110,14 @@ export const recipesGet = {
 			required: true,
 			model: recipeSM,
 		},
-		invalidResponses: {},
+		invalidResponses: {
+			'400': {
+				description: 'Bad Request',
+			},
+			'404': {
+				description: 'No such recipe exists',
+			},
+		},
 	}),
 };
 

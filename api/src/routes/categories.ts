@@ -32,7 +32,7 @@ export const categoriesPost = {
 		description:
 			'Creates a new category to be used in settings and for mealplans and shoppinglist',
 		requiresUser: true,
-		queryId: { required: true, id: 'categoryId' },
+		queryId: { required: false },
 		body: {
 			required: true,
 			model: categorySM,
@@ -47,6 +47,9 @@ export const categoriesPost = {
 			},
 			'403': {
 				description: 'User not logged in',
+			},
+			'409': {
+				description: 'Category already exists',
 			},
 		},
 	}),
@@ -79,14 +82,14 @@ export const categoriesPut = {
 			'400': {
 				description: 'Bad Request',
 			},
-			'401': {
-				description: 'User not the creator of the category',
-			},
 			'403': {
 				description: 'User not logged in',
 			},
 			'404': {
 				description: 'No such category exists',
+			},
+			'409': {
+				description: 'Category already exists',
 			},
 		},
 	}),
@@ -110,7 +113,14 @@ export const categoriesGet = {
 			required: true,
 			model: categorySM,
 		},
-		invalidResponses: {},
+		invalidResponses: {
+			'400': {
+				description: 'Bad Request',
+			},
+			'404': {
+				description: 'No such category exists',
+			},
+		},
 	}),
 };
 
@@ -138,9 +148,6 @@ export const categoriesDelete = {
 		invalidResponses: {
 			'400': {
 				description: 'Bad Request',
-			},
-			'401': {
-				description: 'User not the creator of the category',
 			},
 			'403': {
 				description: 'User not logged in',

@@ -45,7 +45,7 @@ export async function updateStoreHandler(req: Request, res: Response) {
 	const store = await findStore({ _id: storeId });
 
 	if (!store) {
-		return res.sendStatus(404);
+		return res.status(404).send('No such store exists');
 	}
 
 	if (
@@ -75,7 +75,7 @@ export async function getStoreHandler(req: Request, res: Response) {
 	const store = await findStore({ _id: storeId });
 
 	if (!store) {
-		return res.sendStatus(404);
+		return res.status(404).send('No such store exists');
 	}
 
 	return res.send(store);
@@ -94,7 +94,7 @@ export async function deleteStoreHandler(req: Request, res: Response) {
 	const store = await findStore({ _id: storeId });
 
 	if (!store) {
-		return res.sendStatus(404);
+		return res.status(404).send('No such store exists');
 	}
 
 	await deleteStore({ _id: storeId });

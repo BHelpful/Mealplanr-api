@@ -104,10 +104,12 @@ parsedSwaggerDoc.definitions.User = userSM;
 app.use('/users', usersRouter);
 parsedSwaggerDoc.paths['/users'] = {
 	...usersPost,
-	...usersExistsGet,
 	...usersGet,
 	...usersPut,
 	...usersDelete,
+};
+parsedSwaggerDoc.paths['/users/exists'] = {
+	...usersExistsGet,
 };
 
 app.use('/sessions', sessionsRouter);

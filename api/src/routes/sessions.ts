@@ -52,46 +52,15 @@ export const sessionsPost = {
 				},
 			},
 		},
-		invalidResponses: {},
-	}),
-};
-export const sessionsPost2 = {
-	post: {
-		summary: 'Log in',
-		description: 'Create a new session for the user (thereby logging in)',
-		tags: ['sessions'],
-		produces: ['application/json'],
-		parameters: [
-			{
-				name: 'body',
-				in: 'body',
-				description: 'Create session body object',
-				required: true,
-				schema: {
-					type: 'object',
-					properties: sessionPostStructure,
-				},
+		invalidResponses: {
+			'400': {
+				description: 'Bad Request',
 			},
-		],
-		responses: {
-			'200': {
-				description: 'OK',
-				schema: {
-					type: 'object',
-					properties: {
-						accessToken: {
-							type: 'string',
-							example: 'JWT accessToken',
-						},
-						refreshToken: {
-							type: 'string',
-							example: 'JWT accessToken',
-						},
-					},
-				},
+			'401': {
+				description: 'Invalid username or password',
 			},
 		},
-	},
+	}),
 };
 
 // Get the user's valid sessions i.e. the sessions where the user is logged in.
