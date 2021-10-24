@@ -31,9 +31,16 @@ export const categoriesPost = {
 		summary: 'Create new category',
 		description:
 			'Creates a new category to be used in settings and for mealplans and shoppinglist',
-		model: categorySM,
-		OmitInputAttributes: [],
-		OmitResponseAttributes: [],
+		requiresUser: true,
+		queryId: { required: true, id: 'categoryId' },
+		body: {
+			required: true,
+			model: categorySM,
+		},
+		respondObject: {
+			required: true,
+			model: categorySM,
+		},
 		invalidResponses: {
 			'400': {
 				description: 'Bad Request',
@@ -42,10 +49,6 @@ export const categoriesPost = {
 				description: 'User not logged in',
 			},
 		},
-		requiresQueryId: false,
-		requiresBody: true,
-		requiresUser: true,
-		respondWithObject: true,
 	}),
 };
 
@@ -62,9 +65,16 @@ export const categoriesPut = {
 		tag: 'categories',
 		summary: 'Update category',
 		description: 'Updates a category that is globally available',
-		model: categorySM,
-		OmitInputAttributes: [],
-		OmitResponseAttributes: [],
+		requiresUser: true,
+		queryId: { required: true, id: 'categoryId' },
+		body: {
+			required: true,
+			model: categorySM,
+		},
+		respondObject: {
+			required: true,
+			model: categorySM,
+		},
 		invalidResponses: {
 			'400': {
 				description: 'Bad Request',
@@ -79,10 +89,6 @@ export const categoriesPut = {
 				description: 'No such category exists',
 			},
 		},
-		requiresQueryId: true,
-		requiresBody: true,
-		requiresUser: true,
-		respondWithObject: true,
 	}),
 };
 
@@ -95,14 +101,16 @@ export const categoriesGet = {
 		tag: 'categories',
 		summary: 'Get a category',
 		description: 'Get a category based on the categoryId',
-		model: categorySM,
-		OmitInputAttributes: [],
-		OmitResponseAttributes: [],
-		invalidResponses: {},
-		requiresQueryId: true,
-		requiresBody: false,
 		requiresUser: false,
-		respondWithObject: true,
+		queryId: { required: true, id: 'categoryId' },
+		body: {
+			required: false,
+		},
+		respondObject: {
+			required: true,
+			model: categorySM,
+		},
+		invalidResponses: {},
 	}),
 };
 
@@ -119,9 +127,14 @@ export const categoriesDelete = {
 		tag: 'categories',
 		summary: 'Delete a category',
 		description: 'Delete a category based on the categoryId',
-		model: categorySM,
-		OmitInputAttributes: [],
-		OmitResponseAttributes: [],
+		requiresUser: true,
+		queryId: { required: true, id: 'categoryId' },
+		body: {
+			required: false,
+		},
+		respondObject: {
+			required: false,
+		},
 		invalidResponses: {
 			'400': {
 				description: 'Bad Request',
@@ -136,10 +149,6 @@ export const categoriesDelete = {
 				description: 'No such category exists',
 			},
 		},
-		requiresQueryId: true,
-		requiresBody: false,
-		requiresUser: true,
-		respondWithObject: false,
 	}),
 };
 

@@ -31,9 +31,16 @@ export const ingredientsPost = {
 		summary: 'Create new ingredient',
 		description:
 			'Creates a new ingredient to be used in settings and for mealplans and shoppinglist',
-		model: ingredientSM,
-		OmitInputAttributes: [],
-		OmitResponseAttributes: [],
+		requiresUser: true,
+		queryId: { required: false },
+		body: {
+			required: true,
+			model: ingredientSM,
+		},
+		respondObject: {
+			required: true,
+			model: ingredientSM,
+		},
 		invalidResponses: {
 			'400': {
 				description: 'Bad Request',
@@ -42,10 +49,6 @@ export const ingredientsPost = {
 				description: 'User not logged in',
 			},
 		},
-		requiresQueryId: false,
-		requiresBody: true,
-		requiresUser: true,
-		respondWithObject: true,
 	}),
 };
 
@@ -62,9 +65,16 @@ export const ingredientsPut = {
 		tag: 'ingredients',
 		summary: 'Update ingredient',
 		description: 'Updates a ingredient that is globally available',
-		model: ingredientSM,
-		OmitInputAttributes: [],
-		OmitResponseAttributes: [],
+		requiresUser: true,
+		queryId: { required: true, id: 'ingredientId' },
+		body: {
+			required: true,
+			model: ingredientSM,
+		},
+		respondObject: {
+			required: true,
+			model: ingredientSM,
+		},
 		invalidResponses: {
 			'400': {
 				description: 'Bad Request',
@@ -79,10 +89,6 @@ export const ingredientsPut = {
 				description: 'No such ingredient exists',
 			},
 		},
-		requiresQueryId: true,
-		requiresBody: true,
-		requiresUser: true,
-		respondWithObject: true,
 	}),
 };
 
@@ -95,14 +101,16 @@ export const ingredientsGet = {
 		tag: 'ingredients',
 		summary: 'Get a ingredient',
 		description: 'Get a ingredient based on the ingredientId',
-		model: ingredientSM,
-		OmitInputAttributes: [],
-		OmitResponseAttributes: [],
-		invalidResponses: {},
-		requiresQueryId: true,
-		requiresBody: false,
 		requiresUser: false,
-		respondWithObject: true,
+		queryId: { required: true, id: 'ingredientId' },
+		body: {
+			required: false,
+		},
+		respondObject: {
+			required: true,
+			model: ingredientSM,
+		},
+		invalidResponses: {},
 	}),
 };
 
@@ -119,9 +127,14 @@ export const ingredientsDelete = {
 		tag: 'ingredients',
 		summary: 'Delete a ingredient',
 		description: 'Delete a ingredient based on the ingredientId',
-		model: ingredientSM,
-		OmitInputAttributes: [],
-		OmitResponseAttributes: [],
+		requiresUser: true,
+		queryId: { required: true, id: 'ingredientId' },
+		body: {
+			required: false,
+		},
+		respondObject: {
+			required: false,
+		},
 		invalidResponses: {
 			'400': {
 				description: 'Bad Request',
@@ -136,10 +149,6 @@ export const ingredientsDelete = {
 				description: 'No such ingredient exists',
 			},
 		},
-		requiresQueryId: true,
-		requiresBody: false,
-		requiresUser: true,
-		respondWithObject: false,
 	}),
 };
 

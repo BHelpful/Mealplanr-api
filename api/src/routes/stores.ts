@@ -31,9 +31,16 @@ export const storesPost = {
 		summary: 'Create new store',
 		description:
 			'Creates a new store to be used in settings and for mealplans and shoppinglist',
-		model: storeSM,
-		OmitInputAttributes: [],
-		OmitResponseAttributes: [],
+		requiresUser: true,
+		queryId: { required: false },
+		body: {
+			required: true,
+			model: storeSM,
+		},
+		respondObject: {
+			required: true,
+			model: storeSM,
+		},
 		invalidResponses: {
 			'400': {
 				description: 'Bad Request',
@@ -42,10 +49,6 @@ export const storesPost = {
 				description: 'User not logged in',
 			},
 		},
-		requiresQueryId: false,
-		requiresBody: true,
-		requiresUser: true,
-		respondWithObject: true,
 	}),
 };
 
@@ -62,9 +65,16 @@ export const storesPut = {
 		tag: 'stores',
 		summary: 'Update store',
 		description: 'Updates a store that is globally available',
-		model: storeSM,
-		OmitInputAttributes: [],
-		OmitResponseAttributes: [],
+		requiresUser: true,
+		queryId: { required: true, id: 'storeId' },
+		body: {
+			required: true,
+			model: storeSM,
+		},
+		respondObject: {
+			required: true,
+			model: storeSM,
+		},
 		invalidResponses: {
 			'400': {
 				description: 'Bad Request',
@@ -79,10 +89,6 @@ export const storesPut = {
 				description: 'No such store exists',
 			},
 		},
-		requiresQueryId: true,
-		requiresBody: true,
-		requiresUser: true,
-		respondWithObject: true,
 	}),
 };
 
@@ -95,14 +101,16 @@ export const storesGet = {
 		tag: 'stores',
 		summary: 'Get a store',
 		description: 'Get a store based on the storeId',
-		model: storeSM,
-		OmitInputAttributes: [],
-		OmitResponseAttributes: [],
-		invalidResponses: {},
-		requiresQueryId: true,
-		requiresBody: false,
 		requiresUser: false,
-		respondWithObject: true,
+		invalidResponses: {},
+		queryId: { required: true, id: 'storeId' },
+		body: {
+			required: false,
+		},
+		respondObject: {
+			required: true,
+			model: storeSM,
+		},
 	}),
 };
 
@@ -119,9 +127,14 @@ export const storesDelete = {
 		tag: 'stores',
 		summary: 'Delete a store',
 		description: 'Delete a store based on the storeId',
-		model: storeSM,
-		OmitInputAttributes: [],
-		OmitResponseAttributes: [],
+		requiresUser: true,
+		queryId: { required: true, id: 'storeId' },
+		body: {
+			required: false,
+		},
+		respondObject: {
+			required: false,
+		},
 		invalidResponses: {
 			'400': {
 				description: 'Bad Request',
@@ -136,10 +149,6 @@ export const storesDelete = {
 				description: 'No such store exists',
 			},
 		},
-		requiresQueryId: true,
-		requiresBody: false,
-		requiresUser: true,
-		respondWithObject: false,
 	}),
 };
 

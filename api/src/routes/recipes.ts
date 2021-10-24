@@ -30,9 +30,17 @@ export const recipesPost = {
 		tag: 'recipes',
 		summary: 'Create new recipe',
 		description: "Creates a new recipe to add to the user's collection",
-		model: recipeSM,
-		OmitInputAttributes: ['rating', 'updatedAt', 'createdAt'],
-		OmitResponseAttributes: [],
+		requiresUser: true,
+		queryId: { required: false },
+		body: {
+			required: true,
+			model: recipeSM,
+			omit: ['rating', 'updatedAt', 'createdAt'],
+		},
+		respondObject: {
+			required: true,
+			model: recipeSM,
+		},
 		invalidResponses: {
 			'400': {
 				description: 'Bad Request',
@@ -41,10 +49,6 @@ export const recipesPost = {
 				description: 'User not logged in',
 			},
 		},
-		requiresQueryId: false,
-		requiresBody: true,
-		requiresUser: true,
-		respondWithObject: true,
 	}),
 };
 
@@ -61,9 +65,17 @@ export const recipesPut = {
 		tag: 'recipes',
 		summary: 'Update recipe',
 		description: 'Updates a recipe that the user owns',
-		model: recipeSM,
-		OmitInputAttributes: ['rating', 'updatedAt', 'createdAt'],
-		OmitResponseAttributes: [],
+		requiresUser: true,
+		queryId: { required: true, id: 'recipeId' },
+		body: {
+			required: true,
+			model: recipeSM,
+			omit: ['rating', 'updatedAt', 'createdAt'],
+		},
+		respondObject: {
+			required: true,
+			model: recipeSM,
+		},
 		invalidResponses: {
 			'400': {
 				description: 'Bad Request',
@@ -78,10 +90,6 @@ export const recipesPut = {
 				description: 'No such recipe exists',
 			},
 		},
-		requiresQueryId: true,
-		requiresBody: true,
-		requiresUser: true,
-		respondWithObject: true,
 	}),
 };
 
@@ -94,14 +102,16 @@ export const recipesGet = {
 		tag: 'recipes',
 		summary: 'Get a recipe',
 		description: 'Get a recipe based on the recipeId',
-		model: recipeSM,
-		OmitInputAttributes: [],
-		OmitResponseAttributes: [],
-		invalidResponses: {},
-		requiresQueryId: true,
-		requiresBody: false,
 		requiresUser: true,
-		respondWithObject: true,
+		queryId: { required: true, id: 'recipeId' },
+		body: {
+			required: false,
+		},
+		respondObject: {
+			required: true,
+			model: recipeSM,
+		},
+		invalidResponses: {},
 	}),
 };
 
@@ -118,9 +128,14 @@ export const recipesDelete = {
 		tag: 'recipes',
 		summary: 'Delete a recipe',
 		description: 'Delete a recipe based on the recipeId',
-		model: recipeSM,
-		OmitInputAttributes: [],
-		OmitResponseAttributes: [],
+		requiresUser: true,
+		queryId: { required: true, id: 'recipeId' },
+		body: {
+			required: false,
+		},
+		respondObject: {
+			required: false,
+		},
 		invalidResponses: {
 			'400': {
 				description: 'Bad Request',
@@ -135,10 +150,6 @@ export const recipesDelete = {
 				description: 'No such recipe exists',
 			},
 		},
-		requiresQueryId: true,
-		requiresBody: false,
-		requiresUser: true,
-		respondWithObject: false,
 	}),
 };
 

@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { omit } from 'lodash';
+import { getSwaggerObject } from '.';
 import {
 	createUserHandler,
 	deleteUserHandler,
@@ -22,29 +22,28 @@ const router = Router();
 // Create a new user
 router.post('/', [validateRequest(createUserSchema)], createUserHandler);
 export const usersPost = {
-	post: {
+	...getSwaggerObject({
+		CRUD: 'post',
+		item: 'user',
+		tag: 'users',
 		summary: 'Register user',
 		description:
 			'Register user (validating the body of the request before calling the method to create a new user)',
-		tags: ['users'],
-		produces: ['application/json'],
-		parameters: [
-			{
-				name: 'body',
-				in: 'body',
-				description: 'Create user body object',
-				required: true,
-				schema: {
-					type: 'object',
-					properties: userCreateStructure,
-				},
+		requiresUser: true,
+		queryId: { required: false },
+		body: {
+			required: true,
+			model: {
+				type: 'object',
+				properties: userCreateStructure,
 			},
-		],
-		responses: {
-			'200': {
-				description: 'OK',
-				schema: omit(userSM, 'password'),
-			},
+		},
+		respondObject: {
+			required: true,
+			model: userSM,
+			omit: ['password'],
+		},
+		invalidResponses: {
 			'409': {
 				description: 'Conflict error - user already exists',
 			},
@@ -52,71 +51,51 @@ export const usersPost = {
 				description: 'Bad Request',
 			},
 		},
-	},
+	}),
 };
 
 // Get a user
 router.get('/', [requiresUser], getUserHandler);
 export const usersGet = {
-	get: {
+	...getSwaggerObject({
+		CRUD: 'get',
+		item: 'user',
+		tag: 'users',
 		summary: 'Get a user',
 		description: "Get a user based on the user's mail",
-		tags: ['users'],
-		produces: ['application/json'],
-		parameters: [
-			{
-				in: 'header',
-				name: 'x-refresh',
-				description: 'refreshToken',
-				required: true,
-				schema: {
-					type: 'string',
-					format: 'uuid',
-				},
-			},
-			{
-				in: 'header',
-				name: 'authorization',
-				description: 'accessToken',
-				required: true,
-				schema: {
-					type: 'string',
-					format: 'uuid',
-				},
-			},
-		],
-		responses: {
-			'200': {
-				description: 'OK',
-				schema: omit(userSM, 'password'),
-			},
+		requiresUser: true,
+		queryId: { required: true, id: 'userMail' },
+		body: {
+			required: false,
 		},
-	},
+		respondObject: {
+			required: true,
+			model: userSM,
+			omit: ['password'],
+		},
+		invalidResponses: {},
+	}),
 };
 
 // Checks if a user exists
 router.get('/exists', [validateRequest(getUserSchema)], getUserExistsHandler);
 export const usersExistsGet = {
-	get: {
+	...getSwaggerObject({
+		CRUD: 'get',
+		item: 'user',
+		tag: 'users',
 		summary: 'Check if a user exists',
 		description: 'Check if a user exists',
-		tags: ['users'],
-		produces: ['application/json'],
-		parameters: [
-			{
-				name: 'userMail',
-				in: 'query',
-				description: 'Email of the user',
-				required: true,
-				type: 'string',
-			},
-		],
-		responses: {
-			'200': {
-				description: 'User exists',
-			},
+		requiresUser: false,
+		queryId: { required: true, id: 'userMail' },
+		body: {
+			required: false,
 		},
-	},
+		respondObject: {
+			required: false,
+		},
+		invalidResponses: {},
+	}),
 };
 
 // Update a user
@@ -126,54 +105,39 @@ router.put(
 	updateUserHandler
 );
 export const usersPut = {
-	put: {
+	...getSwaggerObject({
+		CRUD: 'put',
+		item: 'user',
+		tag: 'users',
 		summary: 'Update a user',
 		description: "Update a user based on the user's mail",
-		tags: ['users'],
-		produces: ['application/json'],
-		parameters: [
-			{
-				name: 'userMail',
-				in: 'query',
-				description: 'Email of the user',
-				required: true,
-				type: 'string',
+		requiresUser: true,
+		queryId: { required: true, id: 'userMail' },
+		body: {
+			required: true,
+			model: userSM,
+			omit: ['password'],
+		},
+		respondObject: {
+			required: true,
+			model: userSM,
+			omit: ['password'],
+		},
+		invalidResponses: {
+			'400': {
+				description: 'Bad Request',
 			},
-			{
-				name: 'body',
-				in: 'body',
-				description: 'Update user body object',
-				required: true,
-				schema: omit(userSM, 'password'),
+			'401': {
+				description: 'User not the creator of the recipe',
 			},
-			{
-				in: 'header',
-				name: 'x-refresh',
-				description: 'refreshToken',
-				required: true,
-				schema: {
-					type: 'string',
-					format: 'uuid',
-				},
+			'403': {
+				description: 'User not logged in',
 			},
-			{
-				in: 'header',
-				name: 'authorization',
-				description: 'accessToken',
-				required: true,
-				schema: {
-					type: 'string',
-					format: 'uuid',
-				},
-			},
-		],
-		responses: {
-			'200': {
-				description: 'OK',
-				schema: omit(userSM, 'password'),
+			'404': {
+				description: 'No such recipe exists',
 			},
 		},
-	},
+	}),
 };
 
 // Delete a user
@@ -183,46 +147,35 @@ router.delete(
 	deleteUserHandler
 );
 export const usersDelete = {
-	delete: {
+	...getSwaggerObject({
+		CRUD: 'delete',
+		item: 'user',
+		tag: 'users',
 		summary: 'Delete a user',
 		description: "Delete a user based on the user's mail",
-		tags: ['users'],
-		produces: ['application/json'],
-		parameters: [
-			{
-				name: 'userMail',
-				in: 'query',
-				description: 'Email of the user',
-				required: true,
-				type: 'string',
+		requiresUser: true,
+		queryId: { required: true, id: 'userMail' },
+		body: {
+			required: false,
+		},
+		respondObject: {
+			required: false,
+		},
+		invalidResponses: {
+			'400': {
+				description: 'Bad Request',
 			},
-			{
-				in: 'header',
-				name: 'x-refresh',
-				description: 'refreshToken',
-				required: true,
-				schema: {
-					type: 'string',
-					format: 'uuid',
-				},
+			'401': {
+				description: 'User not the creator of the recipe',
 			},
-			{
-				in: 'header',
-				name: 'authorization',
-				description: 'accessToken',
-				required: true,
-				schema: {
-					type: 'string',
-					format: 'uuid',
-				},
+			'403': {
+				description: 'User not logged in',
 			},
-		],
-		responses: {
-			'200': {
-				description: 'OK',
+			'404': {
+				description: 'No such recipe exists',
 			},
 		},
-	},
+	}),
 };
 
 export default router;

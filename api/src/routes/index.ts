@@ -1,9 +1,12 @@
 import { omit } from 'lodash';
-import log from '../logger';
-
-// TODO: find a way to generically include session and user here, as they have a slightly different structure than the other routes
 
 export type crudMethods = 'get' | 'post' | 'put' | 'delete';
+export type QueryId = { required: boolean; id?: string };
+export type RequiredModel = {
+	required: boolean;
+	model?: any;
+	omit?: string[];
+};
 
 export type swaggerObjectType = {
 	CRUD: crudMethods;
@@ -11,14 +14,11 @@ export type swaggerObjectType = {
 	tag: string;
 	summary: string;
 	description: string;
-	model: any;
-	OmitInputAttributes: string[];
-	OmitResponseAttributes: string[];
-	invalidResponses: any;
-	requiresQueryId: boolean;
-	requiresBody: boolean;
 	requiresUser: boolean;
-	respondWithObject: boolean;
+	queryId: QueryId;
+	body: RequiredModel;
+	respondObject: RequiredModel;
+	invalidResponses: any;
 };
 
 export function getSwaggerObject(param: swaggerObjectType) {
@@ -39,9 +39,9 @@ export function getSwaggerObject(param: swaggerObjectType) {
 		},
 	};
 
-	if (param.requiresQueryId) {
+	if (param.queryId.required) {
 		obj.crud.parameters.push({
-			name: `${param.item}Id`,
+			name: param.queryId.id,
 			in: 'query',
 			description: `Id of the ${param.item}`,
 			required: true,
@@ -49,14 +49,15 @@ export function getSwaggerObject(param: swaggerObjectType) {
 		});
 	}
 
-	if (param.requiresBody) {
-		param.OmitInputAttributes.push('_id');
-		param.OmitInputAttributes.forEach((part, index, theArray) => {
+	param.body.omit = param.body?.omit ?? [];
+	if (param.body.required && param.body?.omit) {
+		param.body.omit.push('_id');
+		param.body.omit.forEach((part, index, theArray) => {
 			theArray[index] = `properties.${part}`;
 		});
 
-		param.model.properties = removeIdFromNestedProperties(
-			param.model.properties
+		param.body.model.properties = removeIdFromNestedProperties(
+			param.body.model.properties
 		);
 
 		obj.crud.parameters.push({
@@ -64,17 +65,18 @@ export function getSwaggerObject(param: swaggerObjectType) {
 			in: 'body',
 			description: `Create ${param.item} body object`,
 			required: true,
-			schema: omit(param.model, param.OmitInputAttributes),
+			schema: omit(param.body.model, param.body.omit),
 		});
 	}
 
-	if (param.respondWithObject) {
-		param.OmitResponseAttributes.forEach((part, index, theArray) => {
+	param.respondObject.omit = param.body?.omit ?? [];
+	if (param.respondObject && param.respondObject?.omit) {
+		param.respondObject.omit.forEach((part, index, theArray) => {
 			theArray[index] = `properties.${part}`;
 		});
 		obj.crud.responses['200'].schema = omit(
-			param.model,
-			param.OmitResponseAttributes
+			param.respondObject.model,
+			param.respondObject.omit
 		);
 	}
 
@@ -123,7 +125,7 @@ export function getSwaggerObject(param: swaggerObjectType) {
 }
 
 function removeIdFromNestedProperties(properties: any): any {
-	for (const [key, value] of Object.entries(properties)) {
+	for (const [key] of Object.entries(properties)) {
 		if (properties[key].type === 'array') {
 			if (properties[key]?.items?.properties) {
 				properties[key].items.properties = removeIdFromNestedProperties(
