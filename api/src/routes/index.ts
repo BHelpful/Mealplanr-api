@@ -1,7 +1,7 @@
 import { omit } from 'lodash';
+import log from '../logger';
 
 // TODO: find a way to generically include session and user here, as they have a slightly different structure than the other routes
-// TODO: find a clever way to omit the _id field from the input model when it is a nested object like e.g. 'recipes.ingredients[]._id'
 
 export type crudMethods = 'get' | 'post' | 'put' | 'delete';
 
@@ -39,16 +39,6 @@ export function getSwaggerObject(param: swaggerObjectType) {
 		},
 	};
 
-	if (param.respondWithObject) {
-		param.OmitResponseAttributes.forEach((part, index, theArray) => {
-			theArray[index] = `properties.${part}`;
-		});
-		obj.crud.responses['200'].schema = omit(
-			param.model,
-			param.OmitResponseAttributes
-		);
-	}
-
 	if (param.requiresQueryId) {
 		obj.crud.parameters.push({
 			name: `${param.item}Id`,
@@ -64,6 +54,11 @@ export function getSwaggerObject(param: swaggerObjectType) {
 		param.OmitInputAttributes.forEach((part, index, theArray) => {
 			theArray[index] = `properties.${part}`;
 		});
+
+		param.model.properties = removeIdFromNestedProperties(
+			param.model.properties
+		);
+
 		obj.crud.parameters.push({
 			name: 'body',
 			in: 'body',
@@ -71,6 +66,16 @@ export function getSwaggerObject(param: swaggerObjectType) {
 			required: true,
 			schema: omit(param.model, param.OmitInputAttributes),
 		});
+	}
+
+	if (param.respondWithObject) {
+		param.OmitResponseAttributes.forEach((part, index, theArray) => {
+			theArray[index] = `properties.${part}`;
+		});
+		obj.crud.responses['200'].schema = omit(
+			param.model,
+			param.OmitResponseAttributes
+		);
 	}
 
 	if (param.requiresUser) {
@@ -115,4 +120,33 @@ export function getSwaggerObject(param: swaggerObjectType) {
 
 	delete obj.crud;
 	return obj;
+}
+
+function removeIdFromNestedProperties(properties: any): any {
+	for (const [key, value] of Object.entries(properties)) {
+		if (properties[key].type === 'array') {
+			if (properties[key]?.items?.properties) {
+				properties[key].items.properties = removeIdFromNestedProperties(
+					properties[key].items.properties
+				);
+				properties[key].items.properties = omit(
+					properties[key].items.properties,
+					'_id'
+				);
+			}
+		}
+
+		if (properties[key].type === 'object') {
+			if (properties[key]?.properties) {
+				properties[key].properties = removeIdFromNestedProperties(
+					properties[key].properties
+				);
+				properties[key].properties = omit(
+					properties[key].properties,
+					'_id'
+				);
+			}
+		}
+	}
+	return properties;
 }
