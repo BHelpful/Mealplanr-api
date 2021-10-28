@@ -19,9 +19,7 @@ export async function createStoreHandler(req: Request, res: Response) {
 	const body = req.body;
 
 	try {
-		if (
-			(await findStore({ name: { $eq: body.name } }))?.name === body.name
-		) {
+		if ((await findStore({ name: body.name }))?.name === body.name) {
 			return res.status(409).send('Store already exists');
 		}
 		const store = await createStore({ ...body });
@@ -48,9 +46,7 @@ export async function updateStoreHandler(req: Request, res: Response) {
 		return res.status(404).send('No such store exists');
 	}
 
-	if (
-		(await findStore({ name: { $eq: update.name } }))?.name === update.name
-	) {
+	if ((await findStore({ name: update.name }))?.name === update.name) {
 		return res.status(409).send('Store already exists');
 	}
 

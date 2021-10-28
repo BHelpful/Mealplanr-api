@@ -27,7 +27,7 @@ export async function validatePassword({
 	password: string;
 }) {
 	email = sanitize(email);
-	const user = await userModel.findOne({ email: { $eq: email } });
+	const user = await userModel.findOne({ email: email });
 
 	if (!user) {
 		return false;

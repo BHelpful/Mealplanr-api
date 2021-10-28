@@ -19,10 +19,7 @@ export async function createCategoryHandler(req: Request, res: Response) {
 	const body = req.body;
 
 	try {
-		if (
-			(await findCategory({ name: { $eq: body.name } }))?.name ===
-			body.name
-		) {
+		if ((await findCategory({ name: body.name }))?.name === body.name) {
 			return res.status(409).send('Category already exists');
 		}
 		const category = await createCategory({ ...body });
@@ -49,10 +46,7 @@ export async function updateCategoryHandler(req: Request, res: Response) {
 		return res.status(404).send('No such category exists');
 	}
 
-	if (
-		(await findCategory({ name: { $eq: update.name } }))?.name ===
-		update.name
-	) {
+	if ((await findCategory({ name: update.name }))?.name === update.name) {
 		return res.status(409).send('Category already exists');
 	}
 
