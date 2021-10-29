@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { omit } from 'lodash';
+import { getSwaggerObject } from '.';
 import {
 	createRecipeHandler,
 	deleteRecipeHandler,
@@ -13,218 +13,69 @@ import {
 	getRecipeSchema,
 	updateRecipeSchema,
 } from '../collections/recipe/recipe.schema';
-import { requiresUser, sanitizeQuery, validateRequest } from '../middleware';
+import { requiresUser, validateRequest } from '../middleware';
 
 const router = Router();
 
-export const recipesPost = {
-	post: {
-		summary: 'Create new recipe',
-		description: "Creates a new recipe to add to the user's collection",
-		tags: ['recipes'],
-		produces: ['application/json'],
-		parameters: [
-			{
-				name: 'body',
-				in: 'body',
-				description: 'Create recipe body object',
-				required: true,
-				schema: omit(recipeSM, [
-					'properties.rating',
-					'properties.updatedAt',
-					'properties.createdAt',
-					'properties.ingredients.store',
-					'properties.ingredients._id',
-					'properties._id',
-				]),
-			},
-			{
-				in: 'header',
-				name: 'x-refresh',
-				description: 'refreshToken',
-				required: true,
-				schema: {
-					type: 'string',
-					format: 'uuid',
-				},
-			},
-			{
-				in: 'header',
-				name: 'authorization',
-				description: 'accessToken',
-				required: true,
-				schema: {
-					type: 'string',
-					format: 'uuid',
-				},
-			},
-		],
-		responses: {
-			'200': {
-				description: 'OK',
-				schema: recipeSM,
-			},
-			'400': {
-				description: 'Bad Request',
-			},
-			'403': {
-				description: 'User not logged in',
-			},
-		},
-	},
-};
 // Create a new recipe
 router.post(
 	'/',
-	[sanitizeQuery, requiresUser, validateRequest(createRecipeSchema)],
+	[requiresUser, validateRequest(createRecipeSchema)],
 	createRecipeHandler
 );
-
-export const recipesPut = {
-	put: {
-		summary: 'Update recipe',
-		description: 'Updates a recipe that the user owns',
-		tags: ['recipes'],
-		produces: ['application/json'],
-		parameters: [
-			{
-				name: 'recipeId',
-				in: 'query',
-				description: 'Id of the recipe',
-				required: true,
-				type: 'string',
-			},
-			{
-				name: 'body',
-				in: 'body',
-				description: 'Create recipe body object',
-				required: true,
-				schema: omit(recipeSM, [
-					'properties.rating',
-					'properties.updatedAt',
-					'properties.createdAt',
-					'properties.ingredients.store',
-					'properties.ingredients._id',
-					'properties._id',
-				]),
-			},
-			{
-				in: 'header',
-				name: 'x-refresh',
-				description: 'refreshToken',
-				required: true,
-				schema: {
-					type: 'string',
-					format: 'uuid',
-				},
-			},
-			{
-				in: 'header',
-				name: 'authorization',
-				description: 'accessToken',
-				required: true,
-				schema: {
-					type: 'string',
-					format: 'uuid',
-				},
-			},
-		],
-		responses: {
-			'200': {
-				description: 'OK',
-				schema: recipeSM,
-			},
+export const recipesPost = {
+	...getSwaggerObject({
+		CRUD: 'post',
+		item: 'recipe',
+		tag: 'recipes',
+		summary: 'Create new recipe',
+		description: "Creates a new recipe to add to the user's collection",
+		requiresUser: true,
+		queryId: { required: false },
+		body: {
+			required: true,
+			model: recipeSM,
+			omit: ['rating'],
+		},
+		respondObject: {
+			required: true,
+			model: recipeSM,
+		},
+		invalidResponses: {
 			'400': {
 				description: 'Bad Request',
-			},
-			'401': {
-				description: 'User not the creator of the recipe',
 			},
 			'403': {
 				description: 'User not logged in',
 			},
-			'404': {
-				description: 'No such recipe exists',
-			},
 		},
-	},
+	}),
 };
+
 // Update a recipe
 router.put(
 	'/',
-	[sanitizeQuery, requiresUser, validateRequest(updateRecipeSchema)],
+	[requiresUser, validateRequest(updateRecipeSchema)],
 	updateRecipeHandler
 );
-
-export const recipesGet = {
-	get: {
-		summary: 'Get a recipe',
-		description: 'Get a recipe based on the recipeId',
-		tags: ['recipes'],
-		produces: ['application/json'],
-		parameters: [
-			{
-				name: 'recipeId',
-				in: 'query',
-				description: 'Id of the recipe',
-				required: true,
-				type: 'string',
-			},
-		],
-		responses: {
-			'200': {
-				description: 'OK',
-				schema: recipeSM,
-			},
+export const recipesPut = {
+	...getSwaggerObject({
+		CRUD: 'put',
+		item: 'recipe',
+		tag: 'recipes',
+		summary: 'Update recipe',
+		description: 'Updates a recipe that the user owns',
+		requiresUser: true,
+		queryId: { required: true, id: 'recipeId' },
+		body: {
+			required: true,
+			model: recipeSM,
 		},
-	},
-};
-// Get a recipe
-router.get(
-	'/',
-	[sanitizeQuery, validateRequest(getRecipeSchema)],
-	getRecipeHandler
-);
-
-export const recipesDelete = {
-	delete: {
-		summary: 'Delete a recipe',
-		description: 'Delete a recipe based on the recipeId',
-		tags: ['recipes'],
-		produces: ['application/json'],
-		parameters: [
-			{
-				name: 'recipeId',
-				in: 'query',
-				description: 'Id of the recipe',
-				required: true,
-				type: 'string',
-			},
-			{
-				in: 'header',
-				name: 'x-refresh',
-				description: 'refreshToken',
-				required: true,
-				schema: {
-					type: 'string',
-					format: 'uuid',
-				},
-			},
-			{
-				in: 'header',
-				name: 'authorization',
-				description: 'accessToken',
-				required: true,
-				schema: {
-					type: 'string',
-					format: 'uuid',
-				},
-			},
-		],
-		responses: {
-			'200': {
-				description: 'OK',
-			},
+		respondObject: {
+			required: true,
+			model: recipeSM,
+		},
+		invalidResponses: {
 			'400': {
 				description: 'Bad Request',
 			},
@@ -238,13 +89,74 @@ export const recipesDelete = {
 				description: 'No such recipe exists',
 			},
 		},
-	},
+	}),
 };
+
+// Get a recipe
+router.get('/', [validateRequest(getRecipeSchema)], getRecipeHandler);
+export const recipesGet = {
+	...getSwaggerObject({
+		CRUD: 'get',
+		item: 'recipe',
+		tag: 'recipes',
+		summary: 'Get a recipe',
+		description: 'Get a recipe based on the recipeId',
+		requiresUser: true,
+		queryId: { required: true, id: 'recipeId' },
+		body: {
+			required: false,
+		},
+		respondObject: {
+			required: true,
+			model: recipeSM,
+		},
+		invalidResponses: {
+			'400': {
+				description: 'Bad Request',
+			},
+			'404': {
+				description: 'No such recipe exists',
+			},
+		},
+	}),
+};
+
 // Delete a recipe
 router.delete(
 	'/',
-	[sanitizeQuery, requiresUser, validateRequest(deleteRecipeSchema)],
+	[requiresUser, validateRequest(deleteRecipeSchema)],
 	deleteRecipeHandler
 );
+export const recipesDelete = {
+	...getSwaggerObject({
+		CRUD: 'delete',
+		item: 'recipe',
+		tag: 'recipes',
+		summary: 'Delete a recipe',
+		description: 'Delete a recipe based on the recipeId',
+		requiresUser: true,
+		queryId: { required: true, id: 'recipeId' },
+		body: {
+			required: false,
+		},
+		respondObject: {
+			required: false,
+		},
+		invalidResponses: {
+			'400': {
+				description: 'Bad Request',
+			},
+			'401': {
+				description: 'User not the creator of the recipe',
+			},
+			'403': {
+				description: 'User not logged in',
+			},
+			'404': {
+				description: 'No such recipe exists',
+			},
+		},
+	}),
+};
 
 export default router;

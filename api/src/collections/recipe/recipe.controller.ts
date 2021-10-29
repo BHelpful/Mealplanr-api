@@ -37,11 +37,11 @@ export async function updateRecipeHandler(req: Request, res: Response) {
 	const recipe = await findRecipe({ recipeId });
 
 	if (!recipe) {
-		return res.sendStatus(404);
+		return res.status(404).send('No such recipe exists');
 	}
 
 	if (String(recipe.creatorId) !== userId) {
-		return res.sendStatus(401);
+		return res.status(401).send('User not the creator of the recipe');
 	}
 
 	const updatedRecipe = await findAndUpdateRecipe({ recipeId }, update, {
@@ -65,7 +65,7 @@ export async function getRecipeHandler(req: Request, res: Response) {
 	const recipe = await findRecipe({ recipeId });
 
 	if (!recipe) {
-		return res.sendStatus(404);
+		return res.status(404).send('No such recipe exists');
 	}
 
 	return res.send(recipe);
@@ -85,11 +85,11 @@ export async function deleteRecipeHandler(req: Request, res: Response) {
 	const recipe = await findRecipe({ recipeId });
 
 	if (!recipe) {
-		return res.sendStatus(404);
+		return res.status(404).send('No such recipe exists');
 	}
 
 	if (String(recipe.creatorId) !== String(userId)) {
-		return res.sendStatus(401);
+		return res.status(401).send('User not the creator of the recipe');
 	}
 
 	await deleteRecipe({ recipeId });

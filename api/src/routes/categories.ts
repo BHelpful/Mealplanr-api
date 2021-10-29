@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { omit } from 'lodash';
+import { getSwaggerObject } from '.';
 import {
 	createCategoryHandler,
 	deleteCategoryHandler,
@@ -13,212 +13,141 @@ import {
 	getCategorySchema,
 	updateCategorySchema,
 } from '../collections/category/category.schema';
-import { requiresUser, sanitizeQuery, validateRequest } from '../middleware';
+import { requiresUser, validateRequest } from '../middleware';
 
 const router = Router();
 
-// TODO: go over the responses of the swagger documentation and remove/add to match the what is being used for category controller
-
-export const categoriesPost = {
-	post: {
-		summary: 'Create new category',
-		description:
-			'Creates a new category to be used in settings and for mealplans and shoppinglist',
-		tags: ['categories'],
-		produces: ['application/json'],
-		parameters: [
-			{
-				name: 'body',
-				in: 'body',
-				description: 'Create category body object',
-				required: true,
-				schema: omit(categorySM, ['properties._id']),
-			},
-			{
-				in: 'header',
-				name: 'x-refresh',
-				description: 'refreshToken',
-				required: true,
-				schema: {
-					type: 'string',
-					format: 'uuid',
-				},
-			},
-			{
-				in: 'header',
-				name: 'authorization',
-				description: 'accessToken',
-				required: true,
-				schema: {
-					type: 'string',
-					format: 'uuid',
-				},
-			},
-		],
-		responses: {
-			'200': {
-				description: 'OK',
-				schema: categorySM,
-			},
-			'400': {
-				description: 'Bad Request',
-			},
-			'403': {
-				description: 'User not logged in',
-			},
-		},
-	},
-};
 // Create a new category
 router.post(
 	'/',
-	[sanitizeQuery, requiresUser, validateRequest(createCategorySchema)],
+	[requiresUser, validateRequest(createCategorySchema)],
 	createCategoryHandler
 );
-
-export const categoriesPut = {
-	put: {
-		summary: 'Update category',
-		description: 'Updates a category that is globally available',
-		tags: ['categories'],
-		produces: ['application/json'],
-		parameters: [
-			{
-				name: 'categoryId',
-				in: 'query',
-				description: 'Id of the category',
-				required: true,
-				type: 'string',
-			},
-			{
-				name: 'body',
-				in: 'body',
-				description: 'Create category body object',
-				required: true,
-				schema: omit(categorySM, ['properties._id']),
-			},
-			{
-				in: 'header',
-				name: 'x-refresh',
-				description: 'refreshToken',
-				required: true,
-				schema: {
-					type: 'string',
-					format: 'uuid',
-				},
-			},
-			{
-				in: 'header',
-				name: 'authorization',
-				description: 'accessToken',
-				required: true,
-				schema: {
-					type: 'string',
-					format: 'uuid',
-				},
-			},
-		],
-		responses: {
-			'200': {
-				description: 'OK',
-				schema: categorySM,
-			},
+export const categoriesPost = {
+	...getSwaggerObject({
+		CRUD: 'post',
+		item: 'category',
+		tag: 'categories',
+		summary: 'Create new category',
+		description:
+			'Creates a new category to be used in settings and for mealplans and shoppinglist',
+		requiresUser: true,
+		queryId: { required: false },
+		body: {
+			required: true,
+			model: categorySM,
+		},
+		respondObject: {
+			required: true,
+			model: categorySM,
+		},
+		invalidResponses: {
 			'400': {
 				description: 'Bad Request',
-			},
-			'401': {
-				description: 'User not the creator of the category',
 			},
 			'403': {
 				description: 'User not logged in',
 			},
-			'404': {
-				description: 'No such category exists',
+			'409': {
+				description: 'Category already exists',
 			},
 		},
-	},
+	}),
 };
+
 // Update a category
 router.put(
 	'/',
-	[sanitizeQuery, requiresUser, validateRequest(updateCategorySchema)],
+	[requiresUser, validateRequest(updateCategorySchema)],
 	updateCategoryHandler
 );
-
-export const categoriesGet = {
-	get: {
-		summary: 'Get a category',
-		description: 'Get a category based on the categoryId',
-		tags: ['categories'],
-		produces: ['application/json'],
-		parameters: [
-			{
-				name: 'categoryId',
-				in: 'query',
-				description: 'Id of the category',
-				required: true,
-				type: 'string',
-			},
-		],
-		responses: {
-			'200': {
-				description: 'OK',
-				schema: categorySM,
-			},
+export const categoriesPut = {
+	...getSwaggerObject({
+		CRUD: 'put',
+		item: 'category',
+		tag: 'categories',
+		summary: 'Update category',
+		description: 'Updates a category that is globally available',
+		requiresUser: true,
+		queryId: { required: true, id: 'categoryId' },
+		body: {
+			required: true,
+			model: categorySM,
 		},
-	},
-};
-// Get a category
-router.get(
-	'/',
-	[sanitizeQuery, validateRequest(getCategorySchema)],
-	getCategoryHandler
-);
-
-export const categoriesDelete = {
-	delete: {
-		summary: 'Delete a category',
-		description: 'Delete a category based on the categoryId',
-		tags: ['categories'],
-		produces: ['application/json'],
-		parameters: [
-			{
-				name: 'categoryId',
-				in: 'query',
-				description: 'Id of the category',
-				required: true,
-				type: 'string',
-			},
-			{
-				in: 'header',
-				name: 'x-refresh',
-				description: 'refreshToken',
-				required: true,
-				schema: {
-					type: 'string',
-					format: 'uuid',
-				},
-			},
-			{
-				in: 'header',
-				name: 'authorization',
-				description: 'accessToken',
-				required: true,
-				schema: {
-					type: 'string',
-					format: 'uuid',
-				},
-			},
-		],
-		responses: {
-			'200': {
-				description: 'OK',
-			},
+		respondObject: {
+			required: true,
+			model: categorySM,
+		},
+		invalidResponses: {
 			'400': {
 				description: 'Bad Request',
 			},
-			'401': {
-				description: 'User not the creator of the category',
+			'403': {
+				description: 'User not logged in',
+			},
+			'404': {
+				description: 'No such category exists',
+			},
+			'409': {
+				description: 'Category already exists',
+			},
+		},
+	}),
+};
+
+// Get a category
+router.get('/', [validateRequest(getCategorySchema)], getCategoryHandler);
+export const categoriesGet = {
+	...getSwaggerObject({
+		CRUD: 'get',
+		item: 'category',
+		tag: 'categories',
+		summary: 'Get a category',
+		description: 'Get a category based on the categoryId',
+		requiresUser: false,
+		queryId: { required: true, id: 'categoryId' },
+		body: {
+			required: false,
+		},
+		respondObject: {
+			required: true,
+			model: categorySM,
+		},
+		invalidResponses: {
+			'400': {
+				description: 'Bad Request',
+			},
+			'404': {
+				description: 'No such category exists',
+			},
+		},
+	}),
+};
+
+// Delete a category
+router.delete(
+	'/',
+	[requiresUser, validateRequest(deleteCategorySchema)],
+	deleteCategoryHandler
+);
+export const categoriesDelete = {
+	...getSwaggerObject({
+		CRUD: 'delete',
+		item: 'category',
+		tag: 'categories',
+		summary: 'Delete a category',
+		description: 'Delete a category based on the categoryId',
+		requiresUser: true,
+		queryId: { required: true, id: 'categoryId' },
+		body: {
+			required: false,
+		},
+		respondObject: {
+			required: false,
+		},
+		invalidResponses: {
+			'400': {
+				description: 'Bad Request',
 			},
 			'403': {
 				description: 'User not logged in',
@@ -227,13 +156,7 @@ export const categoriesDelete = {
 				description: 'No such category exists',
 			},
 		},
-	},
+	}),
 };
-// Delete a category
-router.delete(
-	'/',
-	[sanitizeQuery, requiresUser, validateRequest(deleteCategorySchema)],
-	deleteCategoryHandler
-);
 
 export default router;

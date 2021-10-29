@@ -1,4 +1,5 @@
 import { Router } from 'express';
+import { getSwaggerObject } from '.';
 import {
 	createUserSessionHandler,
 	getUserSessionsHandler,
@@ -9,137 +10,109 @@ import {
 	createUserSessionSchema,
 	sessionPostStructure,
 } from '../collections/session/session.schema';
-import { requiresUser, sanitizeQuery, validateRequest } from '../middleware';
+import { requiresUser, validateRequest } from '../middleware';
 
 const router = Router();
 
+// login
+router.post(
+	'/',
+	[validateRequest(createUserSessionSchema)],
+	createUserSessionHandler
+);
 export const sessionsPost = {
-	post: {
+	...getSwaggerObject({
+		CRUD: 'post',
+		item: 'session',
+		tag: 'sessions',
 		summary: 'Log in',
 		description: 'Create a new session for the user (thereby logging in)',
-		tags: ['sessions'],
-		produces: ['application/json'],
-		parameters: [
-			{
-				name: 'body',
-				in: 'body',
-				description: 'Create session body object',
-				required: true,
-				schema: {
-					type: 'object',
-					properties: sessionPostStructure,
-				},
+		requiresUser: true,
+		queryId: { required: false },
+		body: {
+			required: true,
+			model: {
+				type: 'object',
+				properties: sessionPostStructure,
 			},
-		],
-		responses: {
-			'200': {
-				description: 'OK',
-				schema: {
-					type: 'object',
-					properties: {
-						accessToken: {
-							type: 'string',
-							example: 'JWT accessToken',
-						},
-						refreshToken: {
-							type: 'string',
-							example: 'JWT accessToken',
-						},
+		},
+		respondObject: {
+			required: true,
+			model: {
+				type: 'object',
+				properties: {
+					accessToken: {
+						type: 'string',
+						example: 'JWT accessToken',
+					},
+					refreshToken: {
+						type: 'string',
+						example: 'JWT accessToken',
 					},
 				},
 			},
 		},
-	},
+		invalidResponses: {
+			'400': {
+				description: 'Bad Request',
+			},
+			'401': {
+				description: 'Invalid username or password',
+			},
+		},
+	}),
 };
-// login
-router.post(
-	'/',
-	[sanitizeQuery, validateRequest(createUserSessionSchema)],
-	createUserSessionHandler
-);
 
+// Get the user's valid sessions i.e. the sessions where the user is logged in.
+router.get('/', [requiresUser], getUserSessionsHandler);
 export const sessionsGet = {
-	get: {
+	...getSwaggerObject({
+		CRUD: 'get',
+		item: 'session',
+		tag: 'sessions',
 		summary: 'Get all active sessions',
 		description: 'Gets all the sessions that is still valid',
-		tags: ['sessions'],
-		produces: ['application/json'],
-		parameters: [
-			{
-				in: 'header',
-				name: 'x-refresh',
-				description: 'refreshToken',
-				required: true,
-				schema: {
-					type: 'string',
-					format: 'uuid',
-				},
-			},
-			{
-				in: 'header',
-				name: 'authorization',
-				description: 'accessToken',
-				required: true,
-				schema: {
-					type: 'string',
-					format: 'uuid',
-				},
-			},
-		],
-		responses: {
-			'200': {
-				description: 'OK',
-				schema: { type: 'array', items: sessionSM },
-			},
+		requiresUser: true,
+		queryId: { required: false },
+		body: {
+			required: false,
+		},
+		respondObject: {
+			required: true,
+			model: { type: 'array', items: sessionSM },
+		},
+		invalidResponses: {
 			'403': {
 				description: 'User not logged in',
 			},
 		},
-	},
+	}),
 };
-// Get the user's valid sessions i.e. the sessions where the user is logged in.
-router.get('/', [sanitizeQuery, requiresUser], getUserSessionsHandler);
 
+// logout (invalidate a user's session)
+router.delete('/', [requiresUser], invalidateUserSessionHandler);
 export const sessionsDelete = {
-	delete: {
+	...getSwaggerObject({
+		CRUD: 'delete',
+		item: 'session',
+		tag: 'sessions',
 		summary: 'Logout',
 		description:
 			"Invalidate a user's session, which will in turn log the user out",
-		tags: ['sessions'],
-		produces: ['application/json'],
-		parameters: [
-			{
-				in: 'header',
-				name: 'x-refresh',
-				description: 'refreshToken',
-				required: true,
-				schema: {
-					type: 'string',
-					format: 'uuid',
-				},
-			},
-			{
-				in: 'header',
-				name: 'authorization',
-				description: 'accessToken',
-				required: true,
-				schema: {
-					type: 'string',
-					format: 'uuid',
-				},
-			},
-		],
-		responses: {
-			'200': {
-				description: 'OK',
-			},
+		requiresUser: true,
+		queryId: { required: false },
+		body: {
+			required: false,
+		},
+		respondObject: {
+			required: false,
+		},
+		invalidResponses: {
 			'403': {
 				description: 'User not logged in',
 			},
 		},
-	},
+	}),
 };
-// logout (invalidate a user's session)
-router.delete('/', [sanitizeQuery, requiresUser], invalidateUserSessionHandler);
 
 export default router;

@@ -4,6 +4,7 @@ import userModel, { UserDocument } from '../user/user.model';
 import sessionModel, { SessionDocument } from './session.model';
 import { sign, decode } from '../../utils/jwt.utils';
 import { findUser } from '../user/user.service';
+const sanitize = require('mongo-sanitize');
 
 /**
  * This function validates a password based on a unuiqe email.
@@ -25,12 +26,14 @@ export async function validatePassword({
 	email: UserDocument['email'];
 	password: string;
 }) {
-	const user = await userModel.findOne({ email: { $eq: email } });
+	email = sanitize(email);
+	const user = await userModel.findOne({ email: email });
 
 	if (!user) {
 		return false;
 	}
 
+	password = sanitize(password);
 	const isValid = await user.comparePassword(password);
 
 	if (!isValid) {
@@ -53,6 +56,7 @@ export async function validatePassword({
  * @returns a session document
  */
 export async function createSession(userId: string, userAgent: string) {
+	userId = sanitize(userId);
 	const session = await sessionModel.create({ userId: userId, userAgent });
 
 	return session.toJSON();
@@ -77,14 +81,12 @@ export function createAccessToken({
 		| LeanDocument<Omit<SessionDocument, 'password'>>;
 }) {
 	// Build and return the new access token
-	const accessToken = sign(
+	return sign(
 		{ ...user, session: session._id },
 		{
 			expiresIn: process.env.ACCESS_TOKEN_TTL as string,
 		} // 15 minutes
 	);
-
-	return accessToken;
 }
 
 /**
@@ -115,9 +117,7 @@ export async function reIssueAccessToken({
 
 	if (!user) return false;
 
-	const accessToken = createAccessToken({ user, session });
-
-	return accessToken;
+	return createAccessToken({ user, session });
 }
 
 /**
@@ -133,6 +133,7 @@ export async function updateSession(
 	update: UpdateQuery<SessionDocument>
 ) {
 	try {
+		query = sanitize(query);
 		return await sessionModel.updateOne(query, update);
 	} catch (error) {
 		throw new Error(error as string);
@@ -147,6 +148,7 @@ export async function updateSession(
  */
 export async function findSessions(query: FilterQuery<SessionDocument>) {
 	try {
+		query = sanitize(query);
 		return await sessionModel.find(query).lean();
 	} catch (error) {
 		throw new Error(error as string);

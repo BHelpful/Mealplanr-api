@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { omit } from 'lodash';
+import { getSwaggerObject } from '.';
 import {
 	createStoreHandler,
 	deleteStoreHandler,
@@ -13,212 +13,141 @@ import {
 	getStoreSchema,
 	updateStoreSchema,
 } from '../collections/store/store.schema';
-import { requiresUser, sanitizeQuery, validateRequest } from '../middleware';
+import { requiresUser, validateRequest } from '../middleware';
 
 const router = Router();
 
-// TODO: go over the responses of the swagger documentation and remove/add to match the what is being used for store controller
-
-export const storesPost = {
-	post: {
-		summary: 'Create new store',
-		description:
-			'Creates a new store to be used in settings and for mealplans and shoppinglist',
-		tags: ['stores'],
-		produces: ['application/json'],
-		parameters: [
-			{
-				name: 'body',
-				in: 'body',
-				description: 'Create store body object',
-				required: true,
-				schema: omit(storeSM, [
-					'properties._id',
-				]),
-			},
-			{
-				in: 'header',
-				name: 'x-refresh',
-				description: 'refreshToken',
-				required: true,
-				schema: {
-					type: 'string',
-					format: 'uuid',
-				},
-			},
-			{
-				in: 'header',
-				name: 'authorization',
-				description: 'accessToken',
-				required: true,
-				schema: {
-					type: 'string',
-					format: 'uuid',
-				},
-			},
-		],
-		responses: {
-			'200': {
-				description: 'OK',
-				schema: storeSM,
-			},
-			'400': {
-				description: 'Bad Request',
-			},
-			'403': {
-				description: 'User not logged in',
-			},
-		},
-	},
-};
 // Create a new store
 router.post(
 	'/',
-	[sanitizeQuery, requiresUser, validateRequest(createStoreSchema)],
+	[requiresUser, validateRequest(createStoreSchema)],
 	createStoreHandler
 );
-
-export const storesPut = {
-	put: {
-		summary: 'Update store',
-		description: 'Updates a store that is globally available',
-		tags: ['stores'],
-		produces: ['application/json'],
-		parameters: [
-			{
-				name: 'storeId',
-				in: 'query',
-				description: 'Id of the store',
-				required: true,
-				type: 'string',
-			},
-			{
-				name: 'body',
-				in: 'body',
-				description: 'Create store body object',
-				required: true,
-				schema: omit(storeSM, [
-					'properties._id',
-				]),
-			},
-			{
-				in: 'header',
-				name: 'x-refresh',
-				description: 'refreshToken',
-				required: true,
-				schema: {
-					type: 'string',
-					format: 'uuid',
-				},
-			},
-			{
-				in: 'header',
-				name: 'authorization',
-				description: 'accessToken',
-				required: true,
-				schema: {
-					type: 'string',
-					format: 'uuid',
-				},
-			},
-		],
-		responses: {
-			'200': {
-				description: 'OK',
-				schema: storeSM,
-			},
+export const storesPost = {
+	...getSwaggerObject({
+		CRUD: 'post',
+		item: 'store',
+		tag: 'stores',
+		summary: 'Create new store',
+		description:
+			'Creates a new store to be used in settings and for mealplans and shoppinglist',
+		requiresUser: true,
+		queryId: { required: false },
+		body: {
+			required: true,
+			model: storeSM,
+		},
+		respondObject: {
+			required: true,
+			model: storeSM,
+		},
+		invalidResponses: {
 			'400': {
 				description: 'Bad Request',
-			},
-			'401': {
-				description: 'User not the creator of the store',
 			},
 			'403': {
 				description: 'User not logged in',
 			},
-			'404': {
-				description: 'No such store exists',
+			'409': {
+				description: 'Store already exists',
 			},
 		},
-	},
+	}),
 };
+
 // Update a store
 router.put(
 	'/',
-	[sanitizeQuery, requiresUser, validateRequest(updateStoreSchema)],
+	[requiresUser, validateRequest(updateStoreSchema)],
 	updateStoreHandler
 );
-
-export const storesGet = {
-	get: {
-		summary: 'Get a store',
-		description: 'Get a store based on the storeId',
-		tags: ['stores'],
-		produces: ['application/json'],
-		parameters: [
-			{
-				name: 'storeId',
-				in: 'query',
-				description: 'Id of the store',
-				required: true,
-				type: 'string',
-			},
-		],
-		responses: {
-			'200': {
-				description: 'OK',
-				schema: storeSM,
-			},
+export const storesPut = {
+	...getSwaggerObject({
+		CRUD: 'put',
+		item: 'store',
+		tag: 'stores',
+		summary: 'Update store',
+		description: 'Updates a store that is globally available',
+		requiresUser: true,
+		queryId: { required: true, id: 'storeId' },
+		body: {
+			required: true,
+			model: storeSM,
 		},
-	},
-};
-// Get a store
-router.get('/', [sanitizeQuery, validateRequest(getStoreSchema)], getStoreHandler);
-
-export const storesDelete = {
-	delete: {
-		summary: 'Delete a store',
-		description: 'Delete a store based on the storeId',
-		tags: ['stores'],
-		produces: ['application/json'],
-		parameters: [
-			{
-				name: 'storeId',
-				in: 'query',
-				description: 'Id of the store',
-				required: true,
-				type: 'string',
-			},
-			{
-				in: 'header',
-				name: 'x-refresh',
-				description: 'refreshToken',
-				required: true,
-				schema: {
-					type: 'string',
-					format: 'uuid',
-				},
-			},
-			{
-				in: 'header',
-				name: 'authorization',
-				description: 'accessToken',
-				required: true,
-				schema: {
-					type: 'string',
-					format: 'uuid',
-				},
-			},
-		],
-		responses: {
-			'200': {
-				description: 'OK',
-			},
+		respondObject: {
+			required: true,
+			model: storeSM,
+		},
+		invalidResponses: {
 			'400': {
 				description: 'Bad Request',
 			},
-			'401': {
-				description: 'User not the creator of the store',
+			'403': {
+				description: 'User not logged in',
+			},
+			'404': {
+				description: 'No such store exists',
+			},
+			'409': {
+				description: 'Store already exists',
+			},
+		},
+	}),
+};
+
+// Get a store
+router.get('/', [validateRequest(getStoreSchema)], getStoreHandler);
+export const storesGet = {
+	...getSwaggerObject({
+		CRUD: 'get',
+		item: 'store',
+		tag: 'stores',
+		summary: 'Get a store',
+		description: 'Get a store based on the storeId',
+		requiresUser: false,
+		queryId: { required: true, id: 'storeId' },
+		body: {
+			required: false,
+		},
+		respondObject: {
+			required: true,
+			model: storeSM,
+		},
+		invalidResponses: {
+			'400': {
+				description: 'Bad Request',
+			},
+			'404': {
+				description: 'No such store exists',
+			},
+		},
+	}),
+};
+
+// Delete a store
+router.delete(
+	'/',
+	[requiresUser, validateRequest(deleteStoreSchema)],
+	deleteStoreHandler
+);
+export const storesDelete = {
+	...getSwaggerObject({
+		CRUD: 'delete',
+		item: 'store',
+		tag: 'stores',
+		summary: 'Delete a store',
+		description: 'Delete a store based on the storeId',
+		requiresUser: true,
+		queryId: { required: true, id: 'storeId' },
+		body: {
+			required: false,
+		},
+		respondObject: {
+			required: false,
+		},
+		invalidResponses: {
+			'400': {
+				description: 'Bad Request',
 			},
 			'403': {
 				description: 'User not logged in',
@@ -227,13 +156,7 @@ export const storesDelete = {
 				description: 'No such store exists',
 			},
 		},
-	},
+	}),
 };
-// Delete a store
-router.delete(
-	'/',
-	[sanitizeQuery, requiresUser, validateRequest(deleteStoreSchema)],
-	deleteStoreHandler
-);
 
 export default router;

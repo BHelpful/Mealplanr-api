@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { omit } from 'lodash';
+import { getSwaggerObject } from '.';
 import {
 	createUserHandler,
 	deleteUserHandler,
@@ -14,227 +14,185 @@ import {
 	getUserSchema,
 	updateUserSchema,
 	userCreateStructure,
-	userUpdateStructure,
 } from '../collections/user/user.schema';
-import { requiresUser, sanitizeQuery, validateRequest } from '../middleware';
+import { requiresUser, validateRequest } from '../middleware';
 
 const router = Router();
 
+// Create a new user
+router.post('/', [validateRequest(createUserSchema)], createUserHandler);
 export const usersPost = {
-	post: {
+	...getSwaggerObject({
+		CRUD: 'post',
+		item: 'user',
+		tag: 'users',
 		summary: 'Register user',
 		description:
 			'Register user (validating the body of the request before calling the method to create a new user)',
-		tags: ['users'],
-		produces: ['application/json'],
-		parameters: [
-			{
-				name: 'body',
-				in: 'body',
-				description: 'Create user body object',
-				required: true,
-				schema: {
-					type: 'object',
-					properties: userCreateStructure,
-				},
+		requiresUser: true,
+		queryId: { required: false },
+		body: {
+			required: true,
+			model: {
+				type: 'object',
+				properties: userCreateStructure,
 			},
-		],
-		responses: {
-			'200': {
-				description: 'OK',
-				schema: omit(userSM, 'password'),
+		},
+		respondObject: {
+			required: true,
+			model: userSM,
+			omit: ['password'],
+		},
+		invalidResponses: {
+			'400': {
+				description: 'Bad Request',
 			},
 			'409': {
 				description: 'Conflict error - user already exists',
 			},
+		},
+	}),
+};
+
+// Get a user
+router.get('/', [requiresUser], getUserHandler);
+export const usersGet = {
+	...getSwaggerObject({
+		CRUD: 'get',
+		item: 'user',
+		tag: 'users',
+		summary: 'Get a user',
+		description: "Get a user based on the user's mail",
+		requiresUser: true,
+		queryId: { required: true, id: 'userMail' },
+		body: {
+			required: false,
+		},
+		respondObject: {
+			required: true,
+			model: userSM,
+			omit: ['password'],
+		},
+		invalidResponses: {
+			'404': {
+				description: 'User not found.',
+			},
+			'403': {
+				description: 'User not logged in.',
+			},
+		},
+	}),
+};
+
+// Checks if a user exists
+router.get('/exists', [validateRequest(getUserSchema)], getUserExistsHandler);
+export const usersExistsGet = {
+	...getSwaggerObject({
+		CRUD: 'get',
+		item: 'user',
+		tag: 'users',
+		summary: 'Check if a user exists',
+		description: 'Check if a user exists',
+		requiresUser: false,
+		queryId: { required: true, id: 'userMail' },
+		body: {
+			required: false,
+		},
+		respondObject: {
+			required: false,
+		},
+		invalidResponses: {
 			'400': {
 				description: 'Bad Request',
 			},
+			'404': {
+				description: 'User not found.',
+			},
 		},
-	},
+	}),
 };
-// Create a new user
-router.post(
-	'/',
-	[sanitizeQuery, validateRequest(createUserSchema)],
-	createUserHandler
-);
 
-export const usersGet = {
-	get: {
-		summary: 'Get a user',
-		description: "Get a user based on the user's mail",
-		tags: ['users'],
-		produces: ['application/json'],
-		parameters: [
-			{
-				in: 'header',
-				name: 'x-refresh',
-				description: 'refreshToken',
-				required: true,
-				schema: {
-					type: 'string',
-					format: 'uuid',
-				},
-			},
-			{
-				in: 'header',
-				name: 'authorization',
-				description: 'accessToken',
-				required: true,
-				schema: {
-					type: 'string',
-					format: 'uuid',
-				},
-			},
-		],
-		responses: {
-			'200': {
-				description: 'OK',
-				schema: omit(userSM, 'password'),
-			},
-		},
-	},
-};
-// Get a user
-router.get('/', [sanitizeQuery, requiresUser], getUserHandler);
-
-export const usersExistsGet = {
-	get: {
-		summary: 'Check if a user exists',
-		description: 'Check if a user exists',
-		tags: ['users'],
-		produces: ['application/json'],
-		parameters: [
-			{
-				name: 'userMail',
-				in: 'query',
-				description: 'Email of the user',
-				required: true,
-				type: 'string',
-			},
-		],
-		responses: {
-			'200': {
-				description: 'User exists',
-			},
-		},
-	},
-};
-// Checks if a user exists
-router.get(
-	'/exists',
-	[sanitizeQuery, validateRequest(getUserSchema)],
-	getUserExistsHandler
-);
-
-export const usersPut = {
-	put: {
-		summary: 'Update a user',
-		description: "Update a user based on the user's mail",
-		tags: ['users'],
-		produces: ['application/json'],
-		parameters: [
-			{
-				name: 'userMail',
-				in: 'query',
-				description: 'Email of the user',
-				required: true,
-				type: 'string',
-			},
-			{
-				name: 'body',
-				in: 'body',
-				description: 'Update user body object',
-				required: true,
-				schema: {
-					type: 'object',
-					properties: userUpdateStructure,
-				},
-			},
-			{
-				in: 'header',
-				name: 'x-refresh',
-				description: 'refreshToken',
-				required: true,
-				schema: {
-					type: 'string',
-					format: 'uuid',
-				},
-			},
-			{
-				in: 'header',
-				name: 'authorization',
-				description: 'accessToken',
-				required: true,
-				schema: {
-					type: 'string',
-					format: 'uuid',
-				},
-			},
-		],
-		responses: {
-			'200': {
-				description: 'OK',
-				schema: omit(userSM, 'password'),
-			},
-		},
-	},
-};
 // Update a user
 router.put(
 	'/',
-	[sanitizeQuery, requiresUser, validateRequest(updateUserSchema)],
+	[requiresUser, validateRequest(updateUserSchema)],
 	updateUserHandler
 );
-
-export const usersDelete = {
-	delete: {
-		summary: 'Delete a user',
-		description: "Delete a user based on the user's mail",
-		tags: ['users'],
-		produces: ['application/json'],
-		parameters: [
-			{
-				name: 'userMail',
-				in: 'query',
-				description: 'Email of the user',
-				required: true,
-				type: 'string',
+export const usersPut = {
+	...getSwaggerObject({
+		CRUD: 'put',
+		item: 'user',
+		tag: 'users',
+		summary: 'Update a user',
+		description: "Update a user based on the user's mail",
+		requiresUser: true,
+		queryId: { required: true, id: 'userMail' },
+		body: {
+			required: true,
+			model: userSM,
+			omit: ['password'],
+		},
+		respondObject: {
+			required: true,
+			model: userSM,
+			omit: ['password'],
+		},
+		invalidResponses: {
+			'400': {
+				description: 'Bad Request',
 			},
-			{
-				in: 'header',
-				name: 'x-refresh',
-				description: 'refreshToken',
-				required: true,
-				schema: {
-					type: 'string',
-					format: 'uuid',
-				},
+			'401': {
+				description: "You can't update other users",
 			},
-			{
-				in: 'header',
-				name: 'authorization',
-				description: 'accessToken',
-				required: true,
-				schema: {
-					type: 'string',
-					format: 'uuid',
-				},
+			'403': {
+				description: 'User not logged in',
 			},
-		],
-		responses: {
-			'200': {
-				description: 'OK',
+			'404': {
+				description: 'User not found',
+			},
+			'409': {
+				description: 'Other user already exists with that email',
 			},
 		},
-	},
+	}),
 };
+
 // Delete a user
 router.delete(
 	'/',
-	[sanitizeQuery, requiresUser, validateRequest(deleteUserSchema)],
+	[requiresUser, validateRequest(deleteUserSchema)],
 	deleteUserHandler
 );
+export const usersDelete = {
+	...getSwaggerObject({
+		CRUD: 'delete',
+		item: 'user',
+		tag: 'users',
+		summary: 'Delete a user',
+		description: "Delete a user based on the user's mail",
+		requiresUser: true,
+		queryId: { required: true, id: 'userMail' },
+		body: {
+			required: false,
+		},
+		respondObject: {
+			required: false,
+		},
+		invalidResponses: {
+			'400': {
+				description: 'Bad Request',
+			},
+			'401': {
+				description: "You can't delete other users",
+			},
+			'403': {
+				description: 'User not logged in',
+			},
+			'404': {
+				description: 'User not found.',
+			},
+		},
+	}),
+};
 
 export default router;

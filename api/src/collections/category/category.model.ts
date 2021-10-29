@@ -6,7 +6,12 @@ export interface CategoryDocument extends Document {
 	type: [string];
 }
 export const CategorySchema = new Schema({
-	name: { type: String, required: true, description: 'Name of the category' },
+	name: {
+		type: String,
+		required: true,
+		unique: true,
+		description: 'Name of the category',
+	},
 	type: {
 		type: [String],
 		required: true,

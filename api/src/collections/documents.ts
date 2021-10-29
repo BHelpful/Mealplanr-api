@@ -114,7 +114,6 @@ export const IngredientListSubschema = new Schema({
 	storeId: {
 		type: Schema.Types.ObjectId,
 		ref: 'stores',
-		required: false,
 		description: 'The store relevant to the ingredient',
 	},
 });

@@ -19,10 +19,7 @@ export async function createCategoryHandler(req: Request, res: Response) {
 	const body = req.body;
 
 	try {
-		if (
-			(await findCategory({ name: { $eq: body.name } }))?.name ===
-			body.name
-		) {
+		if ((await findCategory({ name: body.name }))?.name === body.name) {
 			return res.status(409).send('Category already exists');
 		}
 		const category = await createCategory({ ...body });
@@ -46,13 +43,10 @@ export async function updateCategoryHandler(req: Request, res: Response) {
 	const category = await findCategory({ _id: categoryId });
 
 	if (!category) {
-		return res.sendStatus(404);
+		return res.status(404).send('No such category exists');
 	}
 
-	if (
-		(await findCategory({ name: { $eq: update.name } }))?.name ===
-		update.name
-	) {
+	if ((await findCategory({ name: update.name }))?.name === update.name) {
 		return res.status(409).send('Category already exists');
 	}
 
@@ -81,7 +75,7 @@ export async function getCategoryHandler(req: Request, res: Response) {
 	const category = await findCategory({ _id: categoryId });
 
 	if (!category) {
-		return res.sendStatus(404);
+		return res.status(404).send('No such category exists');
 	}
 
 	return res.send(category);
@@ -100,7 +94,7 @@ export async function deleteCategoryHandler(req: Request, res: Response) {
 	const category = await findCategory({ _id: categoryId });
 
 	if (!category) {
-		return res.sendStatus(404);
+		return res.status(404).send('No such category exists');
 	}
 
 	await deleteCategory({ _id: categoryId });

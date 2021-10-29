@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { getSwaggerObject, swaggerObjectType } from '.';
+import { getSwaggerObject } from '.';
 import {
 	createIngredientHandler,
 	deleteIngredientHandler,
@@ -13,137 +13,150 @@ import {
 	getIngredientSchema,
 	updateIngredientSchema,
 } from '../collections/ingredient/ingredient.schema';
-import { requiresUser, sanitizeQuery, validateRequest } from '../middleware';
+import { requiresUser, validateRequest } from '../middleware';
 
 const router = Router();
 
-const ingredientsPostInput: swaggerObjectType = {
-	CRUD: 'post',
-	tag: 'ingredients',
-	item: 'ingredient',
-	summary: 'Create new ingredient',
-	description:
-		'Creates a new ingredient to be used in settings and for mealplans and shoppinglist',
-	model: ingredientSM,
-	requiresId: false,
-	requiresBody: true,
-	requiresUser: true,
-	respondWithObject: true,
-	itemsIntpuOmit: ['properties._id'],
-	itemsResponseOmit: [],
-	invalidRequestObject: {
-		'400': {
-			description: 'Bad Request',
-		},
-		'403': {
-			description: 'User not logged in',
-		},
-	},
-};
-export const ingredientsPost = { ...getSwaggerObject(ingredientsPostInput) };
 // Create a new ingredient
 router.post(
 	'/',
-	[sanitizeQuery, requiresUser, validateRequest(createIngredientSchema)],
+	[requiresUser, validateRequest(createIngredientSchema)],
 	createIngredientHandler
 );
-
-const ingredientsPutInput: swaggerObjectType = {
-	CRUD: 'put',
-	tag: 'ingredients',
-	item: 'ingredient',
-	summary: 'Update ingredient',
-	description: 'Updates a ingredient that is globally available',
-	model: ingredientSM,
-	requiresId: true,
-	requiresBody: true,
-	requiresUser: true,
-	respondWithObject: true,
-	itemsIntpuOmit: ['properties._id'],
-	itemsResponseOmit: [],
-	invalidRequestObject: {
-		'400': {
-			description: 'Bad Request',
+export const ingredientsPost = {
+	...getSwaggerObject({
+		CRUD: 'post',
+		item: 'ingredient',
+		tag: 'ingredients',
+		summary: 'Create new ingredient',
+		description:
+			'Creates a new ingredient to be used in settings and for mealplans and shoppinglist',
+		requiresUser: true,
+		queryId: { required: false },
+		body: {
+			required: true,
+			model: ingredientSM,
 		},
-		'401': {
-			description: 'User not the creator of the ingredient',
+		respondObject: {
+			required: true,
+			model: ingredientSM,
 		},
-		'403': {
-			description: 'User not logged in',
+		invalidResponses: {
+			'400': {
+				description: 'Bad Request',
+			},
+			'403': {
+				description: 'User not logged in',
+			},
+			'409': {
+				description: 'Ingredient already exists',
+			},
 		},
-		'404': {
-			description: 'No such ingredient exists',
-		},
-	},
+	}),
 };
-export const ingredientsPut = { ...getSwaggerObject(ingredientsPutInput) };
+
 // Update a ingredient
 router.put(
 	'/',
-	[sanitizeQuery, requiresUser, validateRequest(updateIngredientSchema)],
+	[requiresUser, validateRequest(updateIngredientSchema)],
 	updateIngredientHandler
 );
-
-const ingredientsGetInput: swaggerObjectType = {
-	CRUD: 'get',
-	tag: 'ingredients',
-	item: 'ingredient',
-	summary: 'Get a ingredient',
-	description: 'Get a ingredient based on the ingredientId',
-	model: ingredientSM,
-	requiresId: true,
-	requiresBody: false,
-	requiresUser: false,
-	respondWithObject: true,
-	itemsIntpuOmit: ['properties._id'],
-	itemsResponseOmit: [],
-	invalidRequestObject: {},
+export const ingredientsPut = {
+	...getSwaggerObject({
+		CRUD: 'put',
+		item: 'ingredient',
+		tag: 'ingredients',
+		summary: 'Update ingredient',
+		description: 'Updates a ingredient that is globally available',
+		requiresUser: true,
+		queryId: { required: true, id: 'ingredientId' },
+		body: {
+			required: true,
+			model: ingredientSM,
+		},
+		respondObject: {
+			required: true,
+			model: ingredientSM,
+		},
+		invalidResponses: {
+			'400': {
+				description: 'Bad Request',
+			},
+			'403': {
+				description: 'User not logged in',
+			},
+			'404': {
+				description: 'No such ingredient exists',
+			},
+			'409': {
+				description: 'Ingredient already exists',
+			},
+		},
+	}),
 };
-export const ingredientsGet = { ...getSwaggerObject(ingredientsGetInput) };
 
 // Get a ingredient
-router.get(
-	'/',
-	[sanitizeQuery, validateRequest(getIngredientSchema)],
-	getIngredientHandler
-);
+router.get('/', [validateRequest(getIngredientSchema)], getIngredientHandler);
+export const ingredientsGet = {
+	...getSwaggerObject({
+		CRUD: 'get',
+		item: 'ingredient',
+		tag: 'ingredients',
+		summary: 'Get a ingredient',
+		description: 'Get a ingredient based on the ingredientId',
+		requiresUser: false,
+		queryId: { required: true, id: 'ingredientId' },
+		body: {
+			required: false,
+		},
+		respondObject: {
+			required: true,
+			model: ingredientSM,
+		},
+		invalidResponses: {
+			'400': {
+				description: 'Bad Request',
+			},
+			'404': {
+				description: 'No such ingredient exists',
+			},
+		},
+	}),
+};
 
-const ingredientsDeleteInput: swaggerObjectType = {
-	CRUD: 'delete',
-	tag: 'ingredients',
-	item: 'ingredient',
-	summary: 'Delete a ingredient',
-	description: 'Delete a ingredient based on the ingredientId',
-	model: ingredientSM,
-	requiresId: true,
-	requiresBody: false,
-	requiresUser: true,
-	respondWithObject: false,
-	itemsIntpuOmit: [],
-	itemsResponseOmit: [],
-	invalidRequestObject: {
-		'400': {
-			description: 'Bad Request',
-		},
-		'401': {
-			description: 'User not the creator of the ingredient',
-		},
-		'403': {
-			description: 'User not logged in',
-		},
-		'404': {
-			description: 'No such ingredient exists',
-		},
-	},
-};
-export const ingredientsDelete = {
-	...getSwaggerObject(ingredientsDeleteInput),
-};
 // Delete a ingredient
 router.delete(
 	'/',
-	[sanitizeQuery, requiresUser, validateRequest(deleteIngredientSchema)],
+	[requiresUser, validateRequest(deleteIngredientSchema)],
 	deleteIngredientHandler
 );
+export const ingredientsDelete = {
+	...getSwaggerObject({
+		CRUD: 'delete',
+		item: 'ingredient',
+		tag: 'ingredients',
+		summary: 'Delete a ingredient',
+		description: 'Delete a ingredient based on the ingredientId',
+		requiresUser: true,
+		queryId: { required: true, id: 'ingredientId' },
+		body: {
+			required: false,
+		},
+		respondObject: {
+			required: false,
+		},
+		invalidResponses: {
+			'400': {
+				description: 'Bad Request',
+			},
+			'403': {
+				description: 'User not logged in',
+			},
+			'404': {
+				description: 'No such ingredient exists',
+			},
+		},
+	}),
+};
 
 export default router;

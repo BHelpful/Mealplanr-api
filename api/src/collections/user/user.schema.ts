@@ -1,4 +1,5 @@
-import { object, string, ref } from 'yup';
+import { object, string, ref, array, bool, number, date } from 'yup';
+
 // creates the validation schema i.e the schema of which the contents of the body from the request will be
 // validated against. Just for your knowledge, if there are keys in the body of the request
 // that is not represented in this validation schema, it will not be validated for (of course)
@@ -23,6 +24,8 @@ export const userCreateStructure = {
 };
 
 export const userUpdateStructure = {
+	name: string(),
+	email: string().email('Must be a valid email'),
 	password: string()
 		.required('Password is required')
 		.min(6, 'Password is too short - should be 6 chars minimum.')
@@ -30,6 +33,37 @@ export const userUpdateStructure = {
 			/^[a-zA-Z0-9_.-]*$/,
 			'Password can only contain Latin letters.'
 		),
+	collectionId: array().of(string()),
+	options: object({
+		diet: string(),
+		country: string(),
+		notifications: bool(),
+		address: object({
+			streetname: string(),
+			housenumber: number(),
+			postalcode: string(),
+		})
+			.notRequired()
+			.default(undefined),
+		storesId: array().of(string()),
+		gCalendar: bool(),
+	}),
+	plan: object({
+		recipesId: array().of(string()),
+		datedex: date(),
+	}),
+	oAuth: string(),
+	availableIngredientsId: array().of(string()),
+	shoppingList: object({
+		ingredients: array().of(
+			object({
+				ingredientId: string(),
+				amount: number(),
+				unit: string(),
+				storeId: string(),
+			})
+		),
+	}),
 };
 
 const query = {

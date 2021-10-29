@@ -43,7 +43,7 @@ export async function updateIngredientHandler(req: Request, res: Response) {
 	const ingredient = await findIngredient({ _id: ingredientId });
 
 	if (!ingredient) {
-		return res.sendStatus(404);
+		return res.status(404).send('No such ingredient exists');
 	}
 
 	if ((await findIngredient({ name: update.name }))?.name === update.name) {
@@ -75,7 +75,7 @@ export async function getIngredientHandler(req: Request, res: Response) {
 	const ingredient = await findIngredient({ _id: ingredientId });
 
 	if (!ingredient) {
-		return res.sendStatus(404);
+		return res.status(404).send('No such ingredient exists');
 	}
 
 	return res.send(ingredient);
@@ -94,7 +94,7 @@ export async function deleteIngredientHandler(req: Request, res: Response) {
 	const ingredient = await findIngredient({ _id: ingredientId });
 
 	if (!ingredient) {
-		return res.sendStatus(404);
+		return res.status(404).send('No such ingredient exists');
 	}
 
 	await deleteIngredient({ _id: ingredientId });
