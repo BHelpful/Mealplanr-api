@@ -6,7 +6,6 @@ import {
 	findAndUpdateRecipe,
 	deleteRecipe,
 } from './recipe.service';
-
 /**
  * This function is used to request the creation of a new recipe.
  *
@@ -32,22 +31,22 @@ export async function createRecipeHandler(req: Request, res: Response) {
  */
 export async function updateRecipeHandler(req: Request, res: Response) {
 	const userId = get(req, 'user._id');
-	const recipeId = get(req, 'params.recipeId');
+	const recipeId = get(req, 'query.recipeId');
 	const update = req.body;
 
 	const recipe = await findRecipe({ recipeId });
 
 	if (!recipe) {
-		return res.sendStatus(404);
+		return res.status(404).send('No such recipe exists');
 	}
 
 	if (String(recipe.creatorId) !== userId) {
-		return res.sendStatus(401);
+		return res.status(401).send('User not the creator of the recipe');
 	}
 
 	const updatedRecipe = await findAndUpdateRecipe({ recipeId }, update, {
 		new: true,
-		// This is false because setting it true deprecated https://mongoosejs.com/docs/deprecations.html#findandmodify
+		// useFindAndModify is false because setting it true is deprecated https://mongoosejs.com/docs/deprecations.html#findandmodify
 		useFindAndModify: false,
 	});
 
@@ -66,7 +65,7 @@ export async function getRecipeHandler(req: Request, res: Response) {
 	const recipe = await findRecipe({ recipeId });
 
 	if (!recipe) {
-		return res.sendStatus(404);
+		return res.status(404).send('No such recipe exists');
 	}
 
 	return res.send(recipe);
@@ -81,16 +80,16 @@ export async function getRecipeHandler(req: Request, res: Response) {
  */
 export async function deleteRecipeHandler(req: Request, res: Response) {
 	const userId = get(req, 'user._id');
-	const recipeId = get(req, 'params.recipeId');
+	const recipeId = get(req, 'query.recipeId');
 
 	const recipe = await findRecipe({ recipeId });
 
 	if (!recipe) {
-		return res.sendStatus(404);
+		return res.status(404).send('No such recipe exists');
 	}
 
 	if (String(recipe.creatorId) !== String(userId)) {
-		return res.sendStatus(401);
+		return res.status(401).send('User not the creator of the recipe');
 	}
 
 	await deleteRecipe({ recipeId });

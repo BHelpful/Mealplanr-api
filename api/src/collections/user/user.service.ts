@@ -5,6 +5,7 @@ import {
 	UpdateQuery,
 } from 'mongoose';
 import userModel, { UserDocument } from './user.model';
+const sanitize = require('mongo-sanitize');
 
 /**
  * This function is used to create a new user.
@@ -21,9 +22,10 @@ import userModel, { UserDocument } from './user.model';
  */
 export async function createUser(input: DocumentDefinition<UserDocument>) {
 	try {
+		input = sanitize(input);
 		return await userModel.create(input);
 	} catch (error) {
-		throw new Error(error);
+		throw new Error(error as string);
 	}
 }
 
@@ -34,7 +36,12 @@ export async function createUser(input: DocumentDefinition<UserDocument>) {
  * @returns a promise that resolves to the user that was found
  */
 export async function findUser(query: FilterQuery<UserDocument>) {
-	return userModel.findOne(query).lean();
+	try {
+		query = sanitize(query);
+		return await userModel.findOne(query).lean();
+	} catch (error) {
+		throw new Error(error as string);
+	}
 }
 
 /**
@@ -45,12 +52,18 @@ export async function findUser(query: FilterQuery<UserDocument>) {
  * @param options - options for the findOne function from mongoose
  * @returns a user document
  */
-export function findAndUpdateUser(
+export async function findAndUpdateUser(
 	query: FilterQuery<UserDocument>,
 	update: UpdateQuery<UserDocument>,
 	options: QueryOptions
 ) {
-	return userModel.findOneAndUpdate(query, update, options);
+	try {
+		query = sanitize(query);
+		update = sanitize(update);
+		return await userModel.findOneAndUpdate(query, update, options);
+	} catch (error) {
+		throw new Error(error as string);
+	}
 }
 
 /**
@@ -59,6 +72,11 @@ export function findAndUpdateUser(
  * @param query - a query object that will be used to find a user from the DB
  * @returns a user document
  */
-export function deleteUser(query: FilterQuery<UserDocument>) {
-	return userModel.deleteOne(query);
+export async function deleteUser(query: FilterQuery<UserDocument>) {
+	try {
+		query = sanitize(query);
+		return await userModel.deleteOne(query);
+	} catch (error) {
+		throw new Error(error as string);
+	}
 }

@@ -30,8 +30,8 @@ const payload = {
 	}),
 };
 
-const params = {
-	params: object({
+const query = {
+	query: object({
 		recipeId: string().required('recipeId is required'),
 	}),
 };
@@ -41,14 +41,14 @@ export const createRecipeSchema = object({
 });
 
 export const getRecipeSchema = object({
-	...params,
+	...query,
 });
 
 export const updateRecipeSchema = object({
-	...params,
+	...query,
 	...payload,
 });
 
 export const deleteRecipeSchema = object({
-	...params,
+	...query,
 });

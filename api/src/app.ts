@@ -1,10 +1,7 @@
+require('dotenv').config();
 import express from 'express';
-import { connection } from 'mongoose';
 import { serve, setup } from 'swagger-ui-express';
 import cors from 'cors';
-import config from 'config';
-import log from './logger';
-import connectDB from './connect';
 import { deserializeUser } from './middleware';
 import * as swaggerDocument from './swagger.json';
 import { categorySM } from './collections/category/category.model';
@@ -31,11 +28,26 @@ import recipeRouter, {
 	recipesPost,
 	recipesPut,
 } from './routes/recipes';
-var compression = require('compression');
+import storeRouter, {
+	storesDelete,
+	storesGet,
+	storesPost,
+	storesPut,
+} from './routes/stores';
+import categoryRouter, {
+	categoriesDelete,
+	categoriesGet,
+	categoriesPost,
+	categoriesPut,
+} from './routes/categories';
+import ingredientRouter, {
+	ingredientsDelete,
+	ingredientsGet,
+	ingredientsPost,
+	ingredientsPut,
+} from './routes/ingredients';
 
-// gets items from default config file
-const port = config.get('port') as number;
-const host = config.get('host') as string;
+const compression = require('compression');
 
 const app = express();
 
@@ -53,7 +65,7 @@ app.use(compression());
 // assigning app-wide cache settings
 app.use(express.static(__dirname + '/public', { maxAge: 31557600 }));
 
-var allowedOrigins = [
+const allowedOrigins = [
 	'http://localhost:3000',
 	'http://localhost',
 	'http://bhelpful.net',
@@ -66,7 +78,7 @@ app.use(
 			// (like mobile apps or curl requests)
 			if (!origin) return callback(null, true);
 			if (allowedOrigins.indexOf(origin) === -1) {
-				var msg =
+				const msg =
 					'The CORS policy for this site does not ' +
 					'allow access from the specified Origin.';
 				return callback(new Error(msg), false);
@@ -92,10 +104,12 @@ parsedSwaggerDoc.definitions.User = userSM;
 app.use('/users', usersRouter);
 parsedSwaggerDoc.paths['/users'] = {
 	...usersPost,
-	...usersExistsGet,
 	...usersGet,
 	...usersPut,
 	...usersDelete,
+};
+parsedSwaggerDoc.paths['/users/exists'] = {
+	...usersExistsGet,
 };
 
 app.use('/sessions', sessionsRouter);
@@ -108,26 +122,36 @@ parsedSwaggerDoc.paths['/sessions'] = {
 app.use('/recipes', recipeRouter);
 parsedSwaggerDoc.paths['/recipes'] = {
 	...recipesPost,
-};
-parsedSwaggerDoc.paths['/recipes/{recipeId}'] = {
 	...recipesPut,
 	...recipesGet,
 	...recipesDelete,
 };
 
+app.use('/stores', storeRouter);
+parsedSwaggerDoc.paths['/stores'] = {
+	...storesPost,
+	...storesPut,
+	...storesGet,
+	...storesDelete,
+};
+
+app.use('/categories', categoryRouter);
+parsedSwaggerDoc.paths['/categories'] = {
+	...categoriesPost,
+	...categoriesPut,
+	...categoriesGet,
+	...categoriesDelete,
+};
+
+app.use('/ingredients', ingredientRouter);
+parsedSwaggerDoc.paths['/ingredients'] = {
+	...ingredientsPost,
+	...ingredientsPut,
+	...ingredientsGet,
+	...ingredientsDelete,
+};
+
 // set up the Swagger UI
 app.use('/api-docs', serve, setup(parsedSwaggerDoc));
 
-// this is used to get info on the connection to the DB.
-const db = connection;
-
-app.listen(port, host, () => {
-	log.info(`Server is running at http://${host}:${port}/`);
-	// connect to the mongoDB database
-	connectDB();
-	db.on('error', (err) => {
-		log.error(err);
-		// exit the process with a failure
-		process.exit(1);
-	});
-});
+export default app;

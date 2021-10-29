@@ -1,7 +1,7 @@
 name: "Set Issue Label"
 on:
   issues:
-    types: [opened]
+    types: [opened, edited]
 
 jobs:
   test:
@@ -9,63 +9,78 @@ jobs:
     steps:
       - uses: Naturalclar/issue-action@v1.0.0
         with:
-          keywords: '["branch update"]'
-          labels: '["branch update"]'
+          keywords: '["Recipe","recipe"]'
+          labels: '["Recipe"]'
           github-token: "${{ secrets.GITHUB_TOKEN }}"
       - uses: Naturalclar/issue-action@v1.0.0
         with:
-          keywords: '["admin", "administrator"]'
-          labels: '["admin"]'
+          keywords: '["MealPlan","Mealplan", "Meal plan", "meal plan"]'
+          labels: '["MealPlan"]'
           github-token: "${{ secrets.GITHUB_TOKEN }}"
       - uses: Naturalclar/issue-action@v1.0.0
         with:
-          keywords: '["bug", "error"]'
-          labels: '["bug"]'
+          keywords: '["Settings","settings"]'
+          labels: '["Settings"]'
           github-token: "${{ secrets.GITHUB_TOKEN }}"
       - uses: Naturalclar/issue-action@v1.0.0
         with:
-          keywords: '["doc", "documentation"]'
-          labels: '["documentation"]'
+          keywords: '["User","user"]'
+          labels: '["User"]'
           github-token: "${{ secrets.GITHUB_TOKEN }}"
       - uses: Naturalclar/issue-action@v1.0.0
         with:
-          keywords: '["Add", "add", "Added", "added"]'
-          labels: '["enhancement"]'
+          keywords: '["Session","session"]'
+          labels: '["Session"]'
           github-token: "${{ secrets.GITHUB_TOKEN }}"
       - uses: Naturalclar/issue-action@v1.0.0
         with:
-          keywords: '["general"]'
-          labels: '["general"]'
+          keywords: '["Ingredient","ingredient"]'
+          labels: '["Ingredient"]'
           github-token: "${{ secrets.GITHUB_TOKEN }}"
       - uses: Naturalclar/issue-action@v1.0.0
         with:
-          keywords: '["important", "important!"]'
-          labels: '["IMPORTANT!"]'
+          keywords: '["Store","store"]'
+          labels: '["Store"]'
           github-token: "${{ secrets.GITHUB_TOKEN }}"
       - uses: Naturalclar/issue-action@v1.0.0
         with:
-          keywords: '["invalid"]'
-          labels: '["invalid"]'
+          keywords: '["Category","category"]'
+          labels: '["Category"]'
           github-token: "${{ secrets.GITHUB_TOKEN }}"
       - uses: Naturalclar/issue-action@v1.0.0
         with:
-          keywords: '["no code", "not coding"]'
-          labels: '["not coding"]'
+          keywords: '["Middleware","middleware"]'
+          labels: '["Middleware"]'
           github-token: "${{ secrets.GITHUB_TOKEN }}"
       - uses: Naturalclar/issue-action@v1.0.0
         with:
-          keywords: '["?", "question"]'
-          labels: '["question"]'
+          keywords: '["Route","route"]'
+          labels: '["Route"]'
           github-token: "${{ secrets.GITHUB_TOKEN }}"
       - uses: Naturalclar/issue-action@v1.0.0
         with:
-          keywords: '["CSS", "css", "styling"]'
-          labels: '["CSS"]'
+          keywords: '["Utils","utils", "Util", "util"]'
+          labels: '["Utils"]'
           github-token: "${{ secrets.GITHUB_TOKEN }}"
       - uses: Naturalclar/issue-action@v1.0.0
         with:
-          keywords: '["- [ ] #", "- [x] #"]'
-          labels: '["Grouped Task"]'
+          keywords: '["Model","model"]'
+          labels: '["Model"]'
+          github-token: "${{ secrets.GITHUB_TOKEN }}"
+      - uses: Naturalclar/issue-action@v1.0.0
+        with:
+          keywords: '["Schema","schema"]'
+          labels: '["Schema"]'
+          github-token: "${{ secrets.GITHUB_TOKEN }}"
+      - uses: Naturalclar/issue-action@v1.0.0
+        with:
+          keywords: '["Controller","controller"]'
+          labels: '["Controller"]'
+          github-token: "${{ secrets.GITHUB_TOKEN }}"
+      - uses: Naturalclar/issue-action@v1.0.0
+        with:
+          keywords: '["Service","service"]'
+          labels: '["Service"]'
           github-token: "${{ secrets.GITHUB_TOKEN }}"
       # Self hosted deploy server cleanup, should ALWAYS run independent to result
       - name: Cleanup

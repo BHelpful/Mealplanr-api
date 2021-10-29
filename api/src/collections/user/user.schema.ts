@@ -1,11 +1,12 @@
-import { object, string, ref } from 'yup';
+import { object, string, ref, array, bool, number, date } from 'yup';
+
 // creates the validation schema i.e the schema of which the contents of the body from the request will be
 // validated against. Just for your knowledge, if there are keys in the body of the request
 // that is not represented in this validation schema, it will not be validated for (of course)
 // but there will not be any error. So any exess keys will be ignored.
 
 // The schema of the body of the request will is split up in order to use it for swagger documentation in routes.ts:
-export const userCreateeStructure = {
+export const userCreateStructure = {
 	email: string()
 		.email('Must be a valid email')
 		.required('Email is required'),
@@ -23,7 +24,8 @@ export const userCreateeStructure = {
 };
 
 export const userUpdateStructure = {
-	name: string().required('Name is required'),
+	name: string(),
+	email: string().email('Must be a valid email'),
 	password: string()
 		.required('Password is required')
 		.min(6, 'Password is too short - should be 6 chars minimum.')
@@ -31,14 +33,41 @@ export const userUpdateStructure = {
 			/^[a-zA-Z0-9_.-]*$/,
 			'Password can only contain Latin letters.'
 		),
-	passwordConfirmation: string().oneOf(
-		[ref('password'), null],
-		'Passwords must match'
-	),
+	collectionId: array().of(string()),
+	options: object({
+		diet: string(),
+		country: string(),
+		notifications: bool(),
+		address: object({
+			streetname: string(),
+			housenumber: number(),
+			postalcode: string(),
+		})
+			.notRequired()
+			.default(undefined),
+		storesId: array().of(string()),
+		gCalendar: bool(),
+	}),
+	plan: object({
+		recipesId: array().of(string()),
+		datedex: date(),
+	}),
+	oAuth: string(),
+	availableIngredientsId: array().of(string()),
+	shoppingList: object({
+		ingredients: array().of(
+			object({
+				ingredientId: string(),
+				amount: number(),
+				unit: string(),
+				storeId: string(),
+			})
+		),
+	}),
 };
 
-const params = {
-	params: object({
+const query = {
+	query: object({
 		userMail: string()
 			.email('Must be a valid email')
 			.required('Email is required'),
@@ -46,7 +75,7 @@ const params = {
 };
 
 export const createUserSchema = object({
-	body: object(userCreateeStructure),
+	body: object(userCreateStructure),
 });
 
 export const getUserSchema = object({
@@ -58,10 +87,10 @@ export const getUserSchema = object({
 });
 
 export const updateUserSchema = object({
-	...params,
+	...query,
 	body: object(userUpdateStructure),
 });
 
 export const deleteUserSchema = object({
-	...params,
+	...query,
 });
