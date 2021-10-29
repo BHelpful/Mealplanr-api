@@ -5,7 +5,7 @@ on:
 
 jobs:
   test:
-    runs-on: self-hosted
+    runs-on: vds2019x11
     steps:
       - uses: Naturalclar/issue-action@v1.0.0
         with:
@@ -67,3 +67,7 @@ jobs:
           keywords: '["- [ ] #", "- [x] #"]'
           labels: '["Grouped Task"]'
           github-token: "${{ secrets.GITHUB_TOKEN }}"
+      # Self hosted deploy server cleanup, should ALWAYS run independent to result
+      - name: Cleanup
+        if: ${{ always() }}
+        run: docker ps -q | xargs -n 1 -P 8 -I {} docker stop {}

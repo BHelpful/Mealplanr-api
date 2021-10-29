@@ -30,12 +30,15 @@ jobs:
     # Name the Job
     name: Lint Code Base
     # Set the agent to run on
-    runs-on: self-hosted
+    runs-on: vds2019x11
 
     ##################
     # Load all steps #
     ##################
     steps:
+      - name: elevate #https://github.com/actions/checkout/issues/211
+        run: |
+          echo ${{secrets.DEPLOY_PASSWORD}} | sudo -S chown -R $USER:$USER $GITHUB_WORKSPACE
       ##########################
       # Checkout the code base #
       ##########################
@@ -54,3 +57,8 @@ jobs:
           VALIDATE_TYPESCRIPT_ES: true
           DEFAULT_BRANCH: master
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # Self hosted deploy server cleanup, should ALWAYS run independent to result
+      - name: Cleanup
+        if: ${{ always() }}
+        run: docker ps -q | xargs -n 1 -P 8 -I {} docker stop {}
