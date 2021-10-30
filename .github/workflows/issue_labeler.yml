@@ -82,6 +82,10 @@ jobs:
           keywords: '["Service","service"]'
           labels: '["Service"]'
           github-token: "${{ secrets.GITHUB_TOKEN }}"
+      - uses: Naturalclar/issue-action@v1.0.0
+        with:
+          keywords: '["- [ ] #", "- [x] #"]'
+          labels: '["Grouped Task"]'
       # Self hosted deploy server cleanup, should ALWAYS run independent to result
       - name: Cleanup
         if: ${{ always() }}
