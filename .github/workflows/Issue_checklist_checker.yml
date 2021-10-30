@@ -5,8 +5,12 @@ on: issues
 jobs:
   checkIssue:
     name: Check Issue for Incomplete Checklist
-    runs-on: self-hosted
+    runs-on: vds2019x11
     steps:
       - uses: adamzolyak/checklist-checker-action@master
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      # Self hosted deploy server cleanup, should ALWAYS run independent to result
+      - name: Cleanup
+        if: ${{ always() }}
+        run: docker ps -q | xargs -n 1 -P 8 -I {} docker stop {}
