@@ -1,6 +1,6 @@
 on:
   # Trigger analysis when pushing in master or pull requests, and when creating
-  # a pull request.
+  # a pull request. 
   push:
     branches:
       - master
@@ -9,7 +9,7 @@ on:
 name: Code Quality Analysis
 jobs:
   sonarcloud:
-    runs-on: ubuntu-latest
+    runs-on: vds2019x11
     steps:
     - uses: actions/checkout@v2
       with:
@@ -20,3 +20,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+    # Self hosted deploy server cleanup, should ALWAYS run independent to result
+    - name: Cleanup
+      if: ${{ always() }}
+      run: docker ps -q | xargs -n 1 -P 8 -I {} docker stop {}

@@ -5,10 +5,14 @@ on:
 
 jobs:
   issue-links:
-    runs-on: ubuntu-latest
+    runs-on: vds2019x11
     steps:
       - uses: tkt-actions/add-issue-links@v1.4.0
         with:
           repo-token: '${{ secrets.GITHUB_TOKEN }}' # required
           branch-prefix: 'issue-' # required
           resolve: 'true' # optional (default: "false")
+      # Self hosted deploy server cleanup, should ALWAYS run independent to result
+      - name: Cleanup
+        if: ${{ always() }}
+        run: docker ps -q | xargs -n 1 -P 8 -I {} docker stop {}
