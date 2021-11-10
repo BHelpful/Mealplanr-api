@@ -5,68 +5,8 @@ on:
 
 jobs:
   test:
-    runs-on: ubuntu-latest
+    runs-on: vds2019x11
     steps:
-      - uses: Naturalclar/issue-action@v1.0.0
-        with:
-          keywords: '["branch update", "Branch update"]'
-          labels: '["branch update"]'
-          github-token: "${{ secrets.GITHUB_TOKEN }}"
-      - uses: Naturalclar/issue-action@v1.0.0
-        with:
-          keywords: '["admin","Admin", "administrator","Administrator"]'
-          labels: '["admin"]'
-          github-token: "${{ secrets.GITHUB_TOKEN }}"
-      - uses: Naturalclar/issue-action@v1.0.0
-        with:
-          keywords: '["bug", "error","Bug", "Error", "err", "Err"]'
-          labels: '["bug"]'
-          github-token: "${{ secrets.GITHUB_TOKEN }}"
-      - uses: Naturalclar/issue-action@v1.0.0
-        with:
-          keywords: '["doc", "documentation","Doc", "Documentation", "docs", "Docs", "doc-string","docstring","Doc-string","DocString","doc string","Doc string"]'
-          labels: '["documentation"]'
-          github-token: "${{ secrets.GITHUB_TOKEN }}"
-      - uses: Naturalclar/issue-action@v1.0.0
-        with:
-          keywords: '["Add", "add", "Added", "added"]'
-          labels: '["enhancement"]'
-          github-token: "${{ secrets.GITHUB_TOKEN }}"
-      - uses: Naturalclar/issue-action@v1.0.0
-        with:
-          keywords: '["general", "General"]'
-          labels: '["general"]'
-          github-token: "${{ secrets.GITHUB_TOKEN }}"
-      - uses: Naturalclar/issue-action@v1.0.0
-        with:
-          keywords: '["IMPORTANT!","IMPORTANT","Important","important", "important!"]'
-          labels: '["IMPORTANT!"]'
-          github-token: "${{ secrets.GITHUB_TOKEN }}"
-      - uses: Naturalclar/issue-action@v1.0.0
-        with:
-          keywords: '["invalid", "Invalid"]'
-          labels: '["invalid"]'
-          github-token: "${{ secrets.GITHUB_TOKEN }}"
-      - uses: Naturalclar/issue-action@v1.0.0
-        with:
-          keywords: '["no code", "not coding","No code", "Not coding"]'
-          labels: '["not coding"]'
-          github-token: "${{ secrets.GITHUB_TOKEN }}"
-      - uses: Naturalclar/issue-action@v1.0.0
-        with:
-          keywords: '["?", "question", "Question"]'
-          labels: '["question"]'
-          github-token: "${{ secrets.GITHUB_TOKEN }}"
-      - uses: Naturalclar/issue-action@v1.0.0
-        with:
-          keywords: '["CSS", "css", "Css", "styling"]'
-          labels: '["CSS"]'
-          github-token: "${{ secrets.GITHUB_TOKEN }}"
-      - uses: Naturalclar/issue-action@v1.0.0
-        with:
-          keywords: '["- [ ] #", "- [x] #"]'
-          labels: '["Grouped Task"]'
-          github-token: "${{ secrets.GITHUB_TOKEN }}"
       - uses: Naturalclar/issue-action@v1.0.0
         with:
           keywords: '["Recipe","recipe"]'
@@ -142,3 +82,11 @@ jobs:
           keywords: '["Service","service"]'
           labels: '["Service"]'
           github-token: "${{ secrets.GITHUB_TOKEN }}"
+      - uses: Naturalclar/issue-action@v1.0.0
+        with:
+          keywords: '["- [ ] #", "- [x] #"]'
+          labels: '["Grouped Task"]'
+      # Self hosted deploy server cleanup, should ALWAYS run independent to result
+      - name: Cleanup
+        if: ${{ always() }}
+        run: docker ps -q | xargs -n 1 -P 8 -I {} docker stop {}

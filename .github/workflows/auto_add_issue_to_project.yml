@@ -5,7 +5,7 @@ on:
 
 jobs:
   add_item_to_project:
-    runs-on: ubuntu-latest
+    runs-on: vds2019x11
     steps:
       - name: Get project data
         env:
@@ -69,3 +69,7 @@ jobs:
                 }
               }
             }' -f project=$PROJECT_ID -f item=$ITEM_ID -f date_field=$DATE_FIELD_ID -f date_value=$DATE --silent
+      # Self hosted deploy server cleanup, should ALWAYS run independent to result
+      - name: Cleanup
+        if: ${{ always() }}
+        run: docker ps -q | xargs -n 1 -P 8 -I {} docker stop {}
