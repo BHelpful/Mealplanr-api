@@ -11,7 +11,7 @@ import {
 } from '../documents';
 import { RecipeDocument } from '../recipe/recipe.model';
 import { IngredientDocument } from '../ingredient/ingredient.model';
-import log from '../../logger';
+import { getReferences } from '../../utils/populate.utils';
 
 export interface UserDocument extends Document {
 	name: string;
@@ -41,7 +41,7 @@ const UserSchema = new Schema(
 			type: [Schema.Types.ObjectId],
 			ref: 'recipes',
 			description:
-				'List of recipes now owned by the user (ObjectId refering to recipes)',
+				'List of recipes now owned by the user (ObjectId referring to recipes)',
 		},
 		options: { type: UserOptionsSubschema, description: 'User options' },
 		plan: { type: PlanSubschema, description: 'The mealplan of the user' },
@@ -82,7 +82,7 @@ UserSchema.pre('save', async function (next: HookNextFunction) {
 });
 
 /**
- * This function encrupts a password and validates
+ * This function encrypts a password and validates
  * with the existing encrypted password from the user.
  *
  * @remarks
@@ -98,6 +98,8 @@ UserSchema.methods.comparePassword = async function (
 
 	return bcrypt.compare(candidatePassword, user.password).catch((e) => false);
 };
+
+export const userModelRefs = getReferences(UserSchema);
 
 const userModel = model<UserDocument>('users', UserSchema);
 
