@@ -5,7 +5,7 @@ on:
 
 jobs:
   test:
-    runs-on: vds2019x11
+    runs-on: ubuntu-latest
     steps:
       - uses: Naturalclar/issue-action@v1.0.0
         with:
