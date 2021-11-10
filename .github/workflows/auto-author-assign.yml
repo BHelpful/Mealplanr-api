@@ -7,7 +7,7 @@ on:
 
 jobs:
   assign-author:
-    runs-on: vds2019x11
+    runs-on: ubuntu-latest
     steps:
       - uses: toshimaru/auto-author-assign@v1.2.0
         with:

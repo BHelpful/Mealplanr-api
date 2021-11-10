@@ -5,7 +5,7 @@ on: issues
 jobs:
   checkIssue:
     name: Check Issue for Incomplete Checklist
-    runs-on: vds2019x11
+    runs-on: ubuntu-latest
     steps:
       - uses: adamzolyak/checklist-checker-action@master
         env:

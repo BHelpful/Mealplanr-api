@@ -5,7 +5,7 @@ on:
 
 jobs:
   add_item_to_project:
-    runs-on: vds2019x11
+    runs-on: ubuntu-latest
     steps:
       - name: Get project data
         env:
