@@ -13,7 +13,7 @@ export const StoreSchema = new Schema({
 	},
 });
 
-const storeModel = model<StoreDocument>('store', StoreSchema);
+const storeModel = model<StoreDocument>('stores', StoreSchema);
 
 export const storeSM = m2s(storeModel);
 

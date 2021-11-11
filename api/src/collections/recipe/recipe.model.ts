@@ -1,6 +1,6 @@
 import { Schema, Document, model } from 'mongoose';
 import { nanoid } from 'nanoid';
-import { getReferences } from '../../utils/populate.utils';
+import { getDocumentRefs } from '../../utils/populate.utils';
 const m2s = require('mongoose-to-swagger');
 import { CategoryDocument } from '../category/category.model';
 import {
@@ -105,7 +105,7 @@ export const RecipeSchema = new Schema(
 	{ timestamps: true }
 );
 
-export const recipeModelRefs = getReferences(RecipeSchema);
+export const recipeModelRefs = getDocumentRefs(RecipeSchema);
 
 const recipeModel = model<RecipeDocument>('recipes', RecipeSchema);
 
