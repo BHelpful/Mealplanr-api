@@ -17,7 +17,7 @@ export interface UserDocument extends Document {
 	name: string;
 	email: string;
 	password: string;
-	colectionId: [RecipeDocument['_id']];
+	collectionId: [RecipeDocument['_id']];
 	options: UserOptionsDocument;
 	plan: PlanDocument;
 	oAuth: string;
@@ -37,7 +37,7 @@ const UserSchema = new Schema(
 			description: 'Email of the user',
 		},
 		password: { type: String, description: 'Password of the user' },
-		colectionId: {
+		collectionId: {
 			type: [Schema.Types.ObjectId],
 			ref: 'recipes',
 			description:
@@ -73,7 +73,7 @@ UserSchema.pre('save', async function (next: HookNextFunction) {
 		parseInt(process.env.SALT_WORKER_FACTOR as string, 10)
 	);
 
-	const hash = await bcrypt.hashSync(user.password, salt);
+	const hash = bcrypt.hashSync(user.password, salt);
 
 	// Replace the password with the hash
 	user.password = hash;
@@ -99,7 +99,7 @@ UserSchema.methods.comparePassword = async function (
 	return bcrypt.compare(candidatePassword, user.password).catch((e) => false);
 };
 
-// export const userModelRefs = getDocumentRefs(UserSchema);
+export const userModelRefs = getDocumentRefs(UserSchema);
 
 const userModel = model<UserDocument>('users', UserSchema);
 

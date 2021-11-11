@@ -15,17 +15,17 @@ export function getDocumentRefs(
 			refs = refs.concat(getDocumentRefs(path.schema, `${key}.`));
 		}
 		// find names of the keys that reference other documents
-		for (const prop in path) {
-			if (prop === 'options') {
-				const options = path[prop];
-				if (options.ref) {
-					let ref = key;
-					if (nestedPath !== '') {
-						ref = `${nestedPath}${key}`;
-					}
-					refs.push(ref);
-				}
-			}
+		refs = refs.concat(getDocumentRefNames(path, key, nestedPath));
+	}
+	return refs;
+}
+
+function getDocumentRefNames(path: any, key: string, nestedPath: string) {
+	let refs: string[] = [];
+	for (const prop in path) {
+		// if the prop has options and one of the options is a reference to another document
+		if (prop === 'options' && path[prop].ref) {
+			refs.push(`${nestedPath}${key}`);
 		}
 	}
 	return refs;

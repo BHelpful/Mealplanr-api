@@ -20,14 +20,10 @@ export async function createRecipe(body: DocumentDefinition<RecipeDocument>) {
 
 		let recipe = await recipeModel.create(body);
 
-		let populatedRecipe = await populateDocumentResponse(
+		return await populateDocumentResponse(
 			recipe,
 			recipeModelRefs
 		).execPopulate();
-
-		return populatedRecipe;
-
-		// return await recipeModel.create(body);
 	} catch (error) {
 		throw new Error(error as string);
 	}
@@ -48,12 +44,10 @@ export async function findRecipe(
 		query = sanitize(query);
 		let promisedRecipe = recipeModel.findOne(query, {}, options);
 
-		let populatedRecipe = await populateDocumentResponse(
+		return await populateDocumentResponse(
 			promisedRecipe,
 			recipeModelRefs
 		).exec();
-
-		return populatedRecipe;
 	} catch (error) {
 		throw new Error(error as string);
 	}
