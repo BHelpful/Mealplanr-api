@@ -69,7 +69,17 @@ export async function findAndUpdateRecipe(
 	try {
 		query = sanitize(query);
 		update = sanitize(update);
-		return await recipeModel.findOneAndUpdate(query, update, options);
+
+		let promisedRecipe = recipeModel.findOneAndUpdate(
+			query,
+			update,
+			options
+		);
+
+		return await populateDocumentResponse(
+			promisedRecipe,
+			recipeModelRefs
+		).exec();
 	} catch (error) {
 		throw new Error(error as string);
 	}

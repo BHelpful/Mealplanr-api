@@ -1,6 +1,5 @@
 import { Query } from 'mongoose';
 
-// TODO: add correct type to param
 export function getDocumentRefs(
 	mongooseSchema: any,
 	nestedPath: string = ''
