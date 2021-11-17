@@ -4,7 +4,8 @@ import {
 	QueryOptions,
 	UpdateQuery,
 } from 'mongoose';
-import userModel, { UserDocument } from './user.model';
+import { populateDocumentResponse } from '../../utils/populate.utils';
+import userModel, { UserDocument, userModelRefs } from './user.model';
 const sanitize = require('mongo-sanitize');
 
 /**
@@ -23,7 +24,13 @@ const sanitize = require('mongo-sanitize');
 export async function createUser(input: DocumentDefinition<UserDocument>) {
 	try {
 		input = sanitize(input);
-		return await userModel.create(input);
+
+		let user = await userModel.create(input);
+
+		return await populateDocumentResponse(
+			user,
+			userModelRefs
+		).execPopulate();
 	} catch (error) {
 		throw new Error(error as string);
 	}
@@ -38,7 +45,13 @@ export async function createUser(input: DocumentDefinition<UserDocument>) {
 export async function findUser(query: FilterQuery<UserDocument>) {
 	try {
 		query = sanitize(query);
-		return await userModel.findOne(query).lean();
+
+		let promisedUser = userModel.findOne(query).lean();
+
+		return await populateDocumentResponse(
+			promisedUser,
+			userModelRefs
+		).exec();
 	} catch (error) {
 		throw new Error(error as string);
 	}
@@ -60,7 +73,13 @@ export async function findAndUpdateUser(
 	try {
 		query = sanitize(query);
 		update = sanitize(update);
-		return await userModel.findOneAndUpdate(query, update, options);
+
+		let promisedUser = userModel.findOneAndUpdate(query, update, options);
+
+		return await populateDocumentResponse(
+			promisedUser,
+			userModelRefs
+		).exec();
 	} catch (error) {
 		throw new Error(error as string);
 	}

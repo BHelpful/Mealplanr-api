@@ -40,7 +40,7 @@ export async function updateRecipeHandler(req: Request, res: Response) {
 		return res.status(404).send('No such recipe exists');
 	}
 
-	if (String(recipe.creatorId) !== userId) {
+	if (String(recipe.creatorId._id) !== userId) {
 		return res.status(401).send('User not the creator of the recipe');
 	}
 
@@ -88,7 +88,7 @@ export async function deleteRecipeHandler(req: Request, res: Response) {
 		return res.status(404).send('No such recipe exists');
 	}
 
-	if (String(recipe.creatorId) !== String(userId)) {
+	if (String(recipe.creatorId._id) !== String(userId)) {
 		return res.status(401).send('User not the creator of the recipe');
 	}
 

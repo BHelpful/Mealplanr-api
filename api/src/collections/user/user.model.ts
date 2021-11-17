@@ -11,13 +11,13 @@ import {
 } from '../documents';
 import { RecipeDocument } from '../recipe/recipe.model';
 import { IngredientDocument } from '../ingredient/ingredient.model';
-import log from '../../logger';
+import { getDocumentRefs } from '../../utils/populate.utils';
 
 export interface UserDocument extends Document {
 	name: string;
 	email: string;
 	password: string;
-	colectionId: [RecipeDocument['_id']];
+	collectionId: [RecipeDocument['_id']];
 	options: UserOptionsDocument;
 	plan: PlanDocument;
 	oAuth: string;
@@ -37,11 +37,11 @@ const UserSchema = new Schema(
 			description: 'Email of the user',
 		},
 		password: { type: String, description: 'Password of the user' },
-		colectionId: {
+		collectionId: {
 			type: [Schema.Types.ObjectId],
 			ref: 'recipes',
 			description:
-				'List of recipes now owned by the user (ObjectId refering to recipes)',
+				'List of recipes now owned by the user (ObjectId referring to recipes)',
 		},
 		options: { type: UserOptionsSubschema, description: 'User options' },
 		plan: { type: PlanSubschema, description: 'The mealplan of the user' },
@@ -73,7 +73,7 @@ UserSchema.pre('save', async function (next: HookNextFunction) {
 		parseInt(process.env.SALT_WORKER_FACTOR as string, 10)
 	);
 
-	const hash = await bcrypt.hashSync(user.password, salt);
+	const hash = bcrypt.hashSync(user.password, salt);
 
 	// Replace the password with the hash
 	user.password = hash;
@@ -82,7 +82,7 @@ UserSchema.pre('save', async function (next: HookNextFunction) {
 });
 
 /**
- * This function encrupts a password and validates
+ * This function encrypts a password and validates
  * with the existing encrypted password from the user.
  *
  * @remarks
@@ -98,6 +98,8 @@ UserSchema.methods.comparePassword = async function (
 
 	return bcrypt.compare(candidatePassword, user.password).catch((e) => false);
 };
+
+export const userModelRefs = getDocumentRefs(UserSchema);
 
 const userModel = model<UserDocument>('users', UserSchema);
 

@@ -1,4 +1,5 @@
 import { Schema, Document, model } from 'mongoose';
+import { getDocumentRefs } from '../../utils/populate.utils';
 import { UserDocument } from '../user/user.model';
 const m2s = require('mongoose-to-swagger');
 
@@ -31,6 +32,8 @@ const SessionSchema = new Schema(
 	},
 	{ timestamps: true }
 );
+
+export const sessionModelRefs = getDocumentRefs(SessionSchema);
 
 const sessionModel = model<SessionDocument>('session', SessionSchema);
 

@@ -4,7 +4,8 @@ import {
 	UpdateQuery,
 	QueryOptions,
 } from 'mongoose';
-import recipeModel, { RecipeDocument } from './recipe.model';
+import { populateDocumentResponse } from '../../utils/populate.utils';
+import recipeModel, { RecipeDocument, recipeModelRefs } from './recipe.model';
 const sanitize = require('mongo-sanitize');
 
 /**
@@ -16,7 +17,13 @@ const sanitize = require('mongo-sanitize');
 export async function createRecipe(body: DocumentDefinition<RecipeDocument>) {
 	try {
 		body = sanitize(body);
-		return await recipeModel.create(body);
+
+		let recipe = await recipeModel.create(body);
+
+		return await populateDocumentResponse(
+			recipe,
+			recipeModelRefs
+		).execPopulate();
 	} catch (error) {
 		throw new Error(error as string);
 	}
@@ -35,7 +42,12 @@ export async function findRecipe(
 ) {
 	try {
 		query = sanitize(query);
-		return await recipeModel.findOne(query, {}, options);
+		let promisedRecipe = recipeModel.findOne(query, {}, options);
+
+		return await populateDocumentResponse(
+			promisedRecipe,
+			recipeModelRefs
+		).exec();
 	} catch (error) {
 		throw new Error(error as string);
 	}
@@ -57,7 +69,17 @@ export async function findAndUpdateRecipe(
 	try {
 		query = sanitize(query);
 		update = sanitize(update);
-		return await recipeModel.findOneAndUpdate(query, update, options);
+
+		let promisedRecipe = recipeModel.findOneAndUpdate(
+			query,
+			update,
+			options
+		);
+
+		return await populateDocumentResponse(
+			promisedRecipe,
+			recipeModelRefs
+		).exec();
 	} catch (error) {
 		throw new Error(error as string);
 	}
