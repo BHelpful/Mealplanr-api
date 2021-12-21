@@ -1,3 +1,5 @@
+# The development of this repo has been moved to the monorepo: https://github.com/BHelpful/BHelpful
+
 # Mealplanr-API
 [![CircleCI](https://circleci.com/gh/BHelpful/Mealplanr-api/tree/master.svg?style=svg)](https://circleci.com/gh/BHelpful/Mealplanr-api/tree/master) 
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=BHelpful_Mealplanr-api&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=BHelpful_Mealplanr-api)
